@@ -1,0 +1,63 @@
+Running Redis Client
+
+sudo docker run -it --rm --name jonathan-client --link redis-master:bitnami/redis jonathan-cpp
+
+
+
+Redis Master
+
+sudo docker run --name redis-master -v /var/lib/redis:/bitnami/redis/data -e REDIS_REPLICATION_MODE=master -e ALLOW_EMPTY_PASSWORD=yes --rm -d bitnami/redis:latest
+
+
+
+Redis Replica
+
+sudo docker run --name redis-replica -v /home/jonathand/redis-data:/bitnami/redis/data --link redis-master:master -e REDIS_REPLICATION_MODE=slave -e REDIS_MASTER_HOST=master -e ALLOW_EMPTY_PASSWORD=yes --rm -d bitnami/redis:latest
+
+
+
+Without AOF Persistence
+
+-e REDIS_AOF_ENABLED=no
+
+
+
+Redis w/o rdb
+
+sudo docker run --name redis-no-rdb -e ALLOW_EMPTY_PASSWORD=yes -v /home/jonathand/docker/Benchmark/redis-no-rdb.conf:/opt/bitnami/redis/mounted-etc/redis.conf -v /var/lib/redis/no-rdb:/bitnami/redis/data --rm -d bitnami/redis:latest
+
+
+
+Redis Master w/o rdb
+
+sudo docker run --name redis-master-no-rdb -v /home/jonathand/docker/Benchmark/redis-no-rdb.conf:/opt/bitnami/redis/mounted-etc/redis.conf -v /var/lib/redis/no-rdb:/bitnami/redis/data -e REDIS_REPLICATION_MODE=master -e ALLOW_EMPTY_PASSWORD=yes --rm -d bitnami/redis:latest
+
+
+
+Redis Replica w/o rdb
+
+sudo docker run --name redis-replica-no-rdb -v /home/jonathand/docker/Benchmark/redis-no-rdb.conf:/opt/bitnami/redis/mounted-etc/redis.conf -v /var/lib/redis/no-rdb:/bitnami/redis/data --link redis-master-no-rdb:master -e REDIS_REPLICATION_MODE=slave -e REDIS_MASTER_HOST=master -e ALLOW_EMPTY_PASSWORD=yes --rm -d bitnami/redis:latest
+
+
+
+Redis w/o aof
+
+sudo docker run --name redis-no-rdb -e ALLOW_EMPTY_PASSWORD=yes -v /home/jonathand/docker/Benchmark/redis-no-aof.conf:/opt/bitnami/redis/mounted-etc/redis.conf -v /var/lib/redis/no-aof:/bitnami/redis/data --rm -d bitnami/redis:latest
+
+
+
+Redis Master w/o aof
+
+sudo docker run --name redis-master-no-aof -v /home/jonathand/docker/Benchmark/redis-no-aof.conf:/opt/bitnami/redis/mounted-etc/redis.conf -v /var/lib/redis/no-aof:/bitnami/redis/data -e REDIS_REPLICATION_MODE=master -e ALLOW_EMPTY_PASSWORD=yes --rm -d bitnami/redis:latest
+
+
+
+Redis Replica w/o aof
+
+sudo docker run --name redis-replica-no-aof -v /home/jonathand/docker/Benchmark/redis-no-aof.conf:/opt/bitnami/redis/mounted-etc/redis.conf -v /var/lib/redis/no-aof:/bitnami/redis/data --link redis-master-no-aof:master -e REDIS_REPLICATION_MODE=slave -e REDIS_MASTER_HOST=master -e ALLOW_EMPTY_PASSWORD=yes --rm -d bitnami/redis:latest
+
+
+
+Postgres Master
+
+sudo docker run --name postgres-master -itd --rm  --env 'PG_PASSWORD=Juni#20' --env 'DB_NAME=SDB' --env 'REPLICATION_USER=primary' --env 'REPLICATION_PASS=replication' -v /srv/docker/postgresql:/var/lib/postgresql -v /etc/postgres/12/main/postgresql.conf:/etc/postgres/9.4/main/postgresql.conf sameersbn/postgresql:9.5-3
