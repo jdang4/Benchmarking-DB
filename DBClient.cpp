@@ -83,6 +83,17 @@ set<int> DBClient::getRandomKeys(int n, int lower, int upper)
     return keySet;
 }
 
+void DBClient::connect()
+{
+    cout << "Method is ran from the DBClient...." << endl;
+    exit(1);
+}
+
+
+void DBClient::disconnect() 
+{
+    cout << "DB disconnected" << endl;
+}
 
 /**
  * Initializes the DB by inserting 1 million entries with each having a data 

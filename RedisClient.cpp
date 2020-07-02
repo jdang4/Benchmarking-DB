@@ -11,15 +11,10 @@ using namespace std;
 /**
  * constructor 
  */
-RedisClient::RedisClient(bool snap, bool append) : DBClient()
+RedisClient::RedisClient() : DBClient()
 {
-    rdb = snap;
-    aof = append;
-
     entryVal = DBClient::getEntryVal('a');
     newVal = DBClient::getEntryVal('j');
-
-    createConnection(); 
 }
 
 
@@ -42,26 +37,10 @@ double RedisClient::calculateTime(chrono::time_point<std::chrono::high_resolutio
 /**
  * creates the connection to the running redis server (master) in a running container
  */
-void RedisClient::createConnection()
+void RedisClient::connect()
 {
     try {
 	redis = new Redis("tcp://redis:6379");
-	
-	if (!aof)
-	{
-	    redis->command<void>("config", "set", "appendonly", "no");
-	}
-
-	if (!rdb)
-	{
-	    redis->command<void>("config", "set", "save", "");
-	}
-
-	if (!rdb || !aof)
-	{
-	    cout << "re-write" << endl;
-	    redis->command<void>("config", "rewrite");
-	}
 	 
 	// verifying the connection by sending a command
 	redis->set("foo", "bar");
@@ -254,31 +233,9 @@ double RedisClient::simultaneousReaders(int n, string key)
     return DBClient::calculateTime(start, end);
 
 }
-/*
-set<int> RedisClient::getRandomKeys(int n, int lower, int upper)
-{
-    srand(time(0));
-    set<int> keySet;
-    int count = 0;
 
-    while (count != n)
-    {
-	// get a random num from 1 to 1 million
-	int randomNum = (rand() % (upper + 1 - lower)) + lower;
 
-	auto it = keySet.find(randomNum);
 
-	// if key is not already in the set
-	if (it == keySet.end() && randomNum <= 1000000)
-	{
-	    keySet.insert(randomNum);
-	    count++;
-	}
-    }
-
-    return keySet;
-}
-*/
 double RedisClient::simultaneousTasks(int n)
 {
     set<int> keySet = DBClient::getRandomKeys(n, 1, 100000);

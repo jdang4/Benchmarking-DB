@@ -16,32 +16,54 @@ using namespace std;
 
 int main() 
 {
-    vector<double> times;
+    int db;
+    string host;
 
-    DBClient* client = new RedisClient(true, true);
-    
+    cout << "\nWELCOME TO DB BENCHMARK APPLICATION!\n" << endl;
+    cout << "Select the DB to benchmark:" << endl;
+    cout << "1  -  Redis" << endl;
+    cout << "2  -  PostgreSQL" << endl;
+
+    cout << "\nEnter in DB Num: ";
+    cin >> db;
+
+    if (db == 2)
+    {
+	cout << "\n############################################################################################################################################\n" << endl;
+	cout << "HELP GUIDE\n" << endl;
+	cout << "To find the IP Address of the PostgreSQL Primary Container: " << endl;
+	cout << "\t1) outside of this application, locate the desired container's Container ID by entering 'docker ps' in the terminal" << endl;
+	cout << "\t2) copy the Container ID and enter 'docker inspect <insert container id> | grep IPAddress'" << endl;
+	cout << "\t3) the resulted address is the address to enter in the below prompt" << endl;
+	
+	cout << "\nNOTE: at the prompt below, enter 'q' to exit application to follow these instructions (if needed)" << endl;
+	cout << "\n############################################################################################################################################" << endl;
+	
+	cout << "\nEnter in IP Addess of the PostgreSQL Primary Container: ";
+	cin >> host;
+
+	if (host == "q")
+	{
+	    exit(1);
+	}
+    }
+
+    cout << endl << endl;
+
     BenchmarkManager* bm = new BenchmarkManager(5);
 
-    bm->selectDB(1, "");
+    bm->selectDB(db, host);
+    bm->connect();
 
     bm->openCSV();
     bm->closeCSV();
 
-    //double time= client->initializeDB();
-    double time = -1.0;
+    //bm->initializeDB();
+    
+    bm->getReadOutput();
+    bm->disconnect();
 
-    if (time != -1.0)
-    {
-	cout << "time: " << time << " sec\n" << endl;
-    }
-
-    if (remove("stats.csv") != 0)
-    {
-	cout << "ERROR DELETING benchmark-stats file";
-    }
-
-    ofstream csv("stats.csv");
-
+    /*
     // adding the column names
     csv << "Name, Time Elapsed (sec), \n";
 
@@ -74,89 +96,24 @@ int main()
     bm->getSimultaneousTasksOutput(1);
     bm->getSimultaneousTasksOutput(50);
     bm->getSimultaneousTasksOutput(100);
-
-    /*
-    time = client->simultaneousTasks(1);
-
-    cout << "1 Task:\t\t\t\t\t\t";
-    cout << "time: " << time << " sec\n" << endl;
-    csv << 1 << ", " << time << ", , \n";
-
-    time = client->simultaneousTasks(50);
-    double avgTime = double(time) / double(50);
-
-    cout << "50 Simultaneous Tasks:\t\t\t\t";
-    cout << "time: " << time << " sec\t\t";
-    cout << "average time per task: " << avgTime << " sec\n" << endl;
-    csv << 50 << ", " << time << ", " << avgTime << ", \n";
-    
-    time = client->simultaneousTasks(100);
-    avgTime = double(time) / double(100);
-
-    cout << "100 Simultaneous Tasks:\t\t\t\t";
-    cout << "time: " << time << " sec\t\t";
-    cout << "average time per task: " << avgTime << " sec\n" << endl;
-    csv << 100 << ", " << time << ", " << avgTime << ", \n";
-    */
-    /*
-    cout << "=================================================================================================================================================\n" << endl;
-
-    csv << "\n" << "\n";
-
-    csv << "Num of Simultaneous Tasks, Time Elapsed (sec), Average Time per Task, \n";
-     
-    for (int i = 10; i <= 200; i += 10)
-    {
-	time = client->simultaneousTasks(i);
-	avgTime = double(time) / double(i);
-
-	cout << i << " Simultaneous Tasks:\t\t\t\t";
-	cout << "time: " << time << " sec\t\t";
-	cout << "average time per task: " << double(time) / double(i) << " sec\n" << endl;
-	csv << i << ", " << time << ", " << avgTime << ", \n";
-    }
     */
 
+    /*
     cout << "=================================================================================================================================================\n" << endl;
 
     csv << "\n" << "\n";
 
     csv << "Num Of Simultaneous Transactions, Time Elapsed (sec), Average Time per Transaction, \n";
 
-    bm->getTransactionsOutput(1, 70.0);
-    bm->getTransactionsOutput(50, 70.0);
-    bm->getTransactionsOutput(100, 70.0);
+    //bm->getTransactionsOutput(1, 70.0);
+    //bm->getTransactionsOutput(50, 70.0);
+    //bm->getTransactionsOutput(100, 70.0);
 
-    /*
-    time = client->performTransactions(1, 70.0);
-
-    cout << "1 Transaction:\t\t\t\t\t";
-    cout << "time: " << time << " sec\n" << endl;
-    csv << 1 << ", " << time << ", , \n";
-
-
-    time = client->performTransactions(50, 70.0);
-    double avgTime = double(time) / double(50);
-
-    cout << "50 Transactions:\t\t\t\t";
-    cout << "time: " << time << " sec\t\t";
-    cout << "average time per transaction: " << avgTime << ", \n" << endl;
-    csv << 50 << ", " << time << ", " << avgTime << ", \n";
-
-
-    time = client->performTransactions(100, 70.0);
-    avgTime = double(time) / double(100);
-
-    cout << "100 Transactions:\t\t\t\t";
-    cout << "time: " << time << " sec\t\t";
-    cout << "average time per transaction: " << avgTime << ", \n" << endl;
-    csv << 100 << ", " << time << ", " << avgTime << ", \n";
-    */
     cout << "\n=================================================================================================================================================\n" << endl;
     
     csv.close();
-
-    client = new PostgresClient("172.17.0.4");
+    */
+    //client = new PostgresClient("172.17.0.4");
 }
 
 

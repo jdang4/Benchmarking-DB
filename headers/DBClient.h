@@ -11,6 +11,8 @@ class DBClient
 {
     public:
 	char* getEntryVal(char startingChar);
+	virtual void connect();
+	virtual void disconnect();
 	virtual double initializeDB();
 	virtual double readEntry(std::string key);
 	virtual double insertEntry(std::string key);

@@ -16,6 +16,9 @@ class BenchmarkManager
 	~BenchmarkManager();
 
 	void selectDB(int db, std::string host);
+	void initializeDB();
+	void connect();
+	void disconnect();
 	void openCSV();
 	void closeCSV();
 	void getReadOutput();

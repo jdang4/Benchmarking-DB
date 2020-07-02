@@ -60,4 +60,10 @@ sudo docker run --name redis-replica-no-aof -v /home/jonathand/docker/Benchmark/
 
 Postgres Master
 
-sudo docker run --name postgres-master -itd --rm  --env 'PG_PASSWORD=Juni#20' --env 'DB_NAME=SDB' --env 'REPLICATION_USER=primary' --env 'REPLICATION_PASS=replication' -v /srv/docker/postgresql:/var/lib/postgresql -v /etc/postgres/12/main/postgresql.conf:/etc/postgres/9.4/main/postgresql.conf sameersbn/postgresql:9.5-3
+sudo docker run --name postgres-master -itd --rm  --env 'PG_PASSWORD=Juni#20' --env 'DB_NAME=SDB' --env 'REPLICATION_USER=primary' --env 'REPLICATION_PASS=replication' -v /srv/docker/postgresql:/var/lib/postgresql -v /home/jonathand/docker/Benchmark/config/postgresql.conf:/etc/postgres/9.4/main/postgresql.conf sameersbn/postgresql:9.5-3
+
+
+
+Postgres Replica
+
+sudo docker run --name postgres-slave -itd --rm --link postgres-master:master --env 'REPLICATION_MODE=slave' --env 'REPLICATION_HOST=master' --env 'REPLICATION_USER=primary' --env 'REPLICATION_PASS=replication' -v /srv/docker/postgresql:/var/lib/postgresql -v /home/jonathand/docker/Benchmark/config/postgresql.conf:/etc/postgres/9.4/main/postgresql.conf sameersbn/postgresql:9.5-3

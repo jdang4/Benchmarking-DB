@@ -17,7 +17,7 @@ void BenchmarkManager::selectDB(int db, string host)
     switch(db)
     {
 	case 1: 
-	    client = new RedisClient(true, true);
+	    client = new RedisClient();
 	    break;
 
 	case 2:
@@ -27,6 +27,26 @@ void BenchmarkManager::selectDB(int db, string host)
 	default:
 	    cout << "INVALID DB CHOICE!" << endl;
 	    exit(1);
+    }
+}
+
+void BenchmarkManager::connect()
+{
+    client->connect();
+}
+
+void BenchmarkManager::disconnect()
+{
+    client->disconnect();
+}
+
+void BenchmarkManager::initializeDB()
+{
+    double time = client->initializeDB();
+
+    if (time != -1.0)
+    {
+	cout << "time: " << time << " sec" << endl;
     }
 }
 

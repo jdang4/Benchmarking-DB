@@ -11,8 +11,9 @@ class DBClient;
 class RedisClient : public DBClient
 {
     public:
-	RedisClient(bool rdb, bool aof);
+	RedisClient();
 	~RedisClient();
+	void connect() override;
 	double initializeDB() override;
 	double readEntry(std::string key) override;
 	double insertEntry(std::string key) override;
@@ -26,10 +27,6 @@ class RedisClient : public DBClient
 	sw::redis::Redis* redis;
 	char* entryVal;
 	char* newVal;
-	bool rdb;
-	bool aof;
-
-	void createConnection();
 };
 
 #endif
