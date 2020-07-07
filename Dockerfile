@@ -7,17 +7,17 @@ RUN apt-get update && apt-get install -y cmake apt-utils
 
 RUN apt-get install -y postgresql postgresql-contrib libpqxx-4.0 libpq-dev libpqxx-dev
 
-WORKDIR /redis-client
+WORKDIR /benchmark
 
-COPY . /redis-client
+COPY . /benchmark
 
-WORKDIR /redis-client/include/hiredis
+WORKDIR /benchmark/include/hiredis
 
 RUN make
 
 RUN make install
 
-WORKDIR /redis-client/include/redis-plus-plus/compile
+WORKDIR /benchmark/include/redis-plus-plus/compile
 
 RUN cmake -DCMAKE_BUILD_TYPE=Release -REDIS_PLUS_PLUS_BUILD_TEST=OFF ..
 
@@ -25,13 +25,13 @@ RUN make
 
 RUN make install
 
-WORKDIR /redis-client/include/libpqxx-4.0
+WORKDIR /benchmark/include/libpqxx-4.0
 
 CMD ["./configure"]
 
 RUN make
 
-WORKDIR /redis-client/
+WORKDIR /benchmark/
 
 RUN make
 

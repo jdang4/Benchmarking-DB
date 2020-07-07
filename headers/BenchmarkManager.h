@@ -32,7 +32,9 @@ class BenchmarkManager
     private:
 	DBClient* client;
 	int trials;
+	int dbClient;
 	std::ofstream* csv;
 };
+
 
 #endif

@@ -23,16 +23,6 @@ RedisClient::RedisClient() : DBClient()
  */
 RedisClient::~RedisClient() {}
 
-/*
-double RedisClient::calculateTime(chrono::time_point<std::chrono::high_resolution_clock> start, chrono::time_point<std::chrono::high_resolution_clock> end)
-{
-    auto elapsed = chrono::duration_cast<chrono::microseconds>(end - start);
-
-    double time = elapsed.count() * 1e-6;
-
-    return time;
-}
-*/
 
 /**
  * creates the connection to the running redis server (master) in a running container
@@ -346,6 +336,4 @@ double RedisClient::performTransactions(int n, double successPercentage)
 
     return DBClient::calculateTime(start, end);
 }    
-
-
 

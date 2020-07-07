@@ -1,16 +1,7 @@
 #include <iostream>
-#include <stdint.h>
-#include <ctime>
-#include <thread>
-#include <vector>
-#include <fstream>
-#include <chrono>
-#include <time.h>
 #include "headers/RedisClient.h"
 #include "headers/PostgresClient.h"
 #include "headers/BenchmarkManager.h"
-
-#define TRIALS 5
 
 using namespace std;
 
@@ -56,64 +47,65 @@ int main()
     bm->connect();
 
     bm->openCSV();
-    bm->closeCSV();
 
-    //bm->initializeDB();
+    bm->initializeDB();
     
-    bm->getReadOutput();
-    bm->disconnect();
-
-    /*
-    // adding the column names
-    csv << "Name, Time Elapsed (sec), \n";
-
-    cout << "\n=================================================================================================================================================\n" << endl;
+    cout << "READING 1 KEY BENCHMARK: \n\n\n\n" << endl;
 
     bm->getReadOutput();
-
+    
+    cout << "INSERTING 1 KEY BENCHMARK: \n\n\n\n" << endl; 
+    
     bm->getInsertOutput();
 
-    bm->getUpdateOutput();
+    cout << "UPDATING 1 KEY BENCHMARK: \n\n\n\n" << endl;
+
+    bm->getUpdateOutput(); 
+
+    cout << "DELETING 1 KEY BENCHMARK: \n\n\n\n" << endl;
 
     bm->getDeleteOutput();
 
-    cout << "=================================================================================================================================================\n" << endl;
-
-    csv << "\n" << "\n"; 
-
-    csv << "Simultaneous Readers, Time Elapsed (sec), Average Time per Read, \n";
+    cout << "SIMULTANEOUS READERS [1] BENCHMARK: \n\n\n\n" << endl;
 
     bm->getSimultaneousReadersOutput(1);
+    
+    cout << "SIMULTANEOUS READERS [50] BENCHMARK: \n\n\n\n" << endl;
+    
     bm->getSimultaneousReadersOutput(50);
-    bm->getSimultaneousReadersOutput(100);
+    
+    cout << "SIMULTANEOUS READERS [100] BENCHMARK: \n\n\n\n" << endl;
      
-    cout << "=================================================================================================================================================\n" << endl;
+    bm->getSimultaneousReadersOutput(100);
 
-    csv << "\n" << "\n";
-
-    csv << "Num of Simultaneous Tasks, Time Elapsed (sec), Average Time per Task, \n";
+    cout << "SIMULTANEOUS TASKS [1] BENCHMARK: \n\n\n\n" << endl;
 
     bm->getSimultaneousTasksOutput(1);
+
+    cout << "SIMULTANEOUS TASKS [50] BENCHMARK: \n\n\n\n" << endl;
+
     bm->getSimultaneousTasksOutput(50);
+
+    cout << "SIMULTANEOUS TASKS [100] BENCHMARK: \n\n\n\n" << endl;
+
     bm->getSimultaneousTasksOutput(100);
-    */
 
-    /*
-    cout << "=================================================================================================================================================\n" << endl;
+    cout << "SIMULTANEOUS TRANSACTIONS [1] BENCHMARK: \n\n\n\n" << endl;
 
-    csv << "\n" << "\n";
+    bm->getTransactionsOutput(1, 70.0);
 
-    csv << "Num Of Simultaneous Transactions, Time Elapsed (sec), Average Time per Transaction, \n";
+    cout << "SIMULTANEOUS TRANSACTIONS [50] BENCHMARK: \n\n\n\n" << endl;
 
-    //bm->getTransactionsOutput(1, 70.0);
-    //bm->getTransactionsOutput(50, 70.0);
-    //bm->getTransactionsOutput(100, 70.0);
+    bm->getTransactionsOutput(50, 70.0);
 
-    cout << "\n=================================================================================================================================================\n" << endl;
-    
-    csv.close();
-    */
-    //client = new PostgresClient("172.17.0.4");
+    cout << "SIMULTANEOUS TRANSACTIONS [100] BENCHMARK:	\n\n\n\n" << endl;
+
+    bm->getTransactionsOutput(100, 70.0);
+
+    bm->closeCSV();
+
+    bm->disconnect();
+
 }
 
 
