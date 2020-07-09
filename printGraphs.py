@@ -1,6 +1,7 @@
 from csv import reader
 import matplotlib.pyplot as plt 
 
+
 def oneKeyCommand(m, num, title) :
     data = m[num]
     x = []

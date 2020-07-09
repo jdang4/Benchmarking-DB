@@ -106,7 +106,8 @@ void BenchmarkManager::getReadOutput(int num)
 
 	if (time != -1.0) {
 	    cout << "READ #" << i << ":\t\t\t\t\t";
-	    cout << "time: " << time << " sec\n" << endl;
+	    cout << "time: " << time << " sec\t\t\t";
+
 	    *csv << i << "," << time << "\n";
 
 	    times.push_back(time);
@@ -122,7 +123,7 @@ void BenchmarkManager::getReadOutput(int num)
     }
 
     double averageTime = sumTime / double(times.size());
-    
+ 
     double avg_op_per_sec = double(times.size()) / sumTime;
 
     cout << "\n---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
