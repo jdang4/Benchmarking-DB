@@ -102,6 +102,22 @@ int main()
 
     bm->getTransactionsOutput(100, 70.0);
 
+
+    for (int i = 10; i <= 100; i += 10)
+    {
+	bm->getSimultaneousReadersOutput(i, i);
+    }
+
+    for (int i = 10; i <= 100; i += 10) 
+    {
+	bm->getSimultaneousTasksOutput(i, i);
+    }
+
+    for (int i = 10; i <= 100; i += 10)
+    {
+	bm->getTransactionsOutput(i, 70.0, i);
+    }
+
     bm->closeCSV();
 
     bm->disconnect();

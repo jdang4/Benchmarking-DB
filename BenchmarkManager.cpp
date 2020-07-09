@@ -92,11 +92,13 @@ void BenchmarkManager::closeCSV()
 }
 
 
-void BenchmarkManager::getReadOutput()
+void BenchmarkManager::getReadOutput(int num)
 {
     *csv << "Read Num, Time Elapsed (sec), \n";
 
     vector<double> times;
+
+    trials = (num == 0) ? trials : num;
 
     for (int i = 1; i <= trials; i++)
     {
@@ -133,13 +135,15 @@ void BenchmarkManager::getReadOutput()
 
 
 
-void BenchmarkManager::getInsertOutput()
+void BenchmarkManager::getInsertOutput(int num)
 {
     *csv << "Insert Num, Time Elapased (sec), \n";
 
     vector<double> times;
 
     int64_t key = 2000000;
+
+    trials = (num == 0) ? trials : num;
 
     for (int i = 1; i <= trials; i++)
     {
@@ -179,13 +183,15 @@ void BenchmarkManager::getInsertOutput()
 
 
 
-void BenchmarkManager::getUpdateOutput()
+void BenchmarkManager::getUpdateOutput(int num)
 {
     *csv << "Update Num, Time Elapsed (sec), \n";
 
     vector<double> times;
     
     int64_t key = 2000000;
+
+    trials = (num == 0) ? trials : num;
 
     for (int i = 1; i <= trials; i++)
     {
@@ -225,12 +231,14 @@ void BenchmarkManager::getUpdateOutput()
 
 
 
-void BenchmarkManager::getDeleteOutput()
+void BenchmarkManager::getDeleteOutput(int num)
 {
     *csv << "Delete Num, Time Elapsed (sec), \n";
     vector<double> times;
 
     int64_t key = 2000000;
+
+    trials = (num == 0) ? trials : num;
 
     for (int i = 1; i <= trials; i++) 
     {
@@ -270,23 +278,34 @@ void BenchmarkManager::getDeleteOutput()
 
 
 
-void BenchmarkManager::getSimultaneousReadersOutput(int n)
+void BenchmarkManager::getSimultaneousReadersOutput(int n, int num)
 {
-    *csv << n << " Simul. Reader Num, Time Elapsed (sec), Average Time per Read, \n";
+    if (num <= 10) 
+    {
+	*csv << n << " Simul. Reader Num, Time Elapsed (sec), Average Time per Read, \n";
+    }
 
     vector<double> times;
 
     double sumRead_per_sec = 0;
 
-    for (int i = 1; i <= trials; i++)
+    int max = (num == 0) ? trials : 1;
+
+    for (int i = 1; i <= max; i++)
     {
 	double time = client->simultaneousReaders(n, "550500");
 	double avgTime_per_read = time / double(n);
 	double avg = double(n) / time;
 
-	cout << n << " Simultaneous Readers #" << i << ":\t\t\t";
-	cout << "time: " << time << " sec\t\t";
-	cout << "average time per read: " << avgTime_per_read << " sec\n" << endl;
+	if (num == 0) 
+	{
+	    cout << n << " Simultaneous Readers #" << i << ":\t\t\t";
+	    cout << "time: " << time << " sec\t\t";
+	    cout << "average time per read: " << avgTime_per_read << " sec\n" << endl;
+	}
+
+	i = (num == 0) ? i : num;
+
 	*csv << i << "," << time << "," << avgTime_per_read << "\n";
 
 	sumRead_per_sec += avg;
@@ -305,30 +324,47 @@ void BenchmarkManager::getSimultaneousReadersOutput(int n)
     
     double avg_op_per_sec = double(n * trials) / sumTime; 
 
-    cout << "\n---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
-    cout << "[ Simul. Read Average Time: " << averageTime << " sec\t\t Number of Trials: " << trials; 
-    cout << "\t\t Total Time: " << sumTime << " sec\t\t" << " Estimated " << avg_op_per_sec << " reads/sec ]\n" << endl;
-    cout << "---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
+    if (num == 0)
+    {
+	cout << "\n---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
+	cout << "[ Simul. Read Average Time: " << averageTime << " sec\t\t Number of Trials: " << trials; 
+	cout << "\t\t Total Time: " << sumTime << " sec\t\t" << " Estimated " << avg_op_per_sec << " reads/sec ]\n" << endl;
+	cout << "---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
+    }
 
-    *csv << "\n" << "\n";
+    if (num == 0 || num == 100)
+    {
+	*csv << "\n" << "\n";
+    }
 }
 
 
 
-void BenchmarkManager::getSimultaneousTasksOutput(int n)
+void BenchmarkManager::getSimultaneousTasksOutput(int n, int num)
 {
-    *csv << n << " Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, \n";
+    if (num <= 10)
+    {
+	*csv << n << " Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, \n";
+    }
 
     vector<double> times;
 
-    for (int i = 1; i <= trials; i++)
+    int max = (num == 0) ? trials : 1;
+
+    for (int i = 1; i <= max; i++)
     {
 	double time = client->simultaneousTasks(n);
 	double avgTime_per_task = time / double(n);
 
-	cout << n << " Simultaneous Tasks #" << i << ":\t\t\t";
-	cout << "time: " << time << " sec\t\t";
-	cout << "average time per task: " << avgTime_per_task << " sec\n" << endl;
+	if (num == 0)
+	{
+	    cout << n << " Simultaneous Tasks #" << i << ":\t\t\t";
+	    cout << "time: " << time << " sec\t\t";
+	    cout << "average time per task: " << avgTime_per_task << " sec\n" << endl;
+	}
+	
+	i = (num == 0) ? i : num;
+
 	*csv << i << "," << time << "," << avgTime_per_task << "\n";
 
 	times.push_back(time);
@@ -345,30 +381,47 @@ void BenchmarkManager::getSimultaneousTasksOutput(int n)
     
     double avg_op_per_sec = double(n * trials) / sumTime; 
 
-    cout << "\n---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
-    cout << "[ Simul. Tasks Average Time: " << averageTime << " sec\t\t Number of Trials: " << trials; 
-    cout << "\t\t Total Time: " << sumTime << " sec\t\t" << " Estimated " << avg_op_per_sec << " tasks/sec ]\n" << endl;
-    cout << "---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
+    if (num == 0)
+    {
+	cout << "\n---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
+	cout << "[ Simul. Tasks Average Time: " << averageTime << " sec\t\t Number of Trials: " << trials; 
+	cout << "\t\t Total Time: " << sumTime << " sec\t\t" << " Estimated " << avg_op_per_sec << " tasks/sec ]\n" << endl;
+	cout << "---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
+    }
 
-    *csv << "\n" << "\n";
+    if (num == 0 || num == 100)
+    {
+	*csv << "\n" << "\n";
+    }
 }
 
 
 
-void BenchmarkManager::getTransactionsOutput(int n, double successPercentage)
+void BenchmarkManager::getTransactionsOutput(int n, double successPercentage, int num)
 {
-    *csv << n << " Simul. Transactions, Time Elapsed (sec), Average Time per Tasks, \n";
+    if (num <= 10)
+    {
+	*csv << n << " Simul. Transactions, Time Elapsed (sec), Average Time per Tasks, \n";
+    }
 
     vector<double> times;
 
-    for (int i = 1; i <= trials; i++)
+    int max = (num == 0) ? trials : 1;
+
+    for (int i = 1; i <= max; i++)
     {
 	double time = client->performTransactions(n, successPercentage);
 	double avgTime_per_transaction = time / double(n);
 
-	cout << n << " Simultaneous Transactions #" << i << ":\t\t\t";
-	cout << "time: " << time << " sec\t\t";
-	cout << "average time per transaction: " << avgTime_per_transaction << " sec\n" << endl;
+	if (num == 0)
+	{
+	    cout << n << " Simultaneous Transactions #" << i << ":\t\t\t";
+	    cout << "time: " << time << " sec\t\t";
+	    cout << "average time per transaction: " << avgTime_per_transaction << " sec\n" << endl;
+	}
+
+	i = (num == 0) ? i : num;
+
 	*csv << i << "," << time << "," << avgTime_per_transaction << "\n";
 
 	times.push_back(time);
@@ -385,10 +438,16 @@ void BenchmarkManager::getTransactionsOutput(int n, double successPercentage)
     
     double avg_op_per_sec = double(n * trials) / sumTime; 
 
-    cout << "\n---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
-    cout << "[ Simul. Transactions Average Time: " << averageTime << " sec\t\t Number of Trials: " << trials; 
-    cout << "\t\t Total Time: " << sumTime << " sec\t\t" << " Estimated " << avg_op_per_sec << " transactions/sec ]\n" << endl;
-    cout << "---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
+    if (num == 0)
+    {
+	cout << "\n---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
+	cout << "[ Simul. Transactions Average Time: " << averageTime << " sec\t\t Number of Trials: " << trials; 
+	cout << "\t\t Total Time: " << sumTime << " sec\t\t" << " Estimated " << avg_op_per_sec << " transactions/sec ]\n" << endl;
+	cout << "---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
+    }
 
-    *csv << "\n" << "\n";
+    if (num == 0 || num == 100)
+    {
+	*csv << "\n" << "\n";
+    }
 }

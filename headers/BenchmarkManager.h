@@ -21,13 +21,13 @@ class BenchmarkManager
 	void disconnect();
 	void openCSV();
 	void closeCSV();
-	void getReadOutput();
-	void getInsertOutput();
-	void getUpdateOutput();
-	void getDeleteOutput();
-	void getSimultaneousReadersOutput(int n);
-	void getSimultaneousTasksOutput(int n);
-	void getTransactionsOutput(int n, double p);
+	void getReadOutput(int num = 0);
+	void getInsertOutput(int num = 0);
+	void getUpdateOutput(int num = 0);
+	void getDeleteOutput(int num = 0);
+	void getSimultaneousReadersOutput(int n, int num = 0);
+	void getSimultaneousTasksOutput(int n, int num = 0);
+	void getTransactionsOutput(int n, double p, int num = 0);
 	
     private:
 	DBClient* client;
