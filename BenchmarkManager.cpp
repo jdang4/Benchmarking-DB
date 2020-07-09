@@ -52,6 +52,9 @@ void BenchmarkManager::initializeDB()
     {
 	cout << "time: " << time << " sec" << endl;
     }
+
+    cout << "\n------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
+
 }
 
 void BenchmarkManager::openCSV()
@@ -102,7 +105,7 @@ void BenchmarkManager::getReadOutput()
 	if (time != -1.0) {
 	    cout << "READ #" << i << ":\t\t\t\t\t";
 	    cout << "time: " << time << " sec\n" << endl;
-	    *csv << i << ", " << time << ", \n";
+	    *csv << i << "," << time << "\n";
 
 	    times.push_back(time);
 	}
@@ -146,7 +149,7 @@ void BenchmarkManager::getInsertOutput()
 	{
 	    cout << "INSERTION #" << i << ":\t\t\t\t\t";
 	    cout << "time: " << time << " sec\n" << endl;
-	    *csv << i << ", " << time << ", \n";
+	    *csv << i << "," << time << "\n";
 
 	    times.push_back(time);
 	}
@@ -192,7 +195,7 @@ void BenchmarkManager::getUpdateOutput()
 	{	
 	    cout << "UPDATE #" << i << ":\t\t\t\t\t";
 	    cout << "time: " << time << " sec\n" << endl;
-	    *csv << i << ", " << time << ", \n";
+	    *csv << i << "," << time << "\n";
 
 	    times.push_back(time);
 	}
@@ -237,7 +240,7 @@ void BenchmarkManager::getDeleteOutput()
 	{
 	    cout << "DELETION #" << i << ":\t\t\t\t\t"; 
 	    cout << "time: " << time << " sec\n" << endl;
-	    *csv << i << ", " << time << ", \n";
+	    *csv << i << "," << time << "\n";
 	    
 	    times.push_back(time);
 	}
@@ -284,7 +287,7 @@ void BenchmarkManager::getSimultaneousReadersOutput(int n)
 	cout << n << " Simultaneous Readers #" << i << ":\t\t\t";
 	cout << "time: " << time << " sec\t\t";
 	cout << "average time per read: " << avgTime_per_read << " sec\n" << endl;
-	*csv << i << ", " << time << ", " << avgTime_per_read << ", \n";
+	*csv << i << "," << time << "," << avgTime_per_read << "\n";
 
 	sumRead_per_sec += avg;
 
@@ -326,7 +329,7 @@ void BenchmarkManager::getSimultaneousTasksOutput(int n)
 	cout << n << " Simultaneous Tasks #" << i << ":\t\t\t";
 	cout << "time: " << time << " sec\t\t";
 	cout << "average time per task: " << avgTime_per_task << " sec\n" << endl;
-	*csv << i << ", " << time << ", " << avgTime_per_task << ", \n";
+	*csv << i << "," << time << "," << avgTime_per_task << "\n";
 
 	times.push_back(time);
     }
@@ -366,7 +369,7 @@ void BenchmarkManager::getTransactionsOutput(int n, double successPercentage)
 	cout << n << " Simultaneous Transactions #" << i << ":\t\t\t";
 	cout << "time: " << time << " sec\t\t";
 	cout << "average time per transaction: " << avgTime_per_transaction << " sec\n" << endl;
-	*csv << i << ", " << time << ", " << avgTime_per_transaction << ", \n";
+	*csv << i << "," << time << "," << avgTime_per_transaction << "\n";
 
 	times.push_back(time);
     }

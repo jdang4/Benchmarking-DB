@@ -48,7 +48,7 @@ int main()
 
     bm->openCSV();
 
-    bm->initializeDB();
+//    bm->initializeDB();
     
     cout << "READING 1 KEY BENCHMARK: \n\n\n\n" << endl;
 

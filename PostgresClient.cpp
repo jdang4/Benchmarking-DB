@@ -46,6 +46,7 @@ void PostgresClient::connect()
 void PostgresClient::disconnect()
 {
     postgres->disconnect();
+    cout << "POSTGRESQL DISCONNECTED\n" << endl;
 }
 
 
@@ -226,9 +227,11 @@ double PostgresClient::simultaneousReaders(int n, string key)
 
 	    string stmt = "SELECT * FROM session WHERE ID = " + aKey + ";";
 
-	    nontransaction query(*tmp);
+	    work query(*tmp);
 
 	    query.exec(stmt);
+
+	    query.commit();
 
 	    tmp->disconnect();
 
@@ -275,6 +278,16 @@ double PostgresClient::simultaneousTasks(int n)
 
     copy(keySet.begin(), keySet.end(), randomKeys);
 
+    if (n <= 0)
+    {
+	return -1;
+    }
+
+    else if (n == 1)
+    {
+	return readEntry(to_string(randomKeys[0]));
+    }
+
     vector<thread> thread_pool;
 
     auto read = [&](string aKey) {
@@ -284,9 +297,11 @@ double PostgresClient::simultaneousTasks(int n)
 
 	    string stmt = "SELECT * FROM session WHERE ID = " + aKey + ";";
 
-	    nontransaction query(*tmp);
+	    work query(*tmp);
 
 	    query.exec(stmt);
+
+	    query.commit();
 
 	    tmp->disconnect();
 
@@ -322,16 +337,6 @@ double PostgresClient::simultaneousTasks(int n)
 	}
 
     };
-
-    if (n <= 0)
-    {
-	return -1;
-    }
-
-    else if (n == 1)
-    {
-	read(to_string(randomKeys[0]));
-    }
 
     auto start = chrono::high_resolution_clock::now();
 
@@ -377,7 +382,7 @@ double PostgresClient::performTransactions(int n, double successPercentage)
 	    string stmt = "INSERT INTO session (ID, DATA) VALUES (" \
 			   + aKey + ", '" + dataVal + "' );";
 
-	    nontransaction query(*tmp);
+	    work query(*tmp);
 
 	    query.exec(stmt);
 
@@ -390,6 +395,8 @@ double PostgresClient::performTransactions(int n, double successPercentage)
 	    stmt = "DELETE FROM session WHERE ID = " + aKey + ";";
 
 	    query.exec(stmt);
+
+	    query.commit();
 
 	    tmp->disconnect();
 
@@ -408,7 +415,7 @@ double PostgresClient::performTransactions(int n, double successPercentage)
 	    string stmt = "INSERT INTO session (ID, DATA) VALUES (" \
 			   + aKey + ", '" + dataVal + "' );";
 
-	    nontransaction query(*tmp);
+	    work query(*tmp);
 
 	    query.exec(stmt);
 
@@ -417,6 +424,8 @@ double PostgresClient::performTransactions(int n, double successPercentage)
 	    stmt = "DELETE FROM session WHERE ID = " + aKey + ";";
 
 	    query.exec(stmt);
+
+	    query.commit();
 
 	    tmp->disconnect();
 	    

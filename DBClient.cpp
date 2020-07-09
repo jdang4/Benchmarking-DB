@@ -92,7 +92,7 @@ void DBClient::connect()
 
 void DBClient::disconnect() 
 {
-    cout << "DB disconnected" << endl;
+    cout << "DB disconnected\n" << endl;
 }
 
 /**

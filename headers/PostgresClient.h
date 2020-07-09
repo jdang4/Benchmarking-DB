@@ -6,6 +6,8 @@
 #include <set>
 #include <chrono>
 
+using namespace pqxx;
+
 class DBClient;
 
 class PostgresClient : public DBClient
@@ -25,10 +27,11 @@ class PostgresClient : public DBClient
 	double performTransactions(int n, double p) override;
 
     private:
-	pqxx::connection* postgres;
+	connection* postgres;
 	std::string host;
 	char* dataVal;
 	char* newDataVal;
+
 };
 
 #endif
