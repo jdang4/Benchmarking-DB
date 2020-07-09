@@ -1,4 +1,25 @@
 from csv import reader
+import matplotlib.pyplot as plt 
+
+def printReadsOne(m) :
+    data = m[0]
+    x = []
+    y = []
+
+    for nums in data :
+        x.append(int(nums[0]))
+        y.append(float(nums[1]))
+
+    plt.plot(x, y)
+
+    plt.xlabel('Trials')
+    plt.ylabel('Elapsed Time (sec)')
+
+    plt.title('Reading 1 Key')
+
+    print('showing graph')
+    plt.show()
+
 
 if __name__ == "__main__" :
 
@@ -21,21 +42,20 @@ if __name__ == "__main__" :
             if count < 5 :
                 if header == 0 :
                     myMap[index].append(row)
-                print(row)
+                #print(row)
 
             elif count == 7 :
                 count = -1
                 index += 1
                 myMap[index] = []
-                print()
+                #print()
 
             count += 1
 
 
-    print("\n\n")
+    #print("\n\n")
 
-    for read in myMap[12] :
-        print(read)
+    printReadsOne(myMap)
                 
 
         
