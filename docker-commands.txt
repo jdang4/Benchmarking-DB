@@ -34,6 +34,18 @@ sudo docker run --name redis-no-rdb -e ALLOW_EMPTY_PASSWORD=yes -v /home/jonatha
 
 
 
+Redis Master w/ rdb & aof
+
+sudo docker run --name redis-master -v /home/jonathand/docker/Benchmark/config/redis.conf:/opt/bitnami/redis/mounted-etc/redis.conf -v /var/lib/redis:/bitnami/redis/data -e REDIS_REPLICATION_MODE=master -e ALLOW_EMPTY_PASSWORD=yes --rm -d bitnami/redis:latest
+
+
+
+Redis Replica w/ redb & aof
+
+sudo docker run --name redis-replica -v /home/jonathand/docker/Benchmark/config/redis.conf:/opt/bitnami/redis/mounted-etc/redis.conf -v /var/lib/redis:/bitnami/redis/data --link redis-master:master -e REDIS_REPLICATION_MODE=slave -e REDIS_MASTER_HOST=master -e ALLOW_EMPTY_PASSWORD=yes --rm -d bitnami/redis:latest
+
+
+
 Redis Master w/o rdb
 
 sudo docker run --name redis-master-no-rdb -v /home/jonathand/docker/Benchmark/redis-no-rdb.conf:/opt/bitnami/redis/mounted-etc/redis.conf -v /var/lib/redis/no-rdb:/bitnami/redis/data -e REDIS_REPLICATION_MODE=master -e ALLOW_EMPTY_PASSWORD=yes --rm -d bitnami/redis:latest

@@ -9,6 +9,8 @@ int main()
 {
     int db;
     string host;
+    string initialize_option;
+    bool initialize_db = false;
 
     cout << "\nWELCOME TO DB BENCHMARK APPLICATION!\n" << endl;
     cout << "Select the DB to benchmark:" << endl;
@@ -17,6 +19,16 @@ int main()
 
     cout << "\nEnter in DB Num: ";
     cin >> db;
+
+    cout << endl;
+
+    cout << "Do you want to initialize the DB? [y/n]: ";
+    cin >> initialize_option;
+
+    if (initialize_option == "y") 
+    {
+	initialize_db = true;
+    }
 
     if (db == 2)
     {
@@ -48,7 +60,10 @@ int main()
 
     bm->openCSV();
 
-//    bm->initializeDB();
+    if (initialize_db)
+    {
+	bm->initializeDB();
+    }
     
     cout << "READING 1 KEY BENCHMARK: \n\n\n\n" << endl;
 
