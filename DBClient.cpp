@@ -185,7 +185,7 @@ double DBClient::simultaneousReaders(int n, string key)
 /**
  * Simulates having multiple of tasks happening at the same time.
  * The tasks done are either reading or doing an update on an entry. 
- * The reading/modifying is split 5-1:5-1 and is based on the number 
+ * The reading/modifying is split 50:50 and is based on the number 
  * of simultaneous tasks going on.
  *
  * @param n - the number of simultaneous tasks
@@ -200,7 +200,18 @@ double DBClient::simultaneousTasks(int n)
 }
 
 
-
+/**
+ * Simulates having multiple of transactions happening at the same time.
+ * The transactions done are either a success or a failure. A success transaction performs
+ * 1 insert, 8 simultaneous read/modify, and 1 delete. A fail transaction performs 1 insert and
+ * 1 delete.
+ *
+ * @param n - the number of simultaneous threads
+ * @double p - the success percentage
+ *
+ * @return a double value of the time it took for all the 
+ * simultaneous transactions going on
+ */
 double DBClient::performTransactions(int n, double p)
 {
     cout << "Method is ran from the DBClient...." << endl;

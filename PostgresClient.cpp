@@ -18,6 +18,9 @@ PostgresClient::PostgresClient(string host_name) : DBClient()
 PostgresClient::~PostgresClient() {}
 
 
+/*
+ * see description at DBClient::connect
+ */
 void PostgresClient::connect() 
 {
     try {
@@ -42,7 +45,9 @@ void PostgresClient::connect()
 }
 
 
-
+/*
+ * see description at DBClient::disconnect
+ */
 void PostgresClient::disconnect()
 {
     postgres->disconnect();
@@ -50,6 +55,9 @@ void PostgresClient::disconnect()
 }
 
 
+/*
+ * see description at DBClient::initializeDB()
+ */
 double PostgresClient::initializeDB()
 {
     double time;
@@ -103,8 +111,9 @@ double PostgresClient::initializeDB()
     return time;
 }
 
-
-
+/*
+ * see description at DBClient::readEntry
+ */
 double PostgresClient::readEntry(string key)
 {
     try {
@@ -130,8 +139,9 @@ double PostgresClient::readEntry(string key)
     return -1;
 }
 
-
-
+/*
+ * see description at DBClient::insertEntry
+ */
 double PostgresClient::insertEntry(string key)
 {
     try {
@@ -158,7 +168,9 @@ double PostgresClient::insertEntry(string key)
 }
 
 
-
+/*
+ * see description at DBClient::updateEntry
+ */
 double PostgresClient::updateEntry(string key)
 {
     try {
@@ -188,7 +200,9 @@ double PostgresClient::updateEntry(string key)
 }
 
 
-
+/*
+ * see description at DBClient::deleteEntry
+ */
 double PostgresClient::deleteEntry(string key)
 {
     try {
@@ -214,14 +228,17 @@ double PostgresClient::deleteEntry(string key)
 }
 
 
-
-
+/*
+ * see description at DBClient::simultaneousReaders
+ */
 double PostgresClient::simultaneousReaders(int n, string key) 
 {
     vector<thread> thread_pool;
 
     auto read = [&](string aKey) {
 	try {
+
+	    // idea to have each thread have its own connection to the DB (this client only singe-threaded)
 	    connection* tmp = new connection("dbname = SDB user = postgres password = Juni#20 \
 		hostaddr = " + host + " port = 5432");
 
@@ -246,6 +263,7 @@ double PostgresClient::simultaneousReaders(int n, string key)
 	return -1;
     }
 
+    // no need to use threads
     else if (n == 1)
     {
 	return readEntry(key);
@@ -269,7 +287,9 @@ double PostgresClient::simultaneousReaders(int n, string key)
 }
 
 
-
+/*
+ * see description at DBClient::simultaneousTasks
+ */
 double PostgresClient::simultaneousTasks(int n)
 {
     set<int> keySet = DBClient::getRandomKeys(n, 1, 1000000);
@@ -283,6 +303,7 @@ double PostgresClient::simultaneousTasks(int n)
 	return -1;
     }
 
+    // no need to use threads
     else if (n == 1)
     {
 	return readEntry(to_string(randomKeys[0]));
@@ -290,11 +311,13 @@ double PostgresClient::simultaneousTasks(int n)
 
     vector<thread> thread_pool;
 
+    // defines what a read transaction composes of
     auto read = [&](string aKey) {
 	try {
 	    connection* tmp = new connection("dbname = SDB user = postgres password = Juni#20 \
 		hostaddr = " + host + " port = 5432");
 
+	    // performing a read
 	    string stmt = "SELECT * FROM session WHERE ID = " + aKey + ";";
 
 	    work query(*tmp);
@@ -312,6 +335,7 @@ double PostgresClient::simultaneousTasks(int n)
 
     };
 
+    // defines what a write transaction composes of
     auto write = [&](string aKey) {
 	try {
 	    connection* tmp = new connection("dbname = SDB user = postgres password = Juni#20 \
@@ -363,7 +387,9 @@ double PostgresClient::simultaneousTasks(int n)
 }
 
 
-
+/*
+ * see description at DBClient::performTransactions
+ */
 double PostgresClient::performTransactions(int n, double successPercentage)
 {
     if (successPercentage < 0 || successPercentage > 100 || n <= 0)
@@ -373,6 +399,7 @@ double PostgresClient::performTransactions(int n, double successPercentage)
 
     int numOfSuccess = n * successPercentage;
 
+    // defines what the success transaction composes of
     auto success = [&](string aKey)
     {
 	try {
@@ -386,12 +413,15 @@ double PostgresClient::performTransactions(int n, double successPercentage)
 
 	    query.exec(stmt);
 
+	    // having simultaneous readers/modifiers for each transaction
 	    simultaneousTasks(8);
 
+	    // doing a read
 	    stmt = "SELECT * FROM session WHERE ID = " + aKey + ";";
 
 	    query.exec(stmt);
 
+	    // doing a deletion
 	    stmt = "DELETE FROM session WHERE ID = " + aKey + ";";
 
 	    query.exec(stmt);
@@ -406,12 +436,14 @@ double PostgresClient::performTransactions(int n, double successPercentage)
 	}
     };
 
+    // defines what the fail transaction composes of
     auto fail = [&] (string aKey)
     {
 	try {
 	    connection* tmp = new connection("dbname = SDB user = postgres password = Juni#20 \
 		hostaddr = " + host + " port = 5432");
 
+	    // performing an insert
 	    string stmt = "INSERT INTO session (ID, DATA) VALUES (" \
 			   + aKey + ", '" + dataVal + "' );";
 
@@ -419,7 +451,7 @@ double PostgresClient::performTransactions(int n, double successPercentage)
 
 	    query.exec(stmt);
 
-	    simultaneousTasks(8);
+	    // performing a deletion
 
 	    stmt = "DELETE FROM session WHERE ID = " + aKey + ";";
 
@@ -442,16 +474,19 @@ double PostgresClient::performTransactions(int n, double successPercentage)
 
     auto start = chrono::high_resolution_clock::now();
 
+    // each thread will either perform a success transaction or a fail transaction
     for (int i = 0; i < n; i++)
     {
 	if (i < numOfSuccess)
 	{
+	    // doing a success transaction
 	    auto aKey = to_string(key);
 	    thread_pool.push_back(thread(success, aKey));
 	}
 
 	else
 	{
+	    // doing a fail transaction
 	    auto aKey = to_string(key);
 	    thread_pool.push_back(thread(fail, aKey));
 	}

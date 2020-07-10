@@ -106,7 +106,7 @@ void BenchmarkManager::getReadOutput(int num)
 
 	if (time != -1.0) {
 	    cout << "READ #" << i << ":\t\t\t\t\t";
-	    cout << "time: " << time << " sec\t\t\t";
+	    cout << "time: " << time << " sec\n" << endl;
 
 	    *csv << i << "," << time << "\n";
 

@@ -8,9 +8,7 @@
 using namespace sw::redis;
 using namespace std;
 
-/**
- * constructor 
- */
+
 RedisClient::RedisClient() : DBClient()
 {
     entryVal = DBClient::getEntryVal('a');
@@ -18,14 +16,11 @@ RedisClient::RedisClient() : DBClient()
 }
 
 
-/**
- * destructor
- */
 RedisClient::~RedisClient() {}
 
 
 /**
- * creates the connection to the running redis server (master) in a running container
+ * see description at DBClient::connect()
  */
 void RedisClient::connect()
 {
@@ -46,8 +41,7 @@ void RedisClient::connect()
 
 
 /**
- * creates a replica of the actual sdb by inserting 1 million entries with
- * each having a length of 6K bytes
+ * see description at DBClient::initializeDB()
  */
 double RedisClient::initializeDB() 
 {
@@ -82,7 +76,7 @@ double RedisClient::initializeDB()
 }
 
 /**
- * does a simple redis get (essentially doing a READ) on a given key
+ * see a description at DBClient::readEntry
  */
 double RedisClient::readEntry(string key)
 {
@@ -105,10 +99,7 @@ double RedisClient::readEntry(string key)
 
 
 /**
- * inserting an entry with the given key and automatically assigning
- * a 6K byte val to the entry
- *
- * @param key - the string value of the key to be inserted
+ * see description at DBClient::insertEntry()
  */
 double RedisClient::insertEntry(string key)
 {
@@ -130,12 +121,7 @@ double RedisClient::insertEntry(string key)
 }
 
 /**
- * doing an update on an existing entry in the Redis DB. The method
- * does verify if the key exists in order to differ from the insertEntry
- * method
- *
- * @param key - the string value of the key to be updated
- * @param newVal - the string value of the updated value
+ * see description at DBClient::updateEntry()
  */
 double RedisClient::updateEntry(string key) 
 {
@@ -166,9 +152,7 @@ double RedisClient::updateEntry(string key)
 }
 
 /**
- * deletes the entry with a key that matches the given key value
- *
- * @param key - the string value of the key to be deleted
+ * see description at DBClient::deleteEntry()
  */
 double RedisClient::deleteEntry(string key)
 {
@@ -188,6 +172,9 @@ double RedisClient::deleteEntry(string key)
     return -1.0;
 }
 
+/*
+ * see description at DBClient::simultaneousReaders
+ */
 double RedisClient::simultaneousReaders(int n, string key)
 {
     vector<thread> thread_pool;
@@ -224,8 +211,9 @@ double RedisClient::simultaneousReaders(int n, string key)
 
 }
 
-
-
+/*
+ * see description at DBClient::simultaneousTasks()
+ */
 double RedisClient::simultaneousTasks(int n)
 {
     set<int> keySet = DBClient::getRandomKeys(n, 1, 100000);
@@ -236,10 +224,12 @@ double RedisClient::simultaneousTasks(int n)
 
     vector<thread> thread_pool;
 
+    // defines what a read transaction composes of
     auto read = [&](string aKey) {
 	readEntry(aKey);
     };
 
+    // defines what a write transaction composes of
     auto write = [&](string aKey) {
 	updateEntry(aKey);
     };
@@ -249,13 +239,15 @@ double RedisClient::simultaneousTasks(int n)
 	return -1.0;
     }
 
+    // no need to use threads
     else if (n == 1)
     {
 	return readEntry(to_string(randomKeys[0]));
     }
 
     auto start = chrono::high_resolution_clock::now();
-    
+
+    // idea each thread does either a read or write transaction
     for (int i = 0; i < n; i += 2)
     {
 	auto readKey = to_string(randomKeys[i]);
@@ -279,7 +271,9 @@ double RedisClient::simultaneousTasks(int n)
 }
 
 
-
+/*
+ * see description at DBClient::performTransactions()
+ */
 double RedisClient::performTransactions(int n, double successPercentage)
 {
     if (successPercentage < 0 || successPercentage > 100 || n <= 0)
@@ -289,14 +283,19 @@ double RedisClient::performTransactions(int n, double successPercentage)
 
     int numOfSuccess = n * successPercentage;
 
+    // defines what the success transaction composes of
     auto success = [&] (string aKey)
     {
 	insertEntry(aKey);
+
+	// having simultaneous readers/modifiers for each transaction
 	simultaneousTasks(8);
+
 	readEntry(aKey);
 	deleteEntry(aKey);
     };
 
+    // defines what the fail transaction composes of
     auto fail = [&] (string aKey)
     {
 	insertEntry(aKey);
@@ -307,9 +306,9 @@ double RedisClient::performTransactions(int n, double successPercentage)
 
     int64_t key = 2000000;
 
-
     auto start = chrono::high_resolution_clock::now();
 
+    // each thread will either perform a success or a fail transaction
     for (int i = 0; i < n; i++)
     {
 	if (i < numOfSuccess)

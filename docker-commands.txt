@@ -78,9 +78,9 @@ sudo docker run --name redis-replica-no-aof -v /home/jonathand/docker/Benchmark/
 
 Postgres Master
 
-sudo docker run --name postgres-master -itd --rm --env 'PG_PASSWORD=Juni#20' --env 'DB_NAME=SDB' --env 'REPLICATION_USER=primary' --env 'REPLICATION_PASS=replication' -v /srv/docker/postgresql:/var/lib/postgresql sameersbn/postgresql:9.5-3 -c shared_buffers="27GB" -c max_connections=200
+sudo docker run --name postgres-master -itd --rm --env 'PG_PASSWORD=Juni#20' --env 'DB_NAME=SDB' --env 'REPLICATION_USER=primary' --env 'REPLICATION_PASS=replication' -v /srv/docker/postgresql:/var/lib/postgresql sameersbn/postgresql:9.5-3 -c shared_buffers="27GB" -c max_connections=250 -c checkpoint_completion_target=0.9 -c effective_io_concurrency=4 -c fsync="on" -c random_page_cost=2.5 -c work_mem="133MB" -c effective_cache_size="79GB" -c checkpoint_timeout="30min"
 
 
 Postgres Replica
 
-sudo docker run --name postgres-replica -itd --rm --link postgres-master:master --env 'REPLICATION_MODE=slave' --env 'REPLICATION_HOST=master' --env 'REPLICATION_USER=primary' --env 'REPLICATION_PASS=replication' -v /srv/docker/postgresql:/var/lib/postgresql sameersbn/postgresql:9.5-3 -c shared_buffers="27GB" -c max_connections=200
+sudo docker run --name postgres-replica -itd --rm --link postgres-master:master --env 'REPLICATION_MODE=slave' --env 'REPLICATION_HOST=master' --env 'REPLICATION_USER=primary' --env 'REPLICATION_PASS=replication' -v /srv/docker/postgresql:/var/lib/postgresql sameersbn/postgresql:9.5-3 
