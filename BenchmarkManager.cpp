@@ -92,13 +92,11 @@ void BenchmarkManager::closeCSV()
 }
 
 
-void BenchmarkManager::getReadOutput(int num)
+void BenchmarkManager::getReadOutput()
 {
     *csv << "Read Num, Time Elapsed (sec), \n";
 
     vector<double> times;
-
-    trials = (num == 0) ? trials : num;
 
     for (int i = 1; i <= trials; i++)
     {
@@ -136,15 +134,13 @@ void BenchmarkManager::getReadOutput(int num)
 
 
 
-void BenchmarkManager::getInsertOutput(int num)
+void BenchmarkManager::getInsertOutput()
 {
     *csv << "Insert Num, Time Elapased (sec), \n";
 
     vector<double> times;
 
     int64_t key = 2000000;
-
-    trials = (num == 0) ? trials : num;
 
     for (int i = 1; i <= trials; i++)
     {
@@ -184,15 +180,13 @@ void BenchmarkManager::getInsertOutput(int num)
 
 
 
-void BenchmarkManager::getUpdateOutput(int num)
+void BenchmarkManager::getUpdateOutput()
 {
     *csv << "Update Num, Time Elapsed (sec), \n";
 
     vector<double> times;
     
     int64_t key = 2000000;
-
-    trials = (num == 0) ? trials : num;
 
     for (int i = 1; i <= trials; i++)
     {
@@ -232,14 +226,12 @@ void BenchmarkManager::getUpdateOutput(int num)
 
 
 
-void BenchmarkManager::getDeleteOutput(int num)
+void BenchmarkManager::getDeleteOutput()
 {
     *csv << "Delete Num, Time Elapsed (sec), \n";
     vector<double> times;
 
     int64_t key = 2000000;
-
-    trials = (num == 0) ? trials : num;
 
     for (int i = 1; i <= trials; i++) 
     {
