@@ -98,9 +98,15 @@ void BenchmarkManager::getReadOutput()
 
     vector<double> times;
 
+    set<int> keySet = client->getRandomKeys(trials, 1, 1000000);
+
+    int randomKeys[trials];
+
+    copy(keySet.begin(), keySet.end(), randomKeys);
+
     for (int i = 1; i <= trials; i++)
     {
-	double time = client->readEntry("506550");
+	double time = client->readEntry(to_string(randomKeys[i - 1]));
 
 	if (time != -1.0) {
 	    cout << "READ #" << i << ":\t\t\t\t\t";
