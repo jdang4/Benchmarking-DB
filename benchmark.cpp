@@ -104,7 +104,7 @@ int main()
     double task_1 = 0, task_50 = 0, task_100 = 0;
     double transaction_1 = 0, transaction_50 = 0, transaction_100 = 0;
 
-    while (elapsedTime < 1200)
+    while (elapsedTime < 1800)
     {
 	cout << "READING 1 KEY BENCHMARK: \n\n\n\n" << endl;
 
