@@ -96,6 +96,8 @@ def getRunningStatsGraph(db, num, title) :
 
     plt.plot(timeStamp, values)
 
+    plt.xlim(0, 1200)
+
     plt.title(title)
     plt.xlabel('Running Time (sec)')
     plt.ylabel('Average Elapsed Time (sec)')
