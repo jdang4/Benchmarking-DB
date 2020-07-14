@@ -1,6 +1,7 @@
 from csv import reader
 import matplotlib.pyplot as plt 
 import sys
+import pandas as pd
 
 def oneKeyCommand(redis, postgres, num, title) :
     redis_data = redis[num]
@@ -74,11 +75,45 @@ def getDataFromCSV(file) :
     return myMap 
 
 
+def getRunningDataFromCSV(filename) :
+    df = pd.read_csv(filename)
+    
+    myMap = {}
+    index = 0
+
+    for column in df.columns :
+        myMap[index] = df[column].values.tolist()
+        index += 1
+
+    #print(myMap[1])
+    return myMap
+
+
+def getRunningStatsGraph(db, num, title) :
+    timeStamp = db[0]
+
+    values = db[num]
+
+    plt.plot(timeStamp, values)
+
+    plt.title(title)
+    plt.xlabel('Running Time (sec)')
+    plt.ylabel('Average Elapsed Time (sec)')
+
+    plt.show()
+
+
 if __name__ == "__main__" :
 
-    redis = getDataFromCSV("stats/redis-stats.csv")
-    postgres = getDataFromCSV("stats/postgres-stats.csv")
-     
+    #redis = getDataFromCSV("stats/redis-stats.csv")
+    #postgres = getDataFromCSV("stats/postgres-stats.csv")
+
+    redis = getRunningDataFromCSV("stats/redis-running-stats.csv")
+    postgres = getRunningDataFromCSV("stats/postgres-running-stats.csv")
+
+    getRunningStatsGraph(redis, 1, 'Reading 1 Key') 
+
+    """
     oneKeyCommand(redis, postgres, 0, 'Read 1 Key')
     oneKeyCommand(redis, postgres, 1, 'Insert 1 Key')
     oneKeyCommand(redis, postgres, 2, 'Update 1 Key')
@@ -87,6 +122,6 @@ if __name__ == "__main__" :
     oneKeyCommand(redis, postgres, 13, 'Simultaneous Readers')
     oneKeyCommand(redis, postgres, 14, 'Simultaneous Tasks')
     oneKeyCommand(redis, postgres, 15, 'Simultaneous Transactions')
-
+    """
     
         

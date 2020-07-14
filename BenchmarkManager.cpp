@@ -4,9 +4,10 @@
 
 using namespace std;
 
-BenchmarkManager::BenchmarkManager(int n)
+BenchmarkManager::BenchmarkManager(int n, bool option)
 {
     trials = n;
+    showOutputs = option;
 }
 
 BenchmarkManager::~BenchmarkManager() {}
@@ -92,7 +93,7 @@ void BenchmarkManager::closeCSV()
 }
 
 
-void BenchmarkManager::getReadOutput()
+double BenchmarkManager::getReadOutput()
 {
     *csv << "Read Num, Time Elapsed (sec), \n";
 
@@ -109,8 +110,11 @@ void BenchmarkManager::getReadOutput()
 	double time = client->readEntry(to_string(randomKeys[i - 1]));
 
 	if (time != -1.0) {
-	    cout << "READ #" << i << ":\t\t\t\t\t";
-	    cout << "time: " << time << " sec\n" << endl;
+	    if (showOutputs) 
+	    {
+		cout << "READ #" << i << ":\t\t\t\t\t";
+		cout << "time: " << time << " sec\n" << endl;
+	    }
 
 	    *csv << i << "," << time << "\n";
 
@@ -136,11 +140,13 @@ void BenchmarkManager::getReadOutput()
     cout << "---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
 
     *csv << "\n" << "\n";
+
+    return averageTime;
 }
 
 
 
-void BenchmarkManager::getInsertOutput()
+double BenchmarkManager::getInsertOutput()
 {
     *csv << "Insert Num, Time Elapased (sec), \n";
 
@@ -154,8 +160,12 @@ void BenchmarkManager::getInsertOutput()
 
 	if (time != -1.0)
 	{
-	    cout << "INSERTION #" << i << ":\t\t\t\t\t";
-	    cout << "time: " << time << " sec\n" << endl;
+	    if (showOutputs)
+	    {
+		cout << "INSERTION #" << i << ":\t\t\t\t\t";
+		cout << "time: " << time << " sec\n" << endl;
+	    }
+
 	    *csv << i << "," << time << "\n";
 
 	    times.push_back(time);
@@ -181,12 +191,13 @@ void BenchmarkManager::getInsertOutput()
     cout << "---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
 
     *csv << "\n" << "\n";
-   
+
+    return averageTime;
 }
 
 
 
-void BenchmarkManager::getUpdateOutput()
+double BenchmarkManager::getUpdateOutput()
 {
     *csv << "Update Num, Time Elapsed (sec), \n";
 
@@ -199,9 +210,13 @@ void BenchmarkManager::getUpdateOutput()
 	double time = client->updateEntry(to_string(key));
 
 	if (time != -1.0)
-	{	
-	    cout << "UPDATE #" << i << ":\t\t\t\t\t";
-	    cout << "time: " << time << " sec\n" << endl;
+	{
+	    if (showOutputs)
+	    {
+		cout << "UPDATE #" << i << ":\t\t\t\t\t";
+		cout << "time: " << time << " sec\n" << endl;
+	    }
+
 	    *csv << i << "," << time << "\n";
 
 	    times.push_back(time);
@@ -227,12 +242,13 @@ void BenchmarkManager::getUpdateOutput()
     cout << "---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
 
     *csv << "\n" << "\n";
-
+    
+    return averageTime;
 }
 
 
 
-void BenchmarkManager::getDeleteOutput()
+double BenchmarkManager::getDeleteOutput()
 {
     *csv << "Delete Num, Time Elapsed (sec), \n";
     vector<double> times;
@@ -245,8 +261,12 @@ void BenchmarkManager::getDeleteOutput()
 
 	if (time != -1.0) 
 	{
-	    cout << "DELETION #" << i << ":\t\t\t\t\t"; 
-	    cout << "time: " << time << " sec\n" << endl;
+	    if (showOutputs)
+	    {
+		cout << "DELETION #" << i << ":\t\t\t\t\t"; 
+		cout << "time: " << time << " sec\n" << endl;
+	    }
+
 	    *csv << i << "," << time << "\n";
 	    
 	    times.push_back(time);
@@ -272,12 +292,13 @@ void BenchmarkManager::getDeleteOutput()
     cout << "---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
 
     *csv << "\n" << "\n";
-
+    
+    return averageTime;
 }
 
 
 
-void BenchmarkManager::getSimultaneousReadersOutput(int n, int num)
+double BenchmarkManager::getSimultaneousReadersOutput(int n, int num)
 {
     if (num <= 10) 
     {
@@ -298,9 +319,12 @@ void BenchmarkManager::getSimultaneousReadersOutput(int n, int num)
 
 	if (num == 0) 
 	{
-	    cout << n << " Simultaneous Readers #" << i << ":\t\t\t";
-	    cout << "time: " << time << " sec\t\t";
-	    cout << "average time per read: " << avgTime_per_read << " sec\n" << endl;
+	    if (showOutputs)
+	    {
+		cout << n << " Simultaneous Readers #" << i << ":\t\t\t";
+		cout << "time: " << time << " sec\t\t";
+		cout << "average time per read: " << avgTime_per_read << " sec\n" << endl;
+	    }
 	}
 
 	i = (num == 0) ? i : num;
@@ -335,11 +359,13 @@ void BenchmarkManager::getSimultaneousReadersOutput(int n, int num)
     {
 	*csv << "\n" << "\n";
     }
+
+    return averageTime;
 }
 
 
 
-void BenchmarkManager::getSimultaneousTasksOutput(int n, int num)
+double BenchmarkManager::getSimultaneousTasksOutput(int n, int num)
 {
     if (num <= 10)
     {
@@ -357,9 +383,12 @@ void BenchmarkManager::getSimultaneousTasksOutput(int n, int num)
 
 	if (num == 0)
 	{
-	    cout << n << " Simultaneous Tasks #" << i << ":\t\t\t";
-	    cout << "time: " << time << " sec\t\t";
-	    cout << "average time per task: " << avgTime_per_task << " sec\n" << endl;
+	    if (showOutputs)
+	    {
+		cout << n << " Simultaneous Tasks #" << i << ":\t\t\t";
+		cout << "time: " << time << " sec\t\t";
+		cout << "average time per task: " << avgTime_per_task << " sec\n" << endl;
+	    }
 	}
 	
 	i = (num == 0) ? i : num;
@@ -392,11 +421,13 @@ void BenchmarkManager::getSimultaneousTasksOutput(int n, int num)
     {
 	*csv << "\n" << "\n";
     }
+
+    return averageTime;
 }
 
 
 
-void BenchmarkManager::getTransactionsOutput(int n, double successPercentage, int num)
+double BenchmarkManager::getTransactionsOutput(int n, double successPercentage, int num)
 {
     if (num <= 10)
     {
@@ -414,9 +445,12 @@ void BenchmarkManager::getTransactionsOutput(int n, double successPercentage, in
 
 	if (num == 0)
 	{
-	    cout << n << " Simultaneous Transactions #" << i << ":\t\t\t";
-	    cout << "time: " << time << " sec\t\t";
-	    cout << "average time per transaction: " << avgTime_per_transaction << " sec\n" << endl;
+	    if (showOutputs)
+	    {
+		cout << n << " Simultaneous Transactions #" << i << ":\t\t\t";
+		cout << "time: " << time << " sec\t\t";
+		cout << "average time per transaction: " << avgTime_per_transaction << " sec\n" << endl;
+	    }
 	}
 
 	i = (num == 0) ? i : num;
@@ -449,4 +483,6 @@ void BenchmarkManager::getTransactionsOutput(int n, double successPercentage, in
     {
 	*csv << "\n" << "\n";
     }
+
+    return averageTime;
 }

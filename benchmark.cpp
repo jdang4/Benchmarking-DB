@@ -2,6 +2,7 @@
 #include "headers/RedisClient.h"
 #include "headers/PostgresClient.h"
 #include "headers/BenchmarkManager.h"
+#include <chrono>
 
 using namespace std;
 
@@ -10,7 +11,10 @@ int main()
     int db;
     string host;
     string initialize_option;
+    string print_option;
+
     bool initialize_db = false;
+    bool printOutputs = true;
 
     cout << "\nWELCOME TO DB BENCHMARK APPLICATION!\n" << endl;
     cout << "Select the DB to benchmark:" << endl;
@@ -29,6 +33,17 @@ int main()
     {
 	initialize_db = true;
     }
+
+    cout << endl;
+
+    cout << "Do you want to show all the print outputs? [y/n]: ";
+    cin >> print_option;
+
+    if (print_option == "n")
+    {
+	printOutputs = false;
+    }
+
 
     if (db == 2)
     {
@@ -53,7 +68,17 @@ int main()
 
     cout << endl << endl;
 
-    BenchmarkManager* bm = new BenchmarkManager(5);
+    BenchmarkManager* bm = new BenchmarkManager(5, printOutputs);
+
+    string file = (db == 1) ? "stats/redis-running-stats.csv" : "stats/postgres-running-stats.csv";
+
+    if (remove(file.c_str()) != 0)
+    {
+	cout << "ERROR DELETING RUNNING STATS CSV FILE" << endl;
+	exit(1);
+    }
+
+    ofstream csv(file);
 
     bm->selectDB(db, host);
     bm->connect();
@@ -64,58 +89,88 @@ int main()
     {
 	bm->initializeDB();
     }
+
+    auto start = chrono::high_resolution_clock::now();
+
+    double elapsedTime = 0;
+
+    csv << "Timestamp,Reading,Inserting,Updating,Deleting,"; 
+    csv << "1 Simul. Reader,50 Simul. Reader,100 Simul. Reader,";
+    csv << "1 Simul. Task,50 Simul. Task,100 Simul. Task,";
+    csv << "1 Simul. Transaction,50 Simul. Transaction,100 Simul. Transaction\n";
+
+    double read = 0, insert = 0, update = 0, deletion = 0;
+    double reader_1 = 0, reader_50 = 0, reader_100 = 0;
+    double task_1 = 0, task_50 = 0, task_100 = 0;
+    double transaction_1 = 0, transaction_50 = 0, transaction_100 = 0;
+
+    while (elapsedTime < 1200)
+    {
+	cout << "READING 1 KEY BENCHMARK: \n\n\n\n" << endl;
+
+	read = bm->getReadOutput();
     
-    cout << "READING 1 KEY BENCHMARK: \n\n\n\n" << endl;
-
-    bm->getReadOutput();
+	cout << "INSERTING 1 KEY BENCHMARK: \n\n\n\n" << endl; 
     
-    cout << "INSERTING 1 KEY BENCHMARK: \n\n\n\n" << endl; 
+	insert = bm->getInsertOutput();
+
+	cout << "UPDATING 1 KEY BENCHMARK: \n\n\n\n" << endl;
+
+	update = bm->getUpdateOutput(); 
+
+	cout << "DELETING 1 KEY BENCHMARK: \n\n\n\n" << endl;
+
+	deletion = bm->getDeleteOutput();
+
+	cout << "SIMULTANEOUS READERS [1] BENCHMARK: \n\n\n\n" << endl;
+
+	reader_1 = bm->getSimultaneousReadersOutput(1);
     
-    bm->getInsertOutput();
-
-    cout << "UPDATING 1 KEY BENCHMARK: \n\n\n\n" << endl;
-
-    bm->getUpdateOutput(); 
-
-    cout << "DELETING 1 KEY BENCHMARK: \n\n\n\n" << endl;
-
-    bm->getDeleteOutput();
-
-    cout << "SIMULTANEOUS READERS [1] BENCHMARK: \n\n\n\n" << endl;
-
-    bm->getSimultaneousReadersOutput(1);
+	cout << "SIMULTANEOUS READERS [50] BENCHMARK: \n\n\n\n" << endl;
     
-    cout << "SIMULTANEOUS READERS [50] BENCHMARK: \n\n\n\n" << endl;
+	reader_50 = bm->getSimultaneousReadersOutput(50);
     
-    bm->getSimultaneousReadersOutput(50);
-    
-    cout << "SIMULTANEOUS READERS [100] BENCHMARK: \n\n\n\n" << endl;
+	cout << "SIMULTANEOUS READERS [100] BENCHMARK: \n\n\n\n" << endl;
      
-    bm->getSimultaneousReadersOutput(100);
+	reader_100 = bm->getSimultaneousReadersOutput(100);
 
-    cout << "SIMULTANEOUS TASKS [1] BENCHMARK: \n\n\n\n" << endl;
+	cout << "SIMULTANEOUS TASKS [1] BENCHMARK: \n\n\n\n" << endl;
 
-    bm->getSimultaneousTasksOutput(1);
+	task_1 = bm->getSimultaneousTasksOutput(1);
 
-    cout << "SIMULTANEOUS TASKS [50] BENCHMARK: \n\n\n\n" << endl;
+	cout << "SIMULTANEOUS TASKS [50] BENCHMARK: \n\n\n\n" << endl;
 
-    bm->getSimultaneousTasksOutput(50);
+	task_50 = bm->getSimultaneousTasksOutput(50);
 
-    cout << "SIMULTANEOUS TASKS [100] BENCHMARK: \n\n\n\n" << endl;
+	cout << "SIMULTANEOUS TASKS [100] BENCHMARK: \n\n\n\n" << endl;
 
-    bm->getSimultaneousTasksOutput(100);
+	task_100 = bm->getSimultaneousTasksOutput(100);
 
-    cout << "SIMULTANEOUS TRANSACTIONS [1] BENCHMARK: \n\n\n\n" << endl;
+	cout << "SIMULTANEOUS TRANSACTIONS [1] BENCHMARK: \n\n\n\n" << endl;
 
-    bm->getTransactionsOutput(1, 70.0);
+	transaction_1 = bm->getTransactionsOutput(1, 70.0);
 
-    cout << "SIMULTANEOUS TRANSACTIONS [50] BENCHMARK: \n\n\n\n" << endl;
+	cout << "SIMULTANEOUS TRANSACTIONS [50] BENCHMARK: \n\n\n\n" << endl;
 
-    bm->getTransactionsOutput(50, 70.0);
+	transaction_50 = bm->getTransactionsOutput(50, 70.0);
 
-    cout << "SIMULTANEOUS TRANSACTIONS [100] BENCHMARK:	\n\n\n\n" << endl;
+	cout << "SIMULTANEOUS TRANSACTIONS [100] BENCHMARK:	\n\n\n\n" << endl;
 
-    bm->getTransactionsOutput(100, 70.0);
+	transaction_100 = bm->getTransactionsOutput(100, 70.0);
+
+	auto end = chrono::high_resolution_clock::now();
+
+	auto elapsed = chrono::duration_cast<chrono::microseconds>(end - start);
+
+	elapsedTime = elapsed.count() * 1e-6;
+
+	csv << elapsedTime << "," << read << "," << insert << "," << update << "," << deletion << ",";
+	csv << reader_1 << "," << reader_50 << "," << reader_100 << ",";
+	csv << task_1 << "," << task_50 << "," << task_100 << ",";
+	csv << transaction_1 << "," << transaction_50 << "," << transaction_100 << "\n";
+    }
+
+    csv.close();
 
     /*
     for (int i = 10; i <= 100; i += 10)

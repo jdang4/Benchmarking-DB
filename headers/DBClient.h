@@ -21,10 +21,10 @@ class DBClient
 	virtual double simultaneousReaders(int n, std::string key);
 	virtual double simultaneousTasks(int n);
 	virtual double performTransactions(int n, double p);
+	std::set<int> getRandomKeys(int len, int min, int max);
 
     protected:
 	double calculateTime(std::chrono::time_point<std::chrono::high_resolution_clock> start, std::chrono::time_point<std::chrono::high_resolution_clock> end); 
-	std::set<int> getRandomKeys(int len, int min, int max);
 	
 };
 

@@ -12,7 +12,7 @@ class DBClient;
 class BenchmarkManager 
 {
     public:
-	BenchmarkManager(int n);
+	BenchmarkManager(int n, bool option);
 	~BenchmarkManager();
 
 	void selectDB(int db, std::string host);
@@ -21,18 +21,19 @@ class BenchmarkManager
 	void disconnect();
 	void openCSV();
 	void closeCSV();
-	void getReadOutput();
-	void getInsertOutput();
-	void getUpdateOutput();
-	void getDeleteOutput();
-	void getSimultaneousReadersOutput(int n, int num = 0);
-	void getSimultaneousTasksOutput(int n, int num = 0);
-	void getTransactionsOutput(int n, double p, int num = 0);
+	double getReadOutput();
+	double getInsertOutput();
+	double getUpdateOutput();
+	double getDeleteOutput();
+	double getSimultaneousReadersOutput(int n, int num = 0);
+	double getSimultaneousTasksOutput(int n, int num = 0);
+	double getTransactionsOutput(int n, double p, int num = 0);
 	
     private:
 	DBClient* client;
 	int trials;
 	int dbClient;
+	bool showOutputs;
 	std::ofstream* csv;
 };
 
