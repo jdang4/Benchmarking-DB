@@ -11,11 +11,19 @@ WORKDIR /benchmark
 
 COPY . /benchmark
 
+WORKDIR /benchmark/include
+
+RUN git clone https://github.com/redis/hiredis.git
+
 WORKDIR /benchmark/include/hiredis
 
 RUN make
 
 RUN make install
+
+WORKDIR /benchmark/include
+
+RUN git clone https://github.com/sewenew/redis-plus-plus.git
 
 WORKDIR /benchmark/include/redis-plus-plus/compile
 
