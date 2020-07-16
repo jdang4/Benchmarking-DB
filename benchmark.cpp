@@ -16,6 +16,8 @@ int main()
     bool initialize_db = false;
     bool printOutputs = true;
 
+    double durationTime = 1;
+
     cout << "\nWELCOME TO DB BENCHMARK APPLICATION!\n" << endl;
     cout << "Select the DB to benchmark:" << endl;
     cout << "1  -  Redis" << endl;
@@ -44,6 +46,16 @@ int main()
 	printOutputs = false;
     }
 
+    cout << endl;
+
+    cout << "Select how long (in seconds) you want program to last:" << endl;
+    cout << "NOTE: roughly less than 1 second, the program will run once\n" << endl;
+    
+    cout << "Enter time (in seconds): ";
+    cin >> durationTime;
+
+    durationTime = (durationTime > 0) ? durationTime : 1;
+
 
     if (db == 2)
     {
@@ -67,6 +79,7 @@ int main()
     }
 
     cout << endl << endl;
+
 
     BenchmarkManager* bm = new BenchmarkManager(5, printOutputs);
 
@@ -104,7 +117,7 @@ int main()
     double task_1 = 0, task_50 = 0, task_100 = 0;
     double transaction_1 = 0, transaction_50 = 0, transaction_100 = 0;
 
-    while (elapsedTime < 1800)
+    while (elapsedTime < durationTime)
     {
 	cout << "READING 1 KEY BENCHMARK: \n\n\n\n" << endl;
 
@@ -164,7 +177,9 @@ int main()
 
 	elapsedTime = elapsed.count() * 1e-6;
 
-	csv << elapsedTime << "," << read << "," << insert << "," << update << "," << deletion << ",";
+	double elapsedTime_min = double(elapsedTime) / double(60);
+
+	csv << elapsedTime_min << "," << read << "," << insert << "," << update << "," << deletion << ",";
 	csv << reader_1 << "," << reader_50 << "," << reader_100 << ",";
 	csv << task_1 << "," << task_50 << "," << task_100 << ",";
 	csv << transaction_1 << "," << transaction_50 << "," << transaction_100 << "\n";
