@@ -120,7 +120,7 @@ $ docker run --name redis-master -v ~/docker/Benchmark/config/redis.conf:/opt/bi
 
 ## 3) Get the network to be created on host2
 
-From my experience, in order to get the network that was created on host1, I had to create a running container that connects to that network. Once I am able to verify that the network that was created on host1 is now created on host2, I can then run the application on a different host
+From my experience, in order to get the network that was created on host1, I had to create a running container that connects to that network on host2. Once I am able to verify that the network that was created on host1 is now created on host2, I can then run the application on a different host
 
 ```console
 $ docker run --name running-redis -e ALLOW_EMPTY_PASSWORD=yes --rm -itd --network benchmark-network bitnami/redis:latest
