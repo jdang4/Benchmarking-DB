@@ -364,8 +364,9 @@ double PostgresClient::simultaneousTasks(int n)
 
     auto start = chrono::high_resolution_clock::now();
 
-    for (int i = 0; i < n; i += 2)
+    for (int i = 0; i < n; i++)
     {
+	/*
 	auto readKey = to_string(randomKeys[i]);
 	thread_pool.push_back(thread(read, readKey));
 
@@ -374,13 +375,27 @@ double PostgresClient::simultaneousTasks(int n)
 	    auto writeKey = to_string(randomKeys[i++]);
 	    thread_pool.push_back(thread(write, writeKey));
 	}
+	*/
+
+	auto key = to_string(randomKeys[i]);
+	if (i < (n/2)) 
+	{
+	    thread(read, key).detach();
+	}
+
+	else 
+	{
+	    thread(write, key).detach();
+	}
+
     }
 
+    /*
     for (auto &thread : thread_pool)
     {
 	thread.join();
     }
-
+    */
     auto end = chrono::high_resolution_clock::now();
 
     return DBClient::calculateTime(start, end);
@@ -477,27 +492,29 @@ double PostgresClient::performTransactions(int n, double successPercentage)
     // each thread will either perform a success transaction or a fail transaction
     for (int i = 0; i < n; i++)
     {
+	auto aKey = to_string(key);
+	
 	if (i < numOfSuccess)
 	{
 	    // doing a success transaction
-	    auto aKey = to_string(key);
-	    thread_pool.push_back(thread(success, aKey));
+	    thread(success, aKey).detach();
 	}
 
 	else
 	{
 	    // doing a fail transaction
-	    auto aKey = to_string(key);
-	    thread_pool.push_back(thread(fail, aKey));
+	    thread(fail, aKey).detach();
 	}
 
 	key += 1;
     }
 
+    /*
     for (auto &thread : thread_pool)
     {
 	thread.join();
     }
+    */
 
     auto end = chrono::high_resolution_clock::now();
 
