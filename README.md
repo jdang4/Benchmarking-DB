@@ -34,7 +34,7 @@ $ docker run --name redis-replica -v /home/jonathand/docker/Benchmark/config/red
 
 For more information on Bitnami Redis, please refer to the [bitnami-docker-redis](https://github.com/bitnami/bitnami-docker-redis) repository.
 
-#
+### 
 
 ### PostgreSQL
 
@@ -101,7 +101,7 @@ To add a manager to this swarm, run 'docker swarm join-token manager' and follow
 2) On host2, join the swarm as instructed above:
 
 ```console
-$ docker swarm joing --token <insert token> <insert ip address>:2377
+$ docker swarm join --token <insert token> <insert ip address>:2377
 ```
 
 ## 2) Create an Attachable Overlay Network
@@ -134,6 +134,6 @@ $ docker run --name running-redis -e ALLOW_EMPTY_PASSWORD=yes --rm -itd --networ
 $ docker run -it --rm --name jonathan-client --network benchmark-network -v ~/docker/Benchmarking-DB/stats:/benchmark/stats jonathan-cpp
 ```
 
-#
+### 
 
 For a more in-depth reference please visit the [Docker Swarm Walkthrough](https://docs.docker.com/network/network-tutorial-overlay/).
