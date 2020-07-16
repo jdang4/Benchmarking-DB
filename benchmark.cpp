@@ -21,8 +21,7 @@ int main()
     cout << "\nWELCOME TO DB BENCHMARK APPLICATION!\n" << endl;
     cout << "Select the DB to benchmark:" << endl;
     cout << "1  -  Redis" << endl;
-    cout << "2  -  PostgreSQL" << endl;
-
+    cout << "2  -  PostgreSQL" << endl; 
     cout << "\nEnter in DB Num: ";
     cin >> db;
 
@@ -183,6 +182,8 @@ int main()
 	csv << reader_1 << "," << reader_50 << "," << reader_100 << ",";
 	csv << task_1 << "," << task_50 << "," << task_100 << ",";
 	csv << transaction_1 << "," << transaction_50 << "," << transaction_100 << "\n";
+
+	sleep(2);
     }
 
     csv.close();
