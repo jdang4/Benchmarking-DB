@@ -12,6 +12,8 @@ def getCommandGraph(db, num, title) :
         x.append(int(nums[0]))
         y.append(float(nums[1]))
 
+    plt.plot(x, y)
+
     plt.title(title)
 
     plt.xlabel('Trials')
