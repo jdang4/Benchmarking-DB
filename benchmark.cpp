@@ -3,6 +3,7 @@
 #include "headers/PostgresClient.h"
 #include "headers/BenchmarkManager.h"
 #include <chrono>
+#include <unistd.h>
 
 using namespace std;
 
@@ -80,7 +81,7 @@ int main()
     cout << endl << endl;
 
 
-    BenchmarkManager* bm = new BenchmarkManager(1, printOutputs);
+    BenchmarkManager* bm = new BenchmarkManager(5, printOutputs);
 
     string file = (db == 1) ? "stats/redis-running-stats.csv" : "stats/postgres-running-stats.csv";
 
@@ -146,6 +147,8 @@ int main()
      
 	reader_100 = bm->getSimultaneousReadersOutput(100);
 
+	usleep(3000000);
+
 	cout << "SIMULTANEOUS TASKS [1] BENCHMARK: \n\n\n\n" << endl;
 
 	task_1 = bm->getSimultaneousTasksOutput(1);
@@ -157,6 +160,8 @@ int main()
 	cout << "SIMULTANEOUS TASKS [100] BENCHMARK: \n\n\n\n" << endl;
 
 	task_100 = bm->getSimultaneousTasksOutput(100);
+
+	usleep(3000000);
 
 	cout << "SIMULTANEOUS TRANSACTIONS [1] BENCHMARK: \n\n\n\n" << endl;
 
@@ -183,6 +188,7 @@ int main()
 	csv << task_1 << "," << task_50 << "," << task_100 << ",";
 	csv << transaction_1 << "," << transaction_50 << "," << transaction_100 << "\n";
 
+	usleep(3000000);
     }
 
     csv.close();
