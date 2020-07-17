@@ -3,45 +3,22 @@ import matplotlib.pyplot as plt
 import sys
 import pandas as pd
 
-def oneKeyCommand(redis, postgres, num, title) :
-    redis_data = redis[num]
-    postgres_data = postgres[num]
+def getCommandGraph(db, num, title) :
+    data = db[num]
     x = []
-    redis_y = []
-    postgres_y = []
+    y = []
 
-    max_val = 0
-
-    for nums in redis_data :
+    for nums in data :
         x.append(int(nums[0]))
-        redis_y.append(float(nums[1]))
+        y.append(float(nums[1]))
 
-    for val in redis_y :
-        if val > max_val :
-            max_val = val 
-
-    for nums in postgres_data :
-        postgres_y.append(float(nums[1]))
-    
-    for val in postgres_y :
-        if val > max_val :
-            max_val = val 
-
-
-    plt.plot(x, redis_y, 'r-', label = "redis")
-
-    plt.plot(x, postgres_y, 'g-', label = "postgreSQL")
-    
-    plt.ylim(0, max_val)
-
-    plt.title('Redis vs PostgreSQL %s' % title)
+    plt.title(title)
 
     plt.xlabel('Trials')
     plt.ylabel('Elapsed Time (sec)')
 
     plt.legend()
     plt.show()
-
 
 
 def getDataFromCSV(file) :
@@ -107,13 +84,26 @@ def getRunningStatsGraph(db, num, title) :
 
 if __name__ == "__main__" :
 
-    #redis = getDataFromCSV("stats/redis-stats.csv")
-    #postgres = getDataFromCSV("stats/postgres-stats.csv")
+    redis = getDataFromCSV("stats/redis-stats.csv")
+    postgres = getDataFromCSV("stats/postgres-stats.csv")
 
-    redis = getRunningDataFromCSV("stats/redis-running-stats.csv")
-    postgres = getRunningDataFromCSV("stats/postgres-running-stats.csv")
+    #redis = getRunningDataFromCSV("stats/redis-running-stats.csv")
+    #postgres = getRunningDataFromCSV("stats/postgres-running-stats.csv")
 
-    getRunningStatsGraph(redis, 1, 'Reading 1 Key') 
+    #getRunningStatsGraph(redis, 1, 'Reading 1 Key') 
+
+    getCommandGraph(redis, 0, 'Redis Read')
+    getCommandGraph(postgres, 0, 'PostgreSQL Read')
+
+    getCommandGraph(redis, 1, 'Redis Insert')
+    getCommandGraph(postgres, 1, 'PostgreSQL Insert')
+
+    getCommandGraph(redis, 2, 'Redis Update')
+    getCommandGraph(postgres, 2, 'PostgreSQL Update')
+
+    getCommandGraph(redis, 3, 'Redis Delete')
+    getCommandGraph(postgres, 3, 'PostgreSQL Delete')
+
 
     """
     oneKeyCommand(redis, postgres, 0, 'Read 1 Key')
