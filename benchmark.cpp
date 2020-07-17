@@ -80,7 +80,7 @@ int main()
     cout << endl << endl;
 
 
-    BenchmarkManager* bm = new BenchmarkManager(5, printOutputs);
+    BenchmarkManager* bm = new BenchmarkManager(1, printOutputs);
 
     string file = (db == 1) ? "stats/redis-running-stats.csv" : "stats/postgres-running-stats.csv";
 
@@ -183,7 +183,6 @@ int main()
 	csv << task_1 << "," << task_50 << "," << task_100 << ",";
 	csv << transaction_1 << "," << transaction_50 << "," << transaction_100 << "\n";
 
-	sleep(2);
     }
 
     csv.close();
