@@ -112,17 +112,21 @@ int main()
     csv << "1 Simul. Task,50 Simul. Task,100 Simul. Task,";
     csv << "1 Simul. Transaction,50 Simul. Transaction,100 Simul. Transaction\n";
 
+    //double read = 0;
+    /*
     double read = 0, insert = 0, update = 0, deletion = 0;
     double reader_1 = 0, reader_50 = 0, reader_100 = 0;
     double task_1 = 0, task_50 = 0, task_100 = 0;
     double transaction_1 = 0, transaction_50 = 0, transaction_100 = 0;
+    */
 
     while (elapsedTime < durationTime)
     {
 	cout << "READING 1 KEY BENCHMARK: \n\n\n\n" << endl;
 
-	read = bm->getReadOutput();
-    
+	bm->getReadOutput();
+
+    /*
 	cout << "INSERTING 1 KEY BENCHMARK: \n\n\n\n" << endl; 
     
 	insert = bm->getInsertOutput();
@@ -189,6 +193,15 @@ int main()
 	csv << transaction_1 << "," << transaction_50 << "," << transaction_100 << "\n";
 
 	usleep(3000000);
+    */
+
+    auto end = chrono::high_resolution_clock::now();
+
+	auto elapsed = chrono::duration_cast<chrono::microseconds>(end - start);
+
+	elapsedTime = elapsed.count() * 1e-6;
+
+	//double elapsedTime_min = double(elapsedTime) / double(60);
     }
 
     csv.close();

@@ -28,6 +28,9 @@ class RedisClient : public DBClient
 	char* entryVal;
 	char* newVal;
 	int numOfRuns;
+
+	//void* read(void* arg);
+	//void updateOne(string key);
 };
 
 #endif
