@@ -28,8 +28,9 @@ class RedisClient : public DBClient
 	char* entryVal;
 	char* newVal;
 	int numOfRuns;
-
-	template<typename Lambda>
+	
+	template<typename Lambda>	
+	double run_threads(Lambda f, int begin);
 	
 	//void* read(void* arg);
 	//void updateOne(string key);

@@ -99,7 +99,7 @@ double BenchmarkManager::getReadOutput()
 
     vector<double> times;
 
-    set<int> keySet = client->getRandomKeys(trials, 1, 1000000);
+    vector<int> keySet = client->getRandomKeys(trials, 1, 1000000);
 
     int randomKeys[trials];
 

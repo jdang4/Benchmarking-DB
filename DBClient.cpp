@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstring>
 #include <thread>
+#include <vector>
 #include "headers/DBClient.h"
 
 using namespace std;
@@ -60,25 +61,17 @@ double DBClient::calculateTime(chrono::time_point<std::chrono::high_resolution_c
  *
  * @return - returns a set of n random numbers
  **/
-set<int> DBClient::getRandomKeys(int n, int lower, int upper)
+vector<int> DBClient::getRandomKeys(int n, int lower, int upper)
 {
     srand(time(0));
-    set<int> keySet;
-    int count = 0;
+    vector<int> keySet;
+    //int count = 0;
 
-    while (count != n)
+    for (int i = 0; i < n; i++)
     {
-	// get a random num from 1 to 1 million
 	int randomNum = (rand() % (upper + 1 - lower)) + lower;
 
-	auto it = keySet.find(randomNum);
-
-	// if key is not already in the set
-	if (it == keySet.end() && randomNum <= 1000000)
-	{
-	    keySet.insert(randomNum);
-	    count++;
-	}
+	keySet.push_back(randomNum);
     }
 
     return keySet;
@@ -106,48 +99,6 @@ double DBClient::initializeDB()
 {
     cout << "Method is ran from the DBClient...." << endl;
     return -1;
-}
-
-template<typename Lambda>
-double DBClient::run_threads(Lambda f)
-{
-    int numOfThreads = 10;
-    //MailBox* mailboxes = new MailBox(numOfThreads);
-    vector<thread> thread_pool;
-
-    int perThread = numOfRuns / numOfThreads;
-    int remainingThreads = numOfRuns % numOfThreads;
-
-    int beginRange = 0;
-    int endRange = 0;
-    int runningCount = 1;
-
-    auto start = chrono::high_resolution_clock::now();
-
-    for (int i = 0; i < numOfThreads; i++)
-    {
-        beginRange = runningCount;
-        endRange = beginRange + perThread;
-
-        if (remainingThreads > 0)
-        {
-            remainingThreads--;
-            endRange++;
-        }
-        
-        thread_pool.push_back(thread(f, beginRange, endRange));
-
-        runningCount = endRange;
-    }
-
-    for (auto &thread : thread_pool)
-    {
-        thread.join();
-    }
-
-    auto end = chrono::high_resolution_clock::now();
-
-    return calculateTime(start, end);
 }
 
 /**

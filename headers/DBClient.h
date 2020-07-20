@@ -1,7 +1,7 @@
 #ifndef DBCLIENT_H
 #define DBCLIENT_H
 
-#include <set>
+#include <vector>
 #include <chrono>
 
 #define ENTRY_SIZE 6000
@@ -21,13 +21,11 @@ class DBClient
 	virtual double simultaneousReaders(int n, std::string key);
 	virtual double simultaneousTasks(int n);
 	virtual double performTransactions(int n, double p);
-	std::set<int> getRandomKeys(int len, int min, int max);
+	std::vector<int> getRandomKeys(int len, int min, int max);
 
     protected:
 	double calculateTime(std::chrono::time_point<std::chrono::high_resolution_clock> start, std::chrono::time_point<std::chrono::high_resolution_clock> end); 
 	
-	template<typename Lambda>
-	double run_threads(Lambda f);
 };
 
 #endif

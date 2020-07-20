@@ -292,7 +292,7 @@ double PostgresClient::simultaneousReaders(int n, string key)
  */
 double PostgresClient::simultaneousTasks(int n)
 {
-    set<int> keySet = DBClient::getRandomKeys(n, 1, 1000000);
+    vector<int> keySet = DBClient::getRandomKeys(n, 1, 1000000);
 
     int randomKeys[n];
 

@@ -122,23 +122,30 @@ int main()
 
     while (elapsedTime < durationTime)
     {
-	cout << "READING 1 KEY BENCHMARK: \n\n\n\n" << endl;
+	/*
+	cout << "READING BENCHMARK: \n\n\n\n" << endl;
 
 	bm->getReadOutput();
 
-	cout << "INSERTING 1 KEY BENCHMARK: \n\n\n\n" << endl; 
+	cout << "INSERTION BENCHMARK: \n\n\n\n" << endl; 
     
-	insert = bm->getInsertOutput();
+	bm->getInsertOutput();
 
-    /*
-	cout << "UPDATING 1 KEY BENCHMARK: \n\n\n\n" << endl;
+	cout << "UPDATING BENCHMARK: \n\n\n\n" << endl;
 
-	update = bm->getUpdateOutput(); 
+	bm->getUpdateOutput(); 
 
-	cout << "DELETING 1 KEY BENCHMARK: \n\n\n\n" << endl;
+	cout << "DELETION BENCHMARK: \n\n\n\n" << endl;
 
-	deletion = bm->getDeleteOutput();
+	bm->getDeleteOutput();
+	*/
 
+	cout << "SIMULTANEOUS TASKS [50] BENCHMARK: \n\n\n\n" << endl;
+
+	bm->getSimultaneousTasksOutput(50);
+
+
+	/*
 	cout << "SIMULTANEOUS READERS [1] BENCHMARK: \n\n\n\n" << endl;
 
 	reader_1 = bm->getSimultaneousReadersOutput(1);
@@ -197,9 +204,9 @@ int main()
 
     auto end = chrono::high_resolution_clock::now();
 
-	auto elapsed = chrono::duration_cast<chrono::microseconds>(end - start);
-
-	elapsedTime = elapsed.count() * 1e-6;
+    auto elapsed = chrono::duration_cast<chrono::microseconds>(end - start);
+    
+    elapsedTime = elapsed.count() * 1e-6;
 
 	//double elapsedTime_min = double(elapsedTime) / double(60);
     }

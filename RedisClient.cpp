@@ -1,7 +1,6 @@
 #include <iostream>
 #include <thread>
 #include <vector>
-#include <set>
 #include <chrono>
 #include "headers/RedisClient.h"
 
@@ -76,6 +75,49 @@ double RedisClient::initializeDB()
     return time;
 }
 
+
+template<typename Lambda>
+double RedisClient::run_threads(Lambda f, int begin)
+{
+    int numOfThreads = 10;
+    vector<thread> thread_pool;
+
+    int perThread = numOfRuns / numOfThreads;
+    int remainingThreads = numOfRuns % numOfThreads;
+
+    int beginRange, endRange;
+
+    int runningCount = begin;
+
+    auto start = chrono::high_resolution_clock::now();
+
+    for (int i = 0; i < numOfThreads; i++)
+    {
+        beginRange = runningCount;
+        endRange = beginRange + perThread;
+
+        if (remainingThreads > 0)
+        {
+            remainingThreads--;
+            endRange++;
+        }
+        
+        thread_pool.push_back(thread(f, beginRange, endRange));
+
+        runningCount = endRange;
+    }
+
+    for (auto &thread : thread_pool)
+    {
+        thread.join();
+    }
+
+    auto end = chrono::high_resolution_clock::now();
+
+    return DBClient::calculateTime(start, end);
+}
+
+
 /**
  * see a description at DBClient::readEntry
  */
@@ -93,8 +135,8 @@ double RedisClient::readEntry(string akey)
             exit(-1);
         }
     };
-
-	return DBClient::run_threads(read);
+    
+    return run_threads(read, 1);
 }
 
 
@@ -116,7 +158,7 @@ double RedisClient::insertEntry(string key)
         }
     };
 
-    return DBClient::run_threads(insert);
+    return run_threads(insert, 2000000);
 }
 
 /**
@@ -124,41 +166,42 @@ double RedisClient::insertEntry(string key)
  */
 double RedisClient::updateEntry(string key) 
 {
-    try {
-        auto start = chrono::high_resolution_clock::now();
-        
-        redis->set(key, newVal);
-        
-        auto end = chrono::high_resolution_clock::now();
-        
-        return DBClient::calculateTime(start, end);
+    auto update = [&](int start, int end) {
+	try {
+	    for (int i = start; i < end; i++)
+	    {
+		redis->set(to_string(i), newVal);
+	    }
+	
+	} catch (const Error &e) {
+	    cerr << "ERROR DURING UPDATE" << endl;
+	    exit(-1);
+	}
+    };
 
-    } catch (const Error &e) {
-        cout << "ERROR DURING UPDATE" << endl;
-    }
-
-    return -1.0;
+    return run_threads(update, 2000000);
 }
+
 
 /**
  * see description at DBClient::deleteEntry()
  */
 double RedisClient::deleteEntry(string key)
 {
-    try {
-	    auto start = chrono::high_resolution_clock::now();
+    auto deletion = [&](int start, int end) {
+	try {
+	    for (int i = start; i < end; i++)
+	    {
+		redis->del(to_string(i));
+	    }
+	
+	} catch (const Error &e) {
+	    cerr << "ERROR DURING DELETION" << endl;
+	    exit(-1);
+	}
+    };
 
-	    redis->del(key);
-
-	    auto end  = chrono::high_resolution_clock::now();
-
-	    return DBClient::calculateTime(start, end);
-    
-    } catch (const Error &e) {
-	    cout << "ERROR DURING DELETION" << endl;
-    }
-
-    return -1.0;
+    return run_threads(deletion, 2000000);
 }
 
 /*
@@ -206,7 +249,8 @@ double RedisClient::simultaneousReaders(int n, string key)
  */
 double RedisClient::simultaneousTasks(int n)
 {
-    set<int> keySet = DBClient::getRandomKeys(n, 1, 100000);
+    /*
+    vector<int> keySet = DBClient::getRandomKeys(n, 1, 100000);
 
     int randomKeys[n];
 
@@ -224,6 +268,51 @@ double RedisClient::simultaneousTasks(int n)
 	updateEntry(aKey);
     };
 
+    */
+    auto read_and_write = [&](int start, int end) {
+	auto read = [&](int key) {
+	    try {
+		redis->get(to_string(key));
+	    
+	    } catch (const Error &e) {
+		cerr << "ERROR READING" << endl;
+		exit(-1);
+	    }
+	};
+
+	auto write = [&](int key) {
+	    try {
+		redis->set(to_string(key), newVal);
+	    
+	    } catch (const Error &e) {
+		cerr << "ERROR UPDATING" << endl;
+		exit(-1);
+	    }
+	};
+
+	vector<thread> thread_pool;
+
+	int halfMark = (end - start) / 2;
+
+	for (int i = start; i < end; i++) 
+	{
+	    if (i < halfMark)
+	    {
+		//thread_pool.push_back(thread(read, i));
+		read(i);
+	    }
+
+	    else
+	    {
+		//thread_pool.push_back(thread(write, i));
+		write(i);
+	    }
+	}
+
+    };
+
+    return run_threads(read_and_write, 1);
+    /*
     if (n <= 0)
     {
 	return -1.0;
@@ -258,6 +347,7 @@ double RedisClient::simultaneousTasks(int n)
     auto end = chrono::high_resolution_clock::now();
 
     return DBClient::calculateTime(start, end);
+    */
 }
 
 
