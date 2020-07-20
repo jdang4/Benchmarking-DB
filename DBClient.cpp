@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <thread>
 #include "headers/DBClient.h"
 
 using namespace std;
@@ -107,6 +108,47 @@ double DBClient::initializeDB()
     return -1;
 }
 
+template<typename Lambda>
+double DBClient::run_threads(Lambda f)
+{
+    int numOfThreads = 10;
+    //MailBox* mailboxes = new MailBox(numOfThreads);
+    vector<thread> thread_pool;
+
+    int perThread = numOfRuns / numOfThreads;
+    int remainingThreads = numOfRuns % numOfThreads;
+
+    int beginRange = 0;
+    int endRange = 0;
+    int runningCount = 1;
+
+    auto start = chrono::high_resolution_clock::now();
+
+    for (int i = 0; i < numOfThreads; i++)
+    {
+        beginRange = runningCount;
+        endRange = beginRange + perThread;
+
+        if (remainingThreads > 0)
+        {
+            remainingThreads--;
+            endRange++;
+        }
+        
+        thread_pool.push_back(thread(f, beginRange, endRange));
+
+        runningCount = endRange;
+    }
+
+    for (auto &thread : thread_pool)
+    {
+        thread.join();
+    }
+
+    auto end = chrono::high_resolution_clock::now();
+
+    return calculateTime(start, end);
+}
 
 /**
  * Does a simple read on an entry in the DB

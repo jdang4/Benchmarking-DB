@@ -126,11 +126,11 @@ int main()
 
 	bm->getReadOutput();
 
-    /*
 	cout << "INSERTING 1 KEY BENCHMARK: \n\n\n\n" << endl; 
     
 	insert = bm->getInsertOutput();
 
+    /*
 	cout << "UPDATING 1 KEY BENCHMARK: \n\n\n\n" << endl;
 
 	update = bm->getUpdateOutput(); 

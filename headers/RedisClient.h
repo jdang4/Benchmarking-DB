@@ -30,7 +30,7 @@ class RedisClient : public DBClient
 	int numOfRuns;
 
 	template<typename Lambda>
-	double run_threads(Lambda f);
+	
 	//void* read(void* arg);
 	//void updateOne(string key);
 };

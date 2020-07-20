@@ -25,6 +25,9 @@ class DBClient
 
     protected:
 	double calculateTime(std::chrono::time_point<std::chrono::high_resolution_clock> start, std::chrono::time_point<std::chrono::high_resolution_clock> end); 
+	
+	template<typename Lambda>
+	double run_threads(Lambda f);
 };
 
 #endif
