@@ -110,25 +110,9 @@ void updateOne(string key)
 }
 */
 
-/**
- * see a description at DBClient::readEntry
- */
-double RedisClient::readEntry(string akey)
+template<typename Lambda>
+double RedisClient::run_threads(Lambda f)
 {
-    auto read = [&](int start, int end) {
-        try {
-            for (int i = start; i < end; i++)
-            {
-                redis->get(to_string(i));
-            }
-        
-        } catch (const Error &e) {
-            cerr << "ERROR DURING READ" << endl;
-            exit(-1);
-        }
-    };
-
-
     int numOfThreads = 10;
     //MailBox* mailboxes = new MailBox(numOfThreads);
     vector<thread> thread_pool;
@@ -152,9 +136,9 @@ double RedisClient::readEntry(string akey)
             remainingThreads--;
             endRange++;
         }
-
-	cout << "\nCREATING THREAD #" << i + 1 << endl;
-        thread_pool.push_back(thread(read, beginRange, endRange));
+        
+        cout << "CREATING THREAD #" << i + 1 << endl << endl;
+        thread_pool.push_back(thread(f, beginRange, endRange));
 
         runningCount = endRange;
     }
@@ -166,7 +150,29 @@ double RedisClient::readEntry(string akey)
 
     auto end = chrono::high_resolution_clock::now();
 
-	return DBClient::calculateTime(start, end);
+    return DBClient::calculateTime(start, end);
+}
+/**
+ * see a description at DBClient::readEntry
+ */
+double RedisClient::readEntry(string akey)
+{
+    auto read = [&](int start, int end) {
+        try {
+            for (int i = start; i < end; i++)
+            {
+                redis->get(to_string(i));
+            }
+        
+        } catch (const Error &e) {
+            cerr << "ERROR DURING READ" << endl;
+            exit(-1);
+        }
+    };
+
+
+
+	return run_threads(read);
 }
 
 
@@ -175,6 +181,20 @@ double RedisClient::readEntry(string akey)
  */
 double RedisClient::insertEntry(string key)
 {
+    
+    auto insert = [&](int start, int end) {
+        try {
+            for (int i = start; i < end; i++)
+            {
+                redis->set(to_string(i), entryVal);
+            }
+        
+        } catch (const Error &e) {
+            cerr << "ERROR DURING INSERT" << endl;
+            exit(-1);
+        }
+    };
+
     try {
         auto start = chrono::high_resolution_clock::now();
         
