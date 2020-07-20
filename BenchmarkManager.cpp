@@ -20,7 +20,7 @@ void BenchmarkManager::selectDB(int db, string host)
     switch(db)
     {
 	case 1: 
-	    client = new RedisClient();
+	    client = new RedisClient(1000000);
 	    break;
 
 	case 2:
@@ -120,7 +120,6 @@ double BenchmarkManager::getReadOutput()
 
 	    times.push_back(time);
 	}
-
     }
 
     double sumTime = 0;

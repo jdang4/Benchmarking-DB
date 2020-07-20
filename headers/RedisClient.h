@@ -11,7 +11,7 @@ class DBClient;
 class RedisClient : public DBClient
 {
     public:
-	RedisClient();
+	RedisClient(int n);
 	~RedisClient();
 	void connect() override;
 	double initializeDB() override;
@@ -27,6 +27,7 @@ class RedisClient : public DBClient
 	sw::redis::Redis* redis;
 	char* entryVal;
 	char* newVal;
+	int numOfRuns;
 };
 
 #endif

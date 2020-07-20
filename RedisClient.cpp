@@ -9,10 +9,11 @@ using namespace sw::redis;
 using namespace std;
 
 
-RedisClient::RedisClient() : DBClient()
+RedisClient::RedisClient(int n) : DBClient()
 {
     entryVal = DBClient::getEntryVal('a');
     newVal = DBClient::getEntryVal('j');
+    numOfRuns = n; 
 }
 
 
@@ -84,7 +85,10 @@ double RedisClient::readEntry(string key)
 
 	auto start = chrono::high_resolution_clock::now();
 
-	auto val = redis->get(key);
+	for (int i = 0; i < n; i++)
+	{
+	    auto val = redis->get(key);
+	}
 	
 	auto end = chrono::high_resolution_clock::now();
 	
@@ -104,10 +108,12 @@ double RedisClient::readEntry(string key)
 double RedisClient::insertEntry(string key)
 {
     try {
-
 	auto start = chrono::high_resolution_clock::now();
 
-	redis->set(key, entryVal);
+	for (int i = 0; i < 1; i++)
+	{
+	    redis->set(key, entryVal);
+	}
 
 	auto end = chrono::high_resolution_clock::now();
 

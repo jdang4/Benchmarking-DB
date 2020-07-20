@@ -81,7 +81,7 @@ int main()
     cout << endl << endl;
 
 
-    BenchmarkManager* bm = new BenchmarkManager(5, printOutputs);
+    BenchmarkManager* bm = new BenchmarkManager(1, printOutputs);
 
     string file = (db == 1) ? "stats/redis-running-stats.csv" : "stats/postgres-running-stats.csv";
 
