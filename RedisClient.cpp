@@ -26,7 +26,7 @@ RedisClient::~RedisClient() {}
 void RedisClient::connect()
 {
     try {
-	redis = new Redis("tcp://redis:6379");
+	redis = new Redis("tcp://redis-master:6379");
 	 
 	// verifying the connection by sending a command
 	redis->set("foo", "bar");
@@ -153,6 +153,7 @@ double RedisClient::readEntry(string akey)
             endRange++;
         }
 
+	cout << "\nCREATING THREAD #" << i + 1 << endl;
         thread_pool.push_back(thread(read, beginRange, endRange));
 
         runningCount = endRange;
