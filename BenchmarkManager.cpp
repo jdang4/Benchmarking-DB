@@ -24,7 +24,7 @@ void BenchmarkManager::selectDB(int db, string host)
 	    break;
 
 	case 2:
-	    client = new PostgresClient(host);
+	    client = new PostgresClient(host, 1000000, 10);
 	    break;
 
 	default:
@@ -296,7 +296,7 @@ double BenchmarkManager::getDeleteOutput()
 }
 
 
-
+/*
 double BenchmarkManager::getSimultaneousReadersOutput(int n, int num)
 {
     if (num <= 10) 
@@ -361,7 +361,7 @@ double BenchmarkManager::getSimultaneousReadersOutput(int n, int num)
 
     return averageTime;
 }
-
+*/
 
 
 double BenchmarkManager::getSimultaneousTasksOutput(int n, int num)

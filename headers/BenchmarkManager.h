@@ -25,7 +25,7 @@ class BenchmarkManager
 	double getInsertOutput();
 	double getUpdateOutput();
 	double getDeleteOutput();
-	double getSimultaneousReadersOutput(int n, int num = 0);
+	//double getSimultaneousReadersOutput(int n, int num = 0);
 	double getSimultaneousTasksOutput(int n, int num = 0);
 	double getTransactionsOutput(int n, double p, int num = 0);
 	

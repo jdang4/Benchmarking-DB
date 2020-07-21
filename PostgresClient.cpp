@@ -8,11 +8,15 @@
 using namespace std;
 using namespace pqxx;
 
-PostgresClient::PostgresClient(string host_name) : DBClient() 
+PostgresClient::PostgresClient(string host_name, int n, int threads) : DBClient() 
 {
     dataVal = DBClient::getEntryVal('a');
-    newDataVal = DBClient::getEntryVal('j');
-    host = host_name;
+    newVal = DBClient::getEntryVal('j');
+    connection_description = "dbname = SDB user = postgres password = Juni#20 \
+		hostaddr = " + host_name + " port = 5432";
+
+	numOfRuns = n;
+	numOfThreads = threads;
 }
 
 PostgresClient::~PostgresClient() {}
@@ -24,24 +28,24 @@ PostgresClient::~PostgresClient() {}
 void PostgresClient::connect() 
 {
     try {
-	postgres = new connection("dbname = SDB user = postgres password = Juni#20 \
-		hostaddr = " + host + " port = 5432");
+		connection* postgres = new connection(connection_description);
 
-	if (postgres->is_open())
-	{
-	    cout << "CONNECTED TO POSTGRESQL!\n" << endl; 
-	}
+		if (postgres->is_open())
+		{
+			cout << "CONNECTED TO POSTGRESQL!\n" << endl;
+			postgres->disconnect();
+		}
 
-	else
-	{
-	    cout << "CONNECTING TO POSTGRESQL FAILED\n" << endl;
-	    exit(1);
+		else 
+		{
+			cout << "CONNECTION TO POSTGRESQL FAILED!\n" << endl;
+			exit(-1);
+		}
+
+	} catch (const exception &e) {
+		cerr << e.what() << endl;
+		exit(-1);
 	}
-	 
-    } catch (const exception &e) {
-	cerr << e.what() << endl;
-	exit(1);
-    }
 }
 
 
@@ -50,10 +54,53 @@ void PostgresClient::connect()
  */
 void PostgresClient::disconnect()
 {
-    postgres->disconnect();
+    //postgres->disconnect();
     cout << "POSTGRESQL DISCONNECTED\n" << endl;
 }
 
+
+template<typename Lambda>
+double PostgresClient::run_threads(Lambda f, int begin, bool random, int n)
+{
+    vector<thread> thread_pool;
+
+    int actualNumOfRuns = (n == 0) ? numOfRuns : n;
+
+    int perThread = actualNumOfRuns / numOfThreads;
+
+    int remainingThreads = actualNumOfRuns % numOfThreads;
+
+    int beginRange, endRange;
+
+    int runningCount = begin;
+
+    auto start = chrono::high_resolution_clock::now();
+
+    for (int i = 0; i < numOfThreads; i++)
+    {
+        beginRange = runningCount;
+        endRange = beginRange + perThread;
+
+        if (remainingThreads > 0)
+        {
+            remainingThreads--;
+            endRange++;
+        }
+
+        thread_pool.push_back(thread(f, beginRange, endRange, random));
+
+        runningCount = endRange;
+    }
+
+    for (auto &thread : thread_pool)
+    {
+        thread.join();
+    }
+
+    auto end = chrono::high_resolution_clock::now();
+
+    return DBClient::calculateTime(start, end);
+}
 
 /*
  * see description at DBClient::initializeDB()
@@ -63,50 +110,57 @@ double PostgresClient::initializeDB()
     double time;
 
     try {
+		connection* postgres = new connection(connection_description);
+		
+		string stmt = "DROP TABLE IF EXISTS session;";
+		
+		work dropWork(*postgres);
+		
+		dropWork.exec(stmt);
+		
+		dropWork.commit();
 
-	auto start = chrono::high_resolution_clock::now();
-
-	string stmt = "DROP TABLE IF EXISTS session;";
-
-	work dropWork(*postgres);
-
-	dropWork.exec(stmt);
-
-	dropWork.commit();
+		postgres->disconnect();
 	
-	cout << "Creating the SDB..." << endl;
-
-	stmt = "CREATE TABLE session(" \
-		"ID	INT	PRIMARY KEY	NOT NULL," \
-		"DATA	TEXT	NOT NULL );";
-
-	work tableWork(*postgres);
-	
-	tableWork.exec(stmt);
-
-	tableWork.commit();
-
-	for(int64_t i = 1; i <= NUM_OF_ENTRIES; i++)
-	{
-	    stmt = "INSERT INTO session (ID, DATA) VALUES (" + to_string(i) + ", '" + dataVal + "' );";
-
-	    work insertWork(*postgres);
-
-	    insertWork.exec(stmt);
-
-	    insertWork.commit();
+	} catch (const exception &e) {
+		cerr << e.what() << endl;
+		time = -1;
 	}
 
-	auto end = chrono::high_resolution_clock::now();
+	cout << "Creating the SDB..." << endl;
 
-	cout << "SDB Creation Completed!\n" << endl;
+	auto createDB = [&](int start, int end, bool random) {
+		try {
+			connection* postgres = new connection(connection_description);
 
-	time = DBClient::calculateTime(start, end);
-    
-    } catch (const exception &e) {
-	cerr << e.what() << endl;
-	time = -1.0;
-    }
+			string stmt = "CREATE TABLE session(" \
+			"ID	INT	PRIMARY KEY	NOT NULL," \
+			"DATA	TEXT	NOT NULL );";
+
+			work query(*postgres);
+
+			query.exec(stmt);
+
+			query.commit();
+
+			for (int64_t i = start; i < end; i++)
+			{
+				stmt = "INSERT INTO session (ID, DATA) VALUES (" + to_string(i) + ", '" + dataVal + "' );";
+				
+				work insertWork(*postgres);
+				insertWork.exec(stmt);
+				insertWork.commit();
+			}
+
+			postgres->disconnect();
+		
+		} catch (const exception &e) {
+			cerr << e.what() << endl;
+			exit(-1);
+		}
+	};
+
+	time = run_threads(createDB, 1, false, 1000000);
 
     return time;
 }
@@ -114,89 +168,114 @@ double PostgresClient::initializeDB()
 /*
  * see description at DBClient::readEntry
  */
-double PostgresClient::readEntry(string key, bool randomOption)
+double PostgresClient::readEntry(string aKey, bool randomOption)
 {
-    try {
+	auto read = [&](int start, int end, bool random) {
+		try {
+			connection* postgres = new connection(connection_description);
 
-	work query(*postgres);
+			for (int i = start; i < end; i++)
+			{
+				srand(time(0));
+				int randomNum = (rand() % (end + 1 - start)) + start;  
+				int randomKey = (random) ? randomNum : i;
 
-	auto start = chrono::high_resolution_clock::now();
+				string key = to_string(randomKey);
 
-	string stmt = "SELECT * FROM session WHERE ID = " + key + ";";
+				string stmt = "SELECT * FROM session WHERE ID = " + key + ";";
 
-	query.exec(stmt);
+				work query(*postgres);
 
-	query.commit();
+				query.exec(stmt);
 
-	auto end = chrono::high_resolution_clock::now();
+				query.commit();
+			}
 
-	return DBClient::calculateTime(start, end);
-
-    } catch (const exception &e) {
-	cerr << e.what() << endl;
-    }
-
-    return -1;
+			postgres->disconnect();
+		
+		} catch (const exception &e) {
+			cerr << e.what() << endl;
+			exit(-1);
+		}
+	};
+    
+	return run_threads(read, 1, randomOption);
 }
 
 /*
  * see description at DBClient::insertEntry
  */
-double PostgresClient::insertEntry(string key)
+double PostgresClient::insertEntry(string aKey)
 {
-    try {
-	work query(*postgres);
+	auto insert = [&](int start, int end, bool random) {
+		try {
+			connection* postgres = new connection(connection_description);
 
-	auto start = chrono::high_resolution_clock::now();
+			for (int i = start; i < end; i++)
+			{
+				string key = to_string(i);
 
-	string stmt = "INSERT INTO session (ID, DATA) VALUES (" \
-		       + key + ", '" + dataVal + "' );";
+				string stmt = "INSERT INTO session (ID, DATA) VALUES (" \
+				+ key + ", '" + dataVal + "' );";
 
-	query.exec(stmt);
+				work query(*postgres);
 
-	query.commit();
+				query.exec(stmt);
 
-	auto end = chrono::high_resolution_clock::now();
+				query.commit();
+			}
 
-	return DBClient::calculateTime(start, end);
+			postgres->disconnect();
+		
+		} catch (const exception &e) {
+			cerr << e.what() << endl;
+			exit(-1);
+		}
+	};
     
-    } catch (const exception &e) {
-	cerr << e.what() << endl;
-    }
-
-    return -1;
+	return run_threads(insert, 2000000, false);
 }
 
 
 /*
  * see description at DBClient::updateEntry
  */
-double PostgresClient::updateEntry(string key, bool randomOption)
+double PostgresClient::updateEntry(string aKey, bool randomOption)
 {
-    try {
-	work query(*postgres);
+	auto update = [&](int start, int end, bool random) {
+		try {
+			connection* postgres = new connection(connection_description);
 
-	auto start = chrono::high_resolution_clock::now();
+			for (int i = start; i < end; i++)
+			{
+				srand(time(0));
+				int randomNum = (rand() % (end + 1 - start)) + start;  
+				int randomKey = (random) ? randomNum : i;
 
-	string stmt = "UPDATE session set DATA = '";
-	
-	stmt.append(newDataVal);
-	
-	stmt += "' WHERE ID = " + key + ";";
+				string key = to_string(randomKey);
 
-	query.exec(stmt);
+				string stmt = "UPDATE session set DATA = '";
 
-	query.commit();
+				stmt.append(newVal);
 
-	auto end = chrono::high_resolution_clock::now();
+				stmt += "' WHERE ID = " + key + ";";
 
-	return DBClient::calculateTime(start, end);
+				work query(*postgres);
+
+				query.exec(stmt);
+
+				query.commit();
+			}
+
+			postgres->disconnect();
+		
+		} catch (const exception &e) {
+			cerr << e.what() << endl;
+			exit(-1);
+		}
+	};
     
-    } catch (const exception &e) {
-	cerr << e.what() << endl;
-    }
-
-    return -1;
+	return run_threads(update, 2000000, randomOption);
 }
 
 
@@ -205,85 +284,36 @@ double PostgresClient::updateEntry(string key, bool randomOption)
  */
 double PostgresClient::deleteEntry(string key, bool randomOption)
 {
-    try {
-	work query(*postgres);
+    auto deletion = [&](int start, int end, bool random) {
+		try {
+			connection* postgres = new connection(connection_description);
 
-	auto start = chrono::high_resolution_clock::now();
+			for (int i = start; i < end; i++)
+			{
+				srand(time(0));
+				int randomNum = (rand() % (end + 1 - start)) + start;  
+				int randomKey = (random) ? randomNum : i;
 
-	string stmt = "DELETE FROM session WHERE ID = " + key + ";";
+				string key = to_string(randomKey);
 
-	query.exec(stmt);
+				string stmt = "DELETE FROM session WHERE ID = " + key + ";";
 
-	query.commit();
+				work query(*postgres);
 
-	auto end = chrono::high_resolution_clock::now();
+				query.exec(stmt);
 
-	return DBClient::calculateTime(start, end);
+				query.commit();
+			}
+
+			postgres->disconnect();
+		
+		} catch (const exception &e) {
+			cerr << e.what() << endl;
+			exit(-1);
+		}
+	};
     
-    } catch (const exception &e) {
-	cerr << e.what() << endl;
-    }
-
-    return -1;
-}
-
-
-/*
- * see description at DBClient::simultaneousReaders
- */
-double PostgresClient::simultaneousReaders(int n, string key) 
-{
-    vector<thread> thread_pool;
-
-    auto read = [&](string aKey) {
-	try {
-
-	    // idea to have each thread have its own connection to the DB (this client only singe-threaded)
-	    connection* tmp = new connection("dbname = SDB user = postgres password = Juni#20 \
-		hostaddr = " + host + " port = 5432");
-
-	    string stmt = "SELECT * FROM session WHERE ID = " + aKey + ";";
-
-	    work query(*tmp);
-
-	    query.exec(stmt);
-
-	    query.commit();
-
-	    tmp->disconnect();
-
-	} catch (const exception &e) {
-	    cerr << e.what() << endl;
-	    exit(1);
-	}
-    };
-
-    if (n <= 0)
-    {
-	return -1;
-    }
-
-    // no need to use threads
-    else if (n == 1)
-    {
-	return readEntry(key, false);
-    }
-
-    auto start = chrono::high_resolution_clock::now();
-
-    for (int i = 0; i < n; i++)
-    {
-	thread_pool.push_back(thread(read, key));
-    }
-
-    for (auto &thread : thread_pool)
-    {
-	thread.join();
-    }
-
-    auto end = chrono::high_resolution_clock::now();
-
-    return DBClient::calculateTime(start, end);
+	return run_threads(deletion, 2000000, randomOption);
 }
 
 
@@ -292,102 +322,66 @@ double PostgresClient::simultaneousReaders(int n, string key)
  */
 double PostgresClient::simultaneousTasks(int n, bool randomOption)
 {
-    vector<int> keySet = DBClient::getRandomKeys(n, 1, 1000000);
+	auto read_and_write = [&](int start, int end, bool random) {
+		try {
+			connection* postgres = new connection(connection_description);
 
-    int randomKeys[n];
+			auto read = [&](int aKey) {
+				string key = to_string(aKey);
 
-    copy(keySet.begin(), keySet.end(), randomKeys);
+				string stmt = "SELECT * FROM session WHERE ID = " + key + ";";
 
-    if (n <= 0)
-    {
-	return -1;
-    }
+				work query(*postgres);
 
-    // no need to use threads
-    else if (n == 1)
-    {
-	return readEntry(to_string(randomKeys[0]), false);
-    }
+				query.exec(stmt);
 
-    vector<thread> thread_pool;
+				query.commit();
+			};
 
-    // defines what a read transaction composes of
-    auto read = [&](string aKey) {
-	try {
-	    connection* tmp = new connection("dbname = SDB user = postgres password = Juni#20 \
-		hostaddr = " + host + " port = 5432");
+			auto write = [&](int aKey) {
+				string key = to_string(aKey);
 
-	    // performing a read
-	    string stmt = "SELECT * FROM session WHERE ID = " + aKey + ";";
+				string stmt = "UPDATE session set DATA = '";
 
-	    work query(*tmp);
+				stmt.append(newVal);
 
-	    query.exec(stmt);
+				stmt += "' WHERE ID = " + key + ";";
 
-	    query.commit();
+				work query(*postgres);
 
-	    tmp->disconnect();
+				query.exec(stmt);
 
-	} catch (const exception &e) {
-	    cerr << e.what() << endl;
-	    exit(1);
-	}
+				query.commit();
+			};
 
-    };
+			int halfMark = (end - start) / 2;
 
-    // defines what a write transaction composes of
-    auto write = [&](string aKey) {
-	try {
-	    connection* tmp = new connection("dbname = SDB user = postgres password = Juni#20 \
-		hostaddr = " + host + " port = 5432");
+			for (int i = start; i < end; i++)
+			{
+				srand(time(0));
+				int randomNum = (rand() % (end + 1 - start)) + start;  
+				int key = (random) ? randomNum : i;
 
-	    string stmt = "UPDATE session set DATA = '";
-	
-	    stmt.append(newDataVal);
-	
-	    stmt += "' WHERE ID = " + aKey + ";";
+				if (i < halfMark)
+				{
+					read(key);
+				}
 
-	    work query(*tmp);
+				else 
+				{
+					write(key);
+				}
+			}
 
-	    query.exec(stmt);
+			postgres->disconnect();
 
-	    query.commit();
+		} catch (const exception &e) {
+			cerr << e.what() << endl;
+			exit(-1);
+		}
+	};
 
-	    tmp->disconnect();
-
-	} catch (const exception &e) {
-	    cerr << e.what() << endl;
-	    exit(1);
-	}
-
-    };
-
-    auto start = chrono::high_resolution_clock::now();
-
-    for (int i = 0; i < n; i++)
-    {
-	auto key = to_string(randomKeys[i]);
-
-	if (i < (n/2)) 
-	{
-	    thread_pool.push_back(thread(read, key));
-	}
-
-	else 
-	{
-	    thread_pool.push_back(thread(write, key));
-	}
-
-    }
-
-    for (auto &thread : thread_pool)
-    {
-	thread.join();
-    }
-    
-    auto end = chrono::high_resolution_clock::now();
-
-    return DBClient::calculateTime(start, end);
+	return run_threads(read_and_write, 1, randomOption);
 }
 
 
@@ -398,115 +392,89 @@ double PostgresClient::performTransactions(int n, double successPercentage, bool
 {
     if (successPercentage < 0 || successPercentage > 100 || n <= 0)
     {
-	return -1;
+		return -1;
     }
 
-    int numOfSuccess = n * successPercentage;
+	auto transaction = [&](int start, int end, bool random) {
+		try {
+			connection* postgres = new connection(connection_description);
 
-    // defines what the success transaction composes of
-    auto success = [&](string aKey)
-    {
-	try {
-	    connection* tmp = new connection("dbname = SDB user = postgres password = Juni#20 \
-		hostaddr = " + host + " port = 5432");
+			auto success = [&](int64_t aKey) {
+				string key = to_string(aKey);
+				work query(*postgres);
+				
+				string stmt = "INSERT INTO session (ID, DATA) VALUES (" \
+				+ key + ", '" + dataVal + "' );";
 
-	    string stmt = "INSERT INTO session (ID, DATA) VALUES (" \
-			   + aKey + ", '" + dataVal + "' );";
+				query.exec(stmt);
 
-	    work query(*tmp);
+				for (int i = 0; i < 8; i++)
+				{
+					srand(time(0));
+					int randomKey = (rand() % (1000000 + 1 - 1)) + 1;
+					string tempKey = to_string(randomKey);
 
-	    query.exec(stmt);
+					if (i < 4)
+					{
+						stmt = "SELECT * FROM session WHERE ID = " + tempKey + ";";
+						query.exec(stmt);
+					}
 
-	    // having simultaneous readers/modifiers for each transaction
-	    simultaneousTasks(8, true);
+					else 
+					{
+						stmt = "UPDATE session set DATA = '";
+						
+						stmt.append(newVal);
+						
+						stmt += "' WHERE ID = " + tempKey + ";";
+					}
+				}
 
-	    // doing a read
-	    stmt = "SELECT * FROM session WHERE ID = " + aKey + ";";
+				stmt = "SELECT * FROM session WHERE ID = " + key + ";";
+				query.exec(stmt);
 
-	    query.exec(stmt);
+				stmt = "DELETE FROM session WHERE ID = " + key + ";";
+				query.exec(stmt);
+			};
 
-	    // doing a deletion
-	    stmt = "DELETE FROM session WHERE ID = " + aKey + ";";
+			auto fail = [&](int64_t aKey) {
+				string key = to_string(aKey);
+				work query(*postgres);
 
-	    query.exec(stmt);
+				string stmt = "INSERT INTO session (ID, DATA) VALUES (" \
+				+ key + ", '" + dataVal + "' );";
 
-	    query.commit();
+				query.exec(stmt);
 
-	    tmp->disconnect();
+				stmt = "DELETE FROM session WHERE ID = " + key + ";";
+				query.exec(stmt);
+			};
 
-	} catch (const exception &e) {
-	    cerr << e.what() << endl;
-	    exit(1);
-	}
-    };
+			int range = end - start;
 
-    // defines what the fail transaction composes of
-    auto fail = [&] (string aKey)
-    {
-	try {
-	    connection* tmp = new connection("dbname = SDB user = postgres password = Juni#20 \
-		hostaddr = " + host + " port = 5432");
+			int numOfSuccess = range * 0.7;
 
-	    // performing an insert
-	    string stmt = "INSERT INTO session (ID, DATA) VALUES (" \
-			   + aKey + ", '" + dataVal + "' );";
+			for (int64_t i = start; i < end; i++)
+			{
+				if (i < numOfSuccess)
+				{
+					success(i);
+				}
 
-	    work query(*tmp);
+				else
+				{
+					fail(i);
+				}
+				
+			}
 
-	    query.exec(stmt);
+			postgres->disconnect();
+		
+		} catch (const exception &e) {
+			cerr << e.what() << endl;
+			exit(-1);
+		}
+	};
 
-	    // performing a deletion
-
-	    stmt = "DELETE FROM session WHERE ID = " + aKey + ";";
-
-	    query.exec(stmt);
-
-	    query.commit();
-
-	    tmp->disconnect();
-	    
-	
-	} catch (const exception &e) {
-	    cerr << e.what() << endl;
-	    exit(1);
-	}
-    };
-
-    vector<thread> thread_pool;
-
-    int64_t key = 2000000;
-
-    auto start = chrono::high_resolution_clock::now();
-
-    // each thread will either perform a success transaction or a fail transaction
-    for (int i = 0; i < n; i++)
-    {
-	auto aKey = to_string(key);
-	
-	if (i < numOfSuccess)
-	{
-	    // doing a success transaction
-	    thread_pool.push_back(thread(success, aKey));
-	}
-
-
-	else
-	{
-	    // doing a fail transaction
-	    thread_pool.push_back(thread(fail, aKey));
-	}
-
-	key += 1;
-    }
-
-    
-    for (auto &thread : thread_pool)
-    {
-	thread.join();
-    }
-    
-
-    auto end = chrono::high_resolution_clock::now();
-
-    return DBClient::calculateTime(start, end);
+	return run_threads(transaction, 2000000, randomOption);
 }

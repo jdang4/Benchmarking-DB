@@ -19,13 +19,12 @@ class RedisClient : public DBClient
 	double insertEntry(std::string key) override;
 	double updateEntry(std::string key, bool randomOption) override;
 	double deleteEntry(std::string key, bool randomOption) override;
-	double simultaneousReaders(int n, std::string key) override;
 	double simultaneousTasks(int n, bool randomOption) override;
 	double performTransactions(int n, double p, bool randomOption) override;
 	 
     private:
 	sw::redis::Redis* redis;
-	char* entryVal;
+	char* dataVal;
 	char* newVal;
 	int numOfRuns;
 	int numOfThreads;

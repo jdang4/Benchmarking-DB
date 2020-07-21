@@ -159,23 +159,6 @@ double DBClient::deleteEntry(string key, bool randomOption)
 
 
 /**
- * Simulates having multiple of readers reading on the same
- * key at the same time
- *
- * @param n - the number of readers 
- * @param key - the key of the entry to have all the readers read
- *
- * @return a double value of the time it took for all the 
- * simultaneous readers to read the key
- **/
-double DBClient::simultaneousReaders(int n, string key)
-{
-    cout << "Method is ran from the DBClient...." << endl;
-    return -1;
-}
-
-
-/**
  * Simulates having multiple of tasks happening at the same time.
  * The tasks done are either reading or doing an update on an entry. 
  * The reading/modifying is split 50:50 and is based on the number 
