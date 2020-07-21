@@ -1,192 +1,24 @@
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.03935,0.000787
+Read Num, Time Elapsed (sec), 
+1,35.2474
+
+
+Insert Num, Time Elapased (sec), 
+1,76.6233
+
+
+Update Num, Time Elapsed (sec), 
+1,83.2892
+
+
+Delete Num, Time Elapsed (sec), 
+1,49.6047
 
 
 50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.031774,0.00063548
+1,81.5011,1.63002
 
 
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.028781,0.00057562
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.024477,0.00048954
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.022776,0.00045552
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.021449,0.00042898
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.021571,0.00043142
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.021504,0.00043008
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.021462,0.00042924
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.020421,0.00040842
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.020736,0.00041472
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.021121,0.00042242
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.020341,0.00040682
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.022726,0.00045452
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.020117,0.00040234
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.020297,0.00040594
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.02266,0.0004532
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.020508,0.00041016
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.020333,0.00040666
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.020256,0.00040512
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.021216,0.00042432
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.020447,0.00040894
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.020735,0.0004147
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.020299,0.00040598
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.02039,0.0004078
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.020501,0.00041002
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.020037,0.00040074
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.019142,0.00038284
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.019267,0.00038534
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.018936,0.00037872
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.019424,0.00038848
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.020065,0.0004013
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.018791,0.00037582
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.018499,0.00036998
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.018608,0.00037216
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.019275,0.0003855
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.018551,0.00037102
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.019208,0.00038416
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.018334,0.00036668
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.018619,0.00037238
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.017947,0.00035894
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.01845,0.000369
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.02051,0.0004102
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.018793,0.00037586
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.018474,0.00036948
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.020017,0.00040034
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.019178,0.00038356
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.019355,0.0003871
+50 Simul. Transactions, Time Elapsed (sec), Average Time per Tasks, 
+1,78.8824,1.57765
 
 

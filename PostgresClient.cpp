@@ -2,7 +2,7 @@
 #include <chrono>
 #include <vector>
 #include <thread>
-
+#include <mutex>
 #include "headers/PostgresClient.h"
 
 using namespace std;
@@ -87,6 +87,8 @@ double PostgresClient::run_threads(Lambda f, int begin, bool random, int n)
             endRange++;
         }
 
+	cout << "\nTHREAD #" << i + 1 << ": " << beginRange << " - " << endRange << endl << endl;
+
         thread_pool.push_back(thread(f, beginRange, endRange, random));
 
         runningCount = endRange;
@@ -114,11 +116,21 @@ double PostgresClient::initializeDB()
 		
 		string stmt = "DROP TABLE IF EXISTS session;";
 		
-		work dropWork(*postgres);
+		work query1(*postgres);
 		
-		dropWork.exec(stmt);
+		query1.exec(stmt);
+
+		query1.commit();
+
+		work query2(*postgres);
 		
-		dropWork.commit();
+		stmt = "CREATE TABLE session(" \
+			"ID	INT	PRIMARY KEY	NOT NULL," \
+			"DATA	TEXT	NOT NULL );";
+
+		query2.exec(stmt);
+
+		query2.commit();
 
 		postgres->disconnect();
 	
@@ -131,21 +143,14 @@ double PostgresClient::initializeDB()
 
 	auto createDB = [&](int start, int end, bool random) {
 		try {
+			mutex mtx;
+
+			mtx.lock();
 			connection* postgres = new connection(connection_description);
-
-			string stmt = "CREATE TABLE session(" \
-			"ID	INT	PRIMARY KEY	NOT NULL," \
-			"DATA	TEXT	NOT NULL );";
-
-			work query(*postgres);
-
-			query.exec(stmt);
-
-			query.commit();
 
 			for (int64_t i = start; i < end; i++)
 			{
-				stmt = "INSERT INTO session (ID, DATA) VALUES (" + to_string(i) + ", '" + dataVal + "' );";
+				string stmt = "INSERT INTO session (ID, DATA) VALUES (" + to_string(i) + ", '" + dataVal + "' );";
 				
 				work insertWork(*postgres);
 				insertWork.exec(stmt);
@@ -153,6 +158,8 @@ double PostgresClient::initializeDB()
 			}
 
 			postgres->disconnect();
+
+			mtx.unlock();
 		
 		} catch (const exception &e) {
 			cerr << e.what() << endl;
