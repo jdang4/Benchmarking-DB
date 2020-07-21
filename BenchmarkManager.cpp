@@ -20,7 +20,7 @@ void BenchmarkManager::selectDB(int db, string host)
     switch(db)
     {
 	case 1: 
-	    client = new RedisClient(1000000);
+	    client = new RedisClient(1000000, 10);
 	    break;
 
 	case 2:
@@ -107,7 +107,7 @@ double BenchmarkManager::getReadOutput()
 
     for (int i = 1; i <= trials; i++)
     {
-	double time = client->readEntry(to_string(randomKeys[i - 1]));
+	double time = client->readEntry(to_string(randomKeys[i - 1]), false);
 
 	if (time != -1.0) {
 	    if (showOutputs) 
@@ -206,7 +206,7 @@ double BenchmarkManager::getUpdateOutput()
 
     for (int i = 1; i <= trials; i++)
     {
-	double time = client->updateEntry(to_string(key));
+	double time = client->updateEntry(to_string(key), false);
 
 	if (time != -1.0)
 	{
@@ -256,7 +256,7 @@ double BenchmarkManager::getDeleteOutput()
 
     for (int i = 1; i <= trials; i++) 
     {
-	double time = client->deleteEntry(to_string(key));
+	double time = client->deleteEntry(to_string(key), false);
 
 	if (time != -1.0) 
 	{
@@ -377,7 +377,7 @@ double BenchmarkManager::getSimultaneousTasksOutput(int n, int num)
 
     for (int i = 1; i <= max; i++)
     {
-	double time = client->simultaneousTasks(n);
+	double time = client->simultaneousTasks(n, true);
 	double avgTime_per_task = time / double(n);
 
 	if (num == 0)
@@ -439,7 +439,7 @@ double BenchmarkManager::getTransactionsOutput(int n, double successPercentage, 
 
     for (int i = 1; i <= max; i++)
     {
-	double time = client->performTransactions(n, successPercentage);
+	double time = client->performTransactions(n, successPercentage, false);
 	double avgTime_per_transaction = time / double(n);
 
 	if (num == 0)

@@ -114,7 +114,7 @@ double PostgresClient::initializeDB()
 /*
  * see description at DBClient::readEntry
  */
-double PostgresClient::readEntry(string key)
+double PostgresClient::readEntry(string key, bool randomOption)
 {
     try {
 
@@ -171,7 +171,7 @@ double PostgresClient::insertEntry(string key)
 /*
  * see description at DBClient::updateEntry
  */
-double PostgresClient::updateEntry(string key)
+double PostgresClient::updateEntry(string key, bool randomOption)
 {
     try {
 	work query(*postgres);
@@ -203,7 +203,7 @@ double PostgresClient::updateEntry(string key)
 /*
  * see description at DBClient::deleteEntry
  */
-double PostgresClient::deleteEntry(string key)
+double PostgresClient::deleteEntry(string key, bool randomOption)
 {
     try {
 	work query(*postgres);
@@ -266,7 +266,7 @@ double PostgresClient::simultaneousReaders(int n, string key)
     // no need to use threads
     else if (n == 1)
     {
-	return readEntry(key);
+	return readEntry(key, false);
     }
 
     auto start = chrono::high_resolution_clock::now();
@@ -290,7 +290,7 @@ double PostgresClient::simultaneousReaders(int n, string key)
 /*
  * see description at DBClient::simultaneousTasks
  */
-double PostgresClient::simultaneousTasks(int n)
+double PostgresClient::simultaneousTasks(int n, bool randomOption)
 {
     vector<int> keySet = DBClient::getRandomKeys(n, 1, 1000000);
 
@@ -306,7 +306,7 @@ double PostgresClient::simultaneousTasks(int n)
     // no need to use threads
     else if (n == 1)
     {
-	return readEntry(to_string(randomKeys[0]));
+	return readEntry(to_string(randomKeys[0]), false);
     }
 
     vector<thread> thread_pool;
@@ -394,7 +394,7 @@ double PostgresClient::simultaneousTasks(int n)
 /*
  * see description at DBClient::performTransactions
  */
-double PostgresClient::performTransactions(int n, double successPercentage)
+double PostgresClient::performTransactions(int n, double successPercentage, bool randomOption)
 {
     if (successPercentage < 0 || successPercentage > 100 || n <= 0)
     {
@@ -418,7 +418,7 @@ double PostgresClient::performTransactions(int n, double successPercentage)
 	    query.exec(stmt);
 
 	    // having simultaneous readers/modifiers for each transaction
-	    simultaneousTasks(8);
+	    simultaneousTasks(8, true);
 
 	    // doing a read
 	    stmt = "SELECT * FROM session WHERE ID = " + aKey + ";";

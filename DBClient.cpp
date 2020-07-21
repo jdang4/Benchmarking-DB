@@ -108,7 +108,7 @@ double DBClient::initializeDB()
  *
  * @return the double value of the time it took to complete a read
  **/
-double DBClient::readEntry(string key) 
+double DBClient::readEntry(string key, bool randomOption) 
 {
     cout << "Method is ran from the DBClient...." << endl;
     return -1;
@@ -137,7 +137,7 @@ double DBClient::insertEntry(string key)
  *
  * @return a double value of the time it took to complete an update
  **/
-double DBClient::updateEntry(string key) 
+double DBClient::updateEntry(string key, bool randomOption) 
 {
     cout << "Method is ran from the DBClient...." << endl; 
     return -1;
@@ -151,7 +151,7 @@ double DBClient::updateEntry(string key)
  *
  * @return a double value of the time it took to complete a deletion
  **/
-double DBClient::deleteEntry(string key)
+double DBClient::deleteEntry(string key, bool randomOption)
 {
     cout << "Method is ran from the DBClient...." << endl;
     return -1;
@@ -186,7 +186,7 @@ double DBClient::simultaneousReaders(int n, string key)
  * @return a double value of the time it took for all the 
  * simultaneous tasks to finish
  **/
-double DBClient::simultaneousTasks(int n)
+double DBClient::simultaneousTasks(int n, bool randomOption)
 {
     cout << "Method is ran from the DBClient...." << endl;
     return -1;
@@ -205,7 +205,7 @@ double DBClient::simultaneousTasks(int n)
  * @return a double value of the time it took for all the 
  * simultaneous transactions going on
  */
-double DBClient::performTransactions(int n, double p)
+double DBClient::performTransactions(int n, double p, bool randomOption)
 {
     cout << "Method is ran from the DBClient...." << endl;
     return -1;

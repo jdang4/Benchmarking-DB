@@ -9,12 +9,11 @@ using namespace sw::redis;
 using namespace std;
 
 
-RedisClient::RedisClient(int n, int threads) : DBClient()
+RedisClient::RedisClient(int n) : DBClient()
 {
     entryVal = DBClient::getEntryVal('a');
     newVal = DBClient::getEntryVal('j');
     numOfRuns = n; 
-    numOfThreads = threads;
 }
 
 
@@ -50,48 +49,42 @@ double RedisClient::initializeDB()
     double time;
     
     try {
+
+	auto start = chrono::high_resolution_clock::now();
+
 	cout << "Creating the SDB..." << endl;
 
 	redis->command<void>("flushall");
+
+	for (int64_t i = 1; i <= NUM_OF_ENTRIES; i++) 
+	{
+	    auto key = to_string(i);
+	    redis->set(key, entryVal);
+	}
+
+	auto end = chrono::high_resolution_clock::now();
+
+	cout << "SDB Creation Completed!\n" << endl;
+
+	time = DBClient::calculateTime(start, end);
 	
     } catch (const Error &e) {
 	cout << "ERROR DURING INITIALIZATION" << endl;
 	time = -1.0;
     }
 
-
-    auto createDB = [&](int start, int end, bool random) {
-	try {
-	    for (int64_t i = start; i < end; i++) 
-	    {
-		auto key = to_string(i);
-		redis->set(key, entryVal);
-	    }
-	
-	} catch (const Error &e) {
-	    cout << "ERROR CREATING THE DATABASE" << endl;
-	    exit(-1);
-	}
-    };
-
-    time = run_threads(createDB, 1, false, 1000000);
-
-    cout << "SDB Creation Completed!\n" << endl;
-
     return time;
 }
 
 
 template<typename Lambda>
-double RedisClient::run_threads(Lambda f, int begin, bool random, int n)
+double RedisClient::run_threads(Lambda f, int begin, bool random)
 {
+    int numOfThreads = 10;
     vector<thread> thread_pool;
 
-    int actualNumOfRuns = (n == 0) ? numOfRuns : n;
-
-    int perThread = actualNumOfRuns / numOfThreads;
-
-    int remainingThreads = actualNumOfRuns % numOfThreads;
+    int perThread = numOfRuns / numOfThreads;
+    int remainingThreads = numOfRuns % numOfThreads;
 
     int beginRange, endRange;
 
@@ -129,7 +122,7 @@ double RedisClient::run_threads(Lambda f, int begin, bool random, int n)
 /**
  * see a description at DBClient::readEntry
  */
-double RedisClient::readEntry(string akey, bool randomOption)
+double RedisClient::readEntry(string akey)
 {
     auto read = [&](int start, int end, bool random) {
         try {
@@ -148,7 +141,7 @@ double RedisClient::readEntry(string akey, bool randomOption)
         }
     };
     
-    return run_threads(read, 1, randomOption);
+    return run_threads(read, 1, false);
 }
 
 
@@ -176,7 +169,7 @@ double RedisClient::insertEntry(string key)
 /**
  * see description at DBClient::updateEntry()
  */
-double RedisClient::updateEntry(string key, bool randomOption) 
+double RedisClient::updateEntry(string key) 
 {
     auto update = [&](int start, int end, bool random) {
 	try {
@@ -195,14 +188,14 @@ double RedisClient::updateEntry(string key, bool randomOption)
 	}
     };
 
-    return run_threads(update, 2000000, randomOption);
+    return run_threads(update, 2000000, false);
 }
 
 
 /**
  * see description at DBClient::deleteEntry()
  */
-double RedisClient::deleteEntry(string key, bool randomOption)
+double RedisClient::deleteEntry(string key)
 {
     auto deletion = [&](int start, int end, bool random) {
 	try {
@@ -221,14 +214,53 @@ double RedisClient::deleteEntry(string key, bool randomOption)
 	}
     };
 
-    return run_threads(deletion, 2000000, randomOption);
+    return run_threads(deletion, 2000000, false);
 }
 
+/*
+ * see description at DBClient::simultaneousReaders
+ */
+double RedisClient::simultaneousReaders(int n, string key)
+{
+    vector<thread> thread_pool;
+
+    auto read = [&](string aKey)
+    {
+        readEntry(aKey);
+    };
+
+    if (n <= 0)
+    {
+        return -1.0;
+    }
+
+    else if (n == 1)
+    {
+	    return readEntry(key);
+    }
+
+    auto start = chrono::high_resolution_clock::now();
+
+    for (int i = 0; i < n; i++)
+    {
+	    thread_pool.push_back(thread(read, key));
+    }
+
+    for (auto &thread : thread_pool)
+    {
+	    thread.join();
+    }
+
+    auto end = chrono::high_resolution_clock::now();
+ 
+    return DBClient::calculateTime(start, end);
+
+}
 
 /*
  * see description at DBClient::simultaneousTasks()
  */
-double RedisClient::simultaneousTasks(int n, bool randomOption)
+double RedisClient::simultaneousTasks(int n)
 {
     auto read_and_write = [&](int start, int end, bool random) {
 	
@@ -273,14 +305,14 @@ double RedisClient::simultaneousTasks(int n, bool randomOption)
 
     };
 
-    return run_threads(read_and_write, 1, randomOption);
+    return run_threads(read_and_write, 1, true);
 }
 
 
 /*
  * see description at DBClient::performTransactions()
  */
-double RedisClient::performTransactions(int n, double successPercentage, bool randomOption)
+double RedisClient::performTransactions(int n, double successPercentage)
 {
     if (successPercentage < 0 || successPercentage > 100 || n <= 0)
     {
@@ -289,68 +321,56 @@ double RedisClient::performTransactions(int n, double successPercentage, bool ra
 
     int numOfSuccess = n * successPercentage;
 
-    auto transaction = [&](int start, int end, bool random) {
+    // defines what the success transaction composes of
+    auto success = [&] (string aKey)
+    {
+	insertEntry(aKey);
 
-	auto success = [&](int64_t aKey) {
-	    try {
-		redis->set(to_string(aKey), entryVal);
+	// having simultaneous readers/modifiers for each transaction
+	simultaneousTasks(8);
 
-		for (int i = 0; i < 8; i++) 
-		{
-		    srand(time(0));
-		    int randomKey = (rand() % (1000000 + 1 - 1)) + 1;
-
-		    if (i < 4) 
-		    {
-			redis->get(to_string(randomKey));
-		    }
-
-		    else
-		    {
-			redis->set(to_string(randomKey), newVal);
-		    }
-		}
-
-		redis->get(to_string(aKey));
-
-		redis->del(to_string(aKey));
-	    
-	    } catch (const Error &e) {
-		cout << "ERROR DURING TRANSACTION SUCCESS" << endl;
-		exit(-1);
-	    }
-	};
-
-	auto fail = [&](int64_t aKey) {
-	    try {
-		redis->set(to_string(aKey), entryVal);
-
-		redis->del(to_string(aKey));
-	    
-	    } catch (const Error &e) {
-		cout << "ERROR DURING TRANSACTION FAIL" << endl;
-		exit(-1);
-	    }
-	};
-
-	int range = end - start;
-
-	int numOfSuccess = range * 0.7;
-
-	for (int64_t i = start; i < end; i++) 
-	{
-	    int index = i;
-	    if (index < numOfSuccess)
-	    {
-		success(i);
-	    }
-
-	    else
-	    {
-		fail(i);
-	    }
-	}
+	readEntry(aKey);
+	deleteEntry(aKey);
     };
 
-    return run_threads(transaction, 2000000, randomOption);
-}
+    // defines what the fail transaction composes of
+    auto fail = [&] (string aKey)
+    {
+	insertEntry(aKey);
+	deleteEntry(aKey);
+    };
+
+    vector<thread> thread_pool;
+
+    int64_t key = 2000000;
+
+    auto start = chrono::high_resolution_clock::now();
+
+    // each thread will either perform a success or a fail transaction
+    for (int i = 0; i < n; i++)
+    {
+	if (i < numOfSuccess)
+	{
+	    auto aKey = to_string(key);
+	    thread_pool.push_back(thread(success, aKey));
+	}
+
+	else
+	{
+	    auto aKey = to_string(key);
+	    thread_pool.push_back(thread(fail, aKey));
+	}
+
+	key += 1;
+    }
+    
+    for (auto &thread : thread_pool)
+    {
+	thread.join();
+    }
+    
+    auto end = chrono::high_resolution_clock::now();
+
+    return DBClient::calculateTime(start, end);
+}    
+

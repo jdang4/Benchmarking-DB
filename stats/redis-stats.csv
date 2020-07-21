@@ -1,4 +1,24 @@
+Read Num, Time Elapsed (sec), 
+1,93.94
+
+
+Insert Num, Time Elapased (sec), 
+1,100.988
+
+
+Update Num, Time Elapsed (sec), 
+1,109.326
+
+
+Delete Num, Time Elapsed (sec), 
+1,79.2578
+
+
 50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,101.093,2.02186
+1,97.1266,1.94253
+
+
+50 Simul. Transactions, Time Elapsed (sec), Average Time per Tasks, 
+1,161.675,3.23351
 
 

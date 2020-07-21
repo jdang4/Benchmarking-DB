@@ -18,13 +18,13 @@ class PostgresClient : public DBClient
 	void connect() override;
 	void disconnect() override;
 	double initializeDB() override;
-	double readEntry(std::string key) override;
+	double readEntry(std::string key, bool randomOption) override;
 	double insertEntry(std::string key) override;
-	double updateEntry(std::string key) override;
-	double deleteEntry(std::string key) override;
+	double updateEntry(std::string key, bool randomOption) override;
+	double deleteEntry(std::string key, bool randomOption) override;
 	double simultaneousReaders(int n, std::string key) override;
-	double simultaneousTasks(int n) override;
-	double performTransactions(int n, double p) override;
+	double simultaneousTasks(int n, bool randomOption) override;
+	double performTransactions(int n, double p, bool randomOption) override;
 
     private:
 	connection* postgres;

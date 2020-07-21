@@ -122,7 +122,7 @@ int main()
 
     while (elapsedTime < durationTime)
     {
-	/*
+	
 	cout << "READING BENCHMARK: \n\n\n\n" << endl;
 
 	bm->getReadOutput();
@@ -138,11 +138,14 @@ int main()
 	cout << "DELETION BENCHMARK: \n\n\n\n" << endl;
 
 	bm->getDeleteOutput();
-	*/
-
+	
 	cout << "SIMULTANEOUS TASKS [50] BENCHMARK: \n\n\n\n" << endl;
 
 	bm->getSimultaneousTasksOutput(50);
+
+	cout << "SIMULTANEOUS TRANSACTIONS [50] BENCHMARK: \n\n\n\n" << endl;
+
+	bm->getTransactionsOutput(50, 70.0);
 
 
 	/*
