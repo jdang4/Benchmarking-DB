@@ -42,6 +42,7 @@ void PostgresClient::connect()
 
 	} catch (const exception &e) {
 		cerr << e.what() << endl;
+		cout << "Connection failed!" << endl;
 		exit(-1);
 	}
 }

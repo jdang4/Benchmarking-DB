@@ -45,6 +45,9 @@ template<typename Lambda>
 double RedisClient::run_threads(Lambda f, int begin, bool random, int n)
 {
     vector<thread> thread_pool;
+    int threads = 10;
+
+    int runs = 1000000;
 
     int numOfRuns = (n == 0) ? runs : n;
 

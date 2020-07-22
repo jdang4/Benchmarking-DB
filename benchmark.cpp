@@ -80,7 +80,7 @@ int main()
 
     BenchmarkManager* bm = new BenchmarkManager(1, printOutputs);
 
-    bm->setThreads_and_Runs(10, 1000000);
+    //bm->setThreads_and_Runs(10, 1000000);
 
     string file = (db == 1) ? "stats/redis-running-stats.csv" : "stats/postgres-running-stats.csv";
 
@@ -90,10 +90,14 @@ int main()
 	exit(1);
     }
 
+    cout << "HERE" << endl;
+
     ofstream csv(file);
 
     bm->selectDB(db, host);
     bm->connect();
+
+    cout << "MADE CONNECTION!" << endl;
 
     bm->openCSV();
 
