@@ -11,7 +11,7 @@ class DBClient;
 class RedisClient : public DBClient
 {
     public:
-	RedisClient(int n, int threads);
+	RedisClient();
 	~RedisClient();
 	void connect() override;
 	double initializeDB() override;
@@ -26,14 +26,10 @@ class RedisClient : public DBClient
 	sw::redis::Redis* redis;
 	char* dataVal;
 	char* newVal;
-	int numOfRuns;
-	int numOfThreads;
 	
 	template<typename Lambda>	
 	double run_threads(Lambda f, int begin, bool random, int n = 0);
-	
-	//void* read(void* arg);
-	//void updateOne(string key);
+
 };
 
 #endif

@@ -21,10 +21,15 @@ class DBClient
 	virtual double simultaneousTasks(int n, bool randomOption);
 	virtual double performTransactions(int n, double p, bool randomOption);
 	std::vector<int> getRandomKeys(int len, int min, int max);
+	void setThreads(int n);
+	void setRuns(int n);
+
 
     protected:
 	double calculateTime(std::chrono::time_point<std::chrono::high_resolution_clock> start, std::chrono::time_point<std::chrono::high_resolution_clock> end); 
 	
+	int threads;
+	int runs;
 };
 
 #endif

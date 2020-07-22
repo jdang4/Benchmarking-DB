@@ -8,18 +8,16 @@
 using namespace std;
 using namespace pqxx;
 
-PostgresClient::PostgresClient(string host_name, int n, int threads) : DBClient() 
+PostgresClient::PostgresClient(string host_name) : DBClient() 
 {
     dataVal = DBClient::getEntryVal('a');
     newVal = DBClient::getEntryVal('j');
     connection_description = "dbname = SDB user = postgres password = Juni#20 \
 		hostaddr = " + host_name + " port = 5432";
-
-	numOfRuns = n;
-	numOfThreads = threads;
 }
 
 PostgresClient::~PostgresClient() {}
+
 
 
 /*
@@ -64,11 +62,11 @@ double PostgresClient::run_threads(Lambda f, int begin, bool random, int n)
 {
     vector<thread> thread_pool;
 
-    int actualNumOfRuns = (n == 0) ? numOfRuns : n;
+    int numOfRuns = (n == 0) ? runs : n;
 
-    int perThread = actualNumOfRuns / numOfThreads;
+    int perThread = numOfRuns / threads;
 
-    int remainingThreads = actualNumOfRuns % numOfThreads;
+    int remainingThreads = numOfRuns % threads;
 
     int beginRange, endRange;
 
@@ -76,7 +74,7 @@ double PostgresClient::run_threads(Lambda f, int begin, bool random, int n)
 
     auto start = chrono::high_resolution_clock::now();
 
-    for (int i = 0; i < numOfThreads; i++)
+    for (int i = 0; i < threads; i++)
     {
         beginRange = runningCount;
         endRange = beginRange + perThread;
@@ -86,8 +84,6 @@ double PostgresClient::run_threads(Lambda f, int begin, bool random, int n)
             remainingThreads--;
             endRange++;
         }
-
-	cout << "\nTHREAD #" << i + 1 << ": " << beginRange << " - " << endRange << endl << endl;
 
         thread_pool.push_back(thread(f, beginRange, endRange, random));
 
@@ -103,6 +99,7 @@ double PostgresClient::run_threads(Lambda f, int begin, bool random, int n)
 
     return DBClient::calculateTime(start, end);
 }
+
 
 /*
  * see description at DBClient::initializeDB()
@@ -179,6 +176,10 @@ double PostgresClient::readEntry(string aKey, bool randomOption)
 {
 	auto read = [&](int start, int end, bool random) {
 		try {
+			mutex mtx;
+
+			mtx.lock();
+
 			connection* postgres = new connection(connection_description);
 
 			for (int i = start; i < end; i++)
@@ -199,7 +200,9 @@ double PostgresClient::readEntry(string aKey, bool randomOption)
 			}
 
 			postgres->disconnect();
-		
+
+			mtx.unlock();
+
 		} catch (const exception &e) {
 			cerr << e.what() << endl;
 			exit(-1);
@@ -216,6 +219,10 @@ double PostgresClient::insertEntry(string aKey)
 {
 	auto insert = [&](int start, int end, bool random) {
 		try {
+			mutex mtx;
+
+			mtx.lock();
+
 			connection* postgres = new connection(connection_description);
 
 			for (int i = start; i < end; i++)
@@ -233,7 +240,9 @@ double PostgresClient::insertEntry(string aKey)
 			}
 
 			postgres->disconnect();
-		
+
+			mtx.unlock();
+
 		} catch (const exception &e) {
 			cerr << e.what() << endl;
 			exit(-1);
@@ -251,6 +260,10 @@ double PostgresClient::updateEntry(string aKey, bool randomOption)
 {
 	auto update = [&](int start, int end, bool random) {
 		try {
+			mutex mtx;
+
+			mtx.lock();
+
 			connection* postgres = new connection(connection_description);
 
 			for (int i = start; i < end; i++)
@@ -275,7 +288,9 @@ double PostgresClient::updateEntry(string aKey, bool randomOption)
 			}
 
 			postgres->disconnect();
-		
+
+			mtx.unlock();
+
 		} catch (const exception &e) {
 			cerr << e.what() << endl;
 			exit(-1);

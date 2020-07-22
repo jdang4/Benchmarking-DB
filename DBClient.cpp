@@ -6,6 +6,7 @@
 
 using namespace std;
 
+
 /**
  * This method creates a value with a size of 6K bytes
  *
@@ -76,6 +77,17 @@ vector<int> DBClient::getRandomKeys(int n, int lower, int upper)
 
     return keySet;
 }
+
+void DBClient::setThreads(int n)
+{
+    threads = n;
+}
+
+void DBClient::setRuns(int n)
+{
+    runs = n;
+}
+
 
 void DBClient::connect()
 {

@@ -10,9 +10,7 @@ using namespace std;
 int main() 
 {
     int db;
-    string host;
-    string initialize_option;
-    string print_option;
+    string host, initialize_option, print_option;
 
     bool initialize_db = false;
     bool printOutputs = true;
@@ -56,7 +54,6 @@ int main()
 
     durationTime = (durationTime > 0) ? durationTime : 1;
 
-
     if (db == 2)
     {
 	cout << "\n############################################################################################################################################\n" << endl;
@@ -82,6 +79,8 @@ int main()
 
 
     BenchmarkManager* bm = new BenchmarkManager(1, printOutputs);
+
+    bm->setThreads_and_Runs(10, 1000000);
 
     string file = (db == 1) ? "stats/redis-running-stats.csv" : "stats/postgres-running-stats.csv";
 

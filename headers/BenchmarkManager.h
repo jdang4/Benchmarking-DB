@@ -16,6 +16,7 @@ class BenchmarkManager
 	~BenchmarkManager();
 
 	void selectDB(int db, std::string host);
+	void setThreads_and_Runs(int threads, int runs);
 	void initializeDB();
 	void connect();
 	void disconnect();
@@ -25,7 +26,6 @@ class BenchmarkManager
 	double getInsertOutput();
 	double getUpdateOutput();
 	double getDeleteOutput();
-	//double getSimultaneousReadersOutput(int n, int num = 0);
 	double getSimultaneousTasksOutput(int n, int num = 0);
 	double getTransactionsOutput(int n, double p, int num = 0);
 	

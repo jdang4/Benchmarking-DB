@@ -20,17 +20,23 @@ void BenchmarkManager::selectDB(int db, string host)
     switch(db)
     {
 	case 1: 
-	    client = new RedisClient(1000000, 10);
+	    client = new RedisClient();
 	    break;
 
 	case 2:
-	    client = new PostgresClient(host, 1000000, 10);
+	    client = new PostgresClient(host);
 	    break;
 
 	default:
 	    cout << "INVALID DB CHOICE!" << endl;
 	    exit(1);
     }
+}
+
+void BenchmarkManager::setThreads_and_Runs(int threads, int runs)
+{
+    client->setThreads(threads);
+    client->setRuns(runs);
 }
 
 void BenchmarkManager::connect()

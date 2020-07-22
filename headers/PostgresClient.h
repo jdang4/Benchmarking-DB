@@ -13,7 +13,7 @@ class DBClient;
 class PostgresClient : public DBClient
 {
     public:
-	PostgresClient(std::string host, int n, int threads);
+	PostgresClient(std::string host);
 	~PostgresClient();
 	void connect() override;
 	void disconnect() override;
@@ -26,16 +26,15 @@ class PostgresClient : public DBClient
 	double performTransactions(int n, double p, bool randomOption) override;
 
     private:
-	//connection* postgres;
 	std::string connection_description;
 	char* dataVal;
 	char* newVal;
-	int numOfRuns;
-	int numOfThreads;
-
 
 	template<typename Lambda>	
 	double run_threads(Lambda f, int begin, bool random, int n = 0);
+
+
+	
 
 };
 

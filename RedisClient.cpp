@@ -9,12 +9,11 @@ using namespace sw::redis;
 using namespace std;
 
 
-RedisClient::RedisClient(int n, int threads) : DBClient()
+RedisClient::RedisClient() : DBClient()
 {
     dataVal = DBClient::getEntryVal('a');
     newVal = DBClient::getEntryVal('j');
-    numOfRuns = n; 
-    numOfThreads = threads;
+
 }
 
 
@@ -47,11 +46,11 @@ double RedisClient::run_threads(Lambda f, int begin, bool random, int n)
 {
     vector<thread> thread_pool;
 
-    int actualNumOfRuns = (n == 0) ? numOfRuns : n;
+    int numOfRuns = (n == 0) ? runs : n;
 
-    int perThread = actualNumOfRuns / numOfThreads;
+    int perThread = numOfRuns / threads;
 
-    int remainingThreads = actualNumOfRuns % numOfThreads;
+    int remainingThreads = numOfRuns % threads;
 
     int beginRange, endRange;
 
@@ -59,7 +58,7 @@ double RedisClient::run_threads(Lambda f, int begin, bool random, int n)
 
     auto start = chrono::high_resolution_clock::now();
 
-    for (int i = 0; i < numOfThreads; i++)
+    for (int i = 0; i < threads; i++)
     {
         beginRange = runningCount;
         endRange = beginRange + perThread;
