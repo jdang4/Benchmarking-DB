@@ -80,8 +80,6 @@ int main()
 
     BenchmarkManager* bm = new BenchmarkManager(1, printOutputs);
 
-    bm->setThreads_and_Runs(10, 1000000);
-
     string file = (db == 1) ? "stats/redis-running-stats.csv" : "stats/postgres-running-stats.csv";
 
     if (remove(file.c_str()) != 0)
@@ -93,6 +91,7 @@ int main()
     ofstream csv(file);
 
     bm->selectDB(db, host);
+    bm->setThreads_and_Runs(10, 1000000);
     bm->connect();
 
     bm->openCSV();
