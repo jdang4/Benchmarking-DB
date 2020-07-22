@@ -138,37 +138,37 @@ int main()
 	
 	cout << "SIMULTANEOUS TASKS [1] BENCHMARK: \n\n\n\n" << endl;
 
-    bm->setThreads_and_Runs(1, 10000000);
+    bm->setThreads_and_Runs(1, 1000000);
 
     task_1 = bm->getSimultaneousTasksOutput(1);
 
     cout << "SIMULTANEOUS TASKS [50] BENCHMARK: \n\n\n\n" << endl;
 
-    bm->setThreads_and_Runs(50, 10000000);
+    bm->setThreads_and_Runs(50, 1000000);
 	
     task_50 = bm->getSimultaneousTasksOutput(50);
 
     cout << "SIMULTANEOUS TASKS [100] BENCHMARK: \n\n\n\n" << endl;
 
-    bm->setThreads_and_Runs(100, 10000000);
+    bm->setThreads_and_Runs(100, 1000000);
 	
     task_100 = bm->getSimultaneousTasksOutput(50);
 
     cout << "SIMULTANEOUS TRANSACTIONS [1] BENCHMARK: \n\n\n\n" << endl;
 
-    bm->setThreads_and_Runs(1, 10000000);
+    bm->setThreads_and_Runs(1, 1000000);
 
     transaction_1 = bm->getTransactionsOutput(1, 70.0);
 
     cout << "SIMULTANEOUS TRANSACTIONS [50] BENCHMARK: \n\n\n\n" << endl;
 
-    bm->setThreads_and_Runs(50, 10000000);
+    bm->setThreads_and_Runs(50, 1000000);
 	
     transaction_50 = bm->getTransactionsOutput(50, 70.0);
 
     cout << "SIMULTANEOUS TRANSACTIONS [100] BENCHMARK: \n\n\n\n" << endl;
 
-    bm->setThreads_and_Runs(100, 10000000);
+    bm->setThreads_and_Runs(100, 1000000);
 	
     transaction_100 = bm->getTransactionsOutput(100, 70.0);
 
