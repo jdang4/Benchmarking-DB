@@ -49,9 +49,6 @@ double RedisClient::run_threads(Lambda f, int begin, bool random, int n)
 
     int runs = DBClient::getRuns();
 
-    cout << "Threads: " << threads << endl;
-    cout << "Runs: " << runs << endl;
-
     int numOfRuns = (n == 0) ? runs : n;
 
     int perThread = numOfRuns / threads;
