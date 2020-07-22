@@ -23,11 +23,14 @@ class DBClient
 	std::vector<int> getRandomKeys(int len, int min, int max);
 	void setThreads(int n);
 	void setRuns(int n);
+	int getThreads();
+	int getRuns();
 
 
     protected:
 	double calculateTime(std::chrono::time_point<std::chrono::high_resolution_clock> start, std::chrono::time_point<std::chrono::high_resolution_clock> end); 
 	
+	private:
 	int threads;
 	int runs;
 };

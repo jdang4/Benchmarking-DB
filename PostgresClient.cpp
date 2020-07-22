@@ -42,7 +42,6 @@ void PostgresClient::connect()
 
 	} catch (const exception &e) {
 		cerr << e.what() << endl;
-		cout << "Connection failed!" << endl;
 		exit(-1);
 	}
 }
@@ -63,9 +62,9 @@ double PostgresClient::run_threads(Lambda f, int begin, bool random, int n)
 {
     vector<thread> thread_pool;
 
-    int threads = 10;
+    int threads = DBClient::getThreads();
 
-    int runs = 1000000;
+    int runs = DBClient::getRuns();
 
     int numOfRuns = (n == 0) ? runs : n;
 

@@ -88,6 +88,15 @@ void DBClient::setRuns(int n)
     runs = n;
 }
 
+int DBClient::getThreads()
+{
+    return threads;
+}
+
+int DBClient::getRuns()
+{
+    return runs;
+}
 
 void DBClient::connect()
 {
