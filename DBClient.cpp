@@ -129,7 +129,7 @@ double DBClient::initializeDB()
  *
  * @return the double value of the time it took to complete a read
  **/
-double DBClient::readEntry(string key, bool randomOption) 
+double DBClient::readEntry(bool randomOption) 
 {
     cout << "Method is ran from the DBClient...." << endl;
     return -1;
@@ -143,7 +143,7 @@ double DBClient::readEntry(string key, bool randomOption)
  *
  * @return the double value of the time it took to complete the insertion
  **/
-double DBClient::insertEntry(string key)
+double DBClient::insertEntry()
 {
     cout << "Method is ran from the DBClient...." << endl;
     return -1;
@@ -158,7 +158,7 @@ double DBClient::insertEntry(string key)
  *
  * @return a double value of the time it took to complete an update
  **/
-double DBClient::updateEntry(string key, bool randomOption) 
+double DBClient::updateEntry(bool randomOption) 
 {
     cout << "Method is ran from the DBClient...." << endl; 
     return -1;
@@ -172,7 +172,7 @@ double DBClient::updateEntry(string key, bool randomOption)
  *
  * @return a double value of the time it took to complete a deletion
  **/
-double DBClient::deleteEntry(string key, bool randomOption)
+double DBClient::deleteEntry(bool randomOption)
 {
     cout << "Method is ran from the DBClient...." << endl;
     return -1;
@@ -190,7 +190,7 @@ double DBClient::deleteEntry(string key, bool randomOption)
  * @return a double value of the time it took for all the 
  * simultaneous tasks to finish
  **/
-double DBClient::simultaneousTasks(int n, bool randomOption)
+double DBClient::simultaneousTasks(bool randomOption)
 {
     cout << "Method is ran from the DBClient...." << endl;
     return -1;
@@ -209,7 +209,7 @@ double DBClient::simultaneousTasks(int n, bool randomOption)
  * @return a double value of the time it took for all the 
  * simultaneous transactions going on
  */
-double DBClient::performTransactions(int n, double p, bool randomOption)
+double DBClient::performTransactions(bool randomOption)
 {
     cout << "Method is ran from the DBClient...." << endl;
     return -1;

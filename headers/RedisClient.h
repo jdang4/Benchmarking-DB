@@ -15,12 +15,12 @@ class RedisClient : public DBClient
 	~RedisClient();
 	void connect() override;
 	double initializeDB() override;
-	double readEntry(std::string key, bool randomOption) override;
-	double insertEntry(std::string key) override;
-	double updateEntry(std::string key, bool randomOption) override;
-	double deleteEntry(std::string key, bool randomOption) override;
-	double simultaneousTasks(int n, bool randomOption) override;
-	double performTransactions(int n, double p, bool randomOption) override;
+	double readEntry(bool randomOption) override;
+	double insertEntry() override;
+	double updateEntry(bool randomOption) override;
+	double deleteEntry(bool randomOption) override;
+	double simultaneousTasks(bool randomOption) override;
+	double performTransactions(bool randomOption) override;
 	 
     private:
 	sw::redis::Redis* redis;

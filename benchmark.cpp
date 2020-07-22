@@ -106,130 +106,90 @@ int main()
     double elapsedTime = 0;
 
     csv << "Timestamp,Reading,Inserting,Updating,Deleting,"; 
-    csv << "1 Simul. Reader,50 Simul. Reader,100 Simul. Reader,";
+    //csv << "1 Simul. Reader,50 Simul. Reader,100 Simul. Reader,";
     csv << "1 Simul. Task,50 Simul. Task,100 Simul. Task,";
     csv << "1 Simul. Transaction,50 Simul. Transaction,100 Simul. Transaction\n";
 
-    //double read = 0;
-    /*
     double read = 0, insert = 0, update = 0, deletion = 0;
-    double reader_1 = 0, reader_50 = 0, reader_100 = 0;
+    //double reader_1 = 0, reader_50 = 0, reader_100 = 0;
     double task_1 = 0, task_50 = 0, task_100 = 0;
     double transaction_1 = 0, transaction_50 = 0, transaction_100 = 0;
-    */
 
     while (elapsedTime < durationTime)
     {
-	
+    
+    bm->setThreads_and_Runs(10, 1000000);
+
 	cout << "READING BENCHMARK: \n\n\n\n" << endl;
 
-	bm->getReadOutput();
+	read = bm->getReadOutput();
 
 	cout << "INSERTION BENCHMARK: \n\n\n\n" << endl; 
     
-	bm->getInsertOutput();
+	insert = bm->getInsertOutput();
 
 	cout << "UPDATING BENCHMARK: \n\n\n\n" << endl;
 
-	bm->getUpdateOutput(); 
+	update = bm->getUpdateOutput(); 
 
 	cout << "DELETION BENCHMARK: \n\n\n\n" << endl;
 
-	bm->getDeleteOutput();
+	deletion = bm->getDeleteOutput();
 	
-	cout << "SIMULTANEOUS TASKS [50] BENCHMARK: \n\n\n\n" << endl;
-
-	bm->getSimultaneousTasksOutput(50);
-
-	cout << "SIMULTANEOUS TRANSACTIONS [50] BENCHMARK: \n\n\n\n" << endl;
-
-	bm->getTransactionsOutput(50, 70.0);
-
-
-	/*
-	cout << "SIMULTANEOUS READERS [1] BENCHMARK: \n\n\n\n" << endl;
-
-	reader_1 = bm->getSimultaneousReadersOutput(1);
-    
-	cout << "SIMULTANEOUS READERS [50] BENCHMARK: \n\n\n\n" << endl;
-    
-	reader_50 = bm->getSimultaneousReadersOutput(50);
-    
-	cout << "SIMULTANEOUS READERS [100] BENCHMARK: \n\n\n\n" << endl;
-     
-	reader_100 = bm->getSimultaneousReadersOutput(100);
-
-	usleep(3000000);
-
 	cout << "SIMULTANEOUS TASKS [1] BENCHMARK: \n\n\n\n" << endl;
 
-	task_1 = bm->getSimultaneousTasksOutput(1);
+    bm->setThreads_and_Runs(1, 10000000);
 
-	cout << "SIMULTANEOUS TASKS [50] BENCHMARK: \n\n\n\n" << endl;
+    task_1 = bm->getSimultaneousTasksOutput(1);
 
-	task_50 = bm->getSimultaneousTasksOutput(50);
+    cout << "SIMULTANEOUS TASKS [50] BENCHMARK: \n\n\n\n" << endl;
 
-	cout << "SIMULTANEOUS TASKS [100] BENCHMARK: \n\n\n\n" << endl;
+    bm->setThreads_and_Runs(50, 10000000);
+	
+    task_50 = bm->getSimultaneousTasksOutput(50);
 
-	task_100 = bm->getSimultaneousTasksOutput(100);
+    cout << "SIMULTANEOUS TASKS [100] BENCHMARK: \n\n\n\n" << endl;
 
-	usleep(3000000);
+    bm->setThreads_and_Runs(100, 10000000);
+	
+    task_100 = bm->getSimultaneousTasksOutput(50);
 
-	cout << "SIMULTANEOUS TRANSACTIONS [1] BENCHMARK: \n\n\n\n" << endl;
+    cout << "SIMULTANEOUS TRANSACTIONS [1] BENCHMARK: \n\n\n\n" << endl;
 
-	transaction_1 = bm->getTransactionsOutput(1, 70.0);
+    bm->setThreads_and_Runs(1, 10000000);
 
-	cout << "SIMULTANEOUS TRANSACTIONS [50] BENCHMARK: \n\n\n\n" << endl;
+    transaction_1 = bm->getTransactionsOutput(1, 70.0);
 
-	transaction_50 = bm->getTransactionsOutput(50, 70.0);
+    cout << "SIMULTANEOUS TRANSACTIONS [50] BENCHMARK: \n\n\n\n" << endl;
 
-	cout << "SIMULTANEOUS TRANSACTIONS [100] BENCHMARK:	\n\n\n\n" << endl;
+    bm->setThreads_and_Runs(50, 10000000);
+	
+    transaction_50 = bm->getTransactionsOutput(50, 70.0);
 
-	transaction_100 = bm->getTransactionsOutput(100, 70.0);
+    cout << "SIMULTANEOUS TRANSACTIONS [100] BENCHMARK: \n\n\n\n" << endl;
 
-	auto end = chrono::high_resolution_clock::now();
+    bm->setThreads_and_Runs(100, 10000000);
+	
+    transaction_100 = bm->getTransactionsOutput(100, 70.0);
 
-	auto elapsed = chrono::duration_cast<chrono::microseconds>(end - start);
-
-	elapsedTime = elapsed.count() * 1e-6;
-
-	double elapsedTime_min = double(elapsedTime) / double(60);
-
-	csv << elapsedTime_min << "," << read << "," << insert << "," << update << "," << deletion << ",";
-	csv << reader_1 << "," << reader_50 << "," << reader_100 << ",";
-	csv << task_1 << "," << task_50 << "," << task_100 << ",";
-	csv << transaction_1 << "," << transaction_50 << "," << transaction_100 << "\n";
-
-	usleep(3000000);
-    */
 
     auto end = chrono::high_resolution_clock::now();
 
     auto elapsed = chrono::duration_cast<chrono::microseconds>(end - start);
-    
+
     elapsedTime = elapsed.count() * 1e-6;
 
-	//double elapsedTime_min = double(elapsedTime) / double(60);
+	double elapsedTime_min = double(elapsedTime) / double(60);
+
+	
+    csv << elapsedTime_min << "," << read << "," << insert << "," << update << "," << deletion << ",";
+	//csv << reader_1 << "," << reader_50 << "," << reader_100 << ",";
+	csv << task_1 << "," << task_50 << "," << task_100 << ",";
+	csv << transaction_1 << "," << transaction_50 << "," << transaction_100 << "\n";
+
     }
 
     csv.close();
-
-    /*
-    for (int i = 10; i <= 100; i += 10)
-    {
-	bm->getSimultaneousReadersOutput(i, i);
-    }
-
-    for (int i = 10; i <= 100; i += 10) 
-    {
-	bm->getSimultaneousTasksOutput(i, i);
-    }
-
-    for (int i = 10; i <= 100; i += 10)
-    {
-	bm->getTransactionsOutput(i, 70.0, i);
-    }
-    */
 
     bm->closeCSV();
 

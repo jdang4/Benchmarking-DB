@@ -134,7 +134,7 @@ double RedisClient::initializeDB()
 /**
  * see a description at DBClient::readEntry
  */
-double RedisClient::readEntry(string akey, bool randomOption)
+double RedisClient::readEntry(bool randomOption)
 {
     auto read = [&](int start, int end, bool random) {
         try {
@@ -160,7 +160,7 @@ double RedisClient::readEntry(string akey, bool randomOption)
 /**
  * see description at DBClient::insertEntry()
  */
-double RedisClient::insertEntry(string key)
+double RedisClient::insertEntry()
 {
     auto insert = [&](int start, int end, bool random) {
         try {
@@ -181,7 +181,7 @@ double RedisClient::insertEntry(string key)
 /**
  * see description at DBClient::updateEntry()
  */
-double RedisClient::updateEntry(string key, bool randomOption) 
+double RedisClient::updateEntry(bool randomOption) 
 {
     auto update = [&](int start, int end, bool random) {
 		try {
@@ -206,7 +206,7 @@ double RedisClient::updateEntry(string key, bool randomOption)
 /**
  * see description at DBClient::deleteEntry()
  */
-double RedisClient::deleteEntry(string key, bool randomOption)
+double RedisClient::deleteEntry(bool randomOption)
 {
     auto deletion = [&](int start, int end, bool random) {
 	try {
@@ -232,7 +232,7 @@ double RedisClient::deleteEntry(string key, bool randomOption)
 /*
  * see description at DBClient::simultaneousTasks()
  */
-double RedisClient::simultaneousTasks(int n, bool randomOption)
+double RedisClient::simultaneousTasks(bool randomOption)
 {
     auto read_and_write = [&](int start, int end, bool random) {
 	
@@ -284,13 +284,8 @@ double RedisClient::simultaneousTasks(int n, bool randomOption)
 /*
  * see description at DBClient::performTransactions()
  */
-double RedisClient::performTransactions(int n, double successPercentage, bool randomOption)
+double RedisClient::performTransactions(bool randomOption)
 {
-    if (successPercentage < 0 || successPercentage > 100 || n <= 0)
-    {
-		return -1.0;
-    }
-
     auto transaction = [&](int start, int end, bool random) {
 
 		auto success = [&](int64_t aKey) {

@@ -14,12 +14,13 @@ class DBClient
 	virtual void connect();
 	virtual void disconnect();
 	virtual double initializeDB();
-	virtual double readEntry(std::string key, bool randomOption);
-	virtual double insertEntry(std::string key);
-	virtual double updateEntry(std::string key, bool randomOption);
-	virtual double deleteEntry(std::string key, bool randomOption);
-	virtual double simultaneousTasks(int n, bool randomOption);
-	virtual double performTransactions(int n, double p, bool randomOption);
+	virtual double readEntry(bool randomOption);
+	virtual double insertEntry();
+	virtual double updateEntry(bool randomOption);
+	virtual double deleteEntry(bool randomOption);
+	virtual double simultaneousTasks(bool randomOption);
+	virtual double performTransactions(bool randomOption);
+	
 	std::vector<int> getRandomKeys(int len, int min, int max);
 	void setThreads(int n);
 	void setRuns(int n);

@@ -176,7 +176,7 @@ double PostgresClient::initializeDB()
 /*
  * see description at DBClient::readEntry
  */
-double PostgresClient::readEntry(string aKey, bool randomOption)
+double PostgresClient::readEntry(bool randomOption)
 {
 	auto read = [&](int start, int end, bool random) {
 		try {
@@ -219,7 +219,7 @@ double PostgresClient::readEntry(string aKey, bool randomOption)
 /*
  * see description at DBClient::insertEntry
  */
-double PostgresClient::insertEntry(string aKey)
+double PostgresClient::insertEntry()
 {
 	auto insert = [&](int start, int end, bool random) {
 		try {
@@ -260,7 +260,7 @@ double PostgresClient::insertEntry(string aKey)
 /*
  * see description at DBClient::updateEntry
  */
-double PostgresClient::updateEntry(string aKey, bool randomOption)
+double PostgresClient::updateEntry(bool randomOption)
 {
 	auto update = [&](int start, int end, bool random) {
 		try {
@@ -308,7 +308,7 @@ double PostgresClient::updateEntry(string aKey, bool randomOption)
 /*
  * see description at DBClient::deleteEntry
  */
-double PostgresClient::deleteEntry(string key, bool randomOption)
+double PostgresClient::deleteEntry(bool randomOption)
 {
     auto deletion = [&](int start, int end, bool random) {
 		try {
@@ -346,7 +346,7 @@ double PostgresClient::deleteEntry(string key, bool randomOption)
 /*
  * see description at DBClient::simultaneousTasks
  */
-double PostgresClient::simultaneousTasks(int n, bool randomOption)
+double PostgresClient::simultaneousTasks(bool randomOption)
 {
 	auto read_and_write = [&](int start, int end, bool random) {
 		try {
@@ -414,13 +414,8 @@ double PostgresClient::simultaneousTasks(int n, bool randomOption)
 /*
  * see description at DBClient::performTransactions
  */
-double PostgresClient::performTransactions(int n, double successPercentage, bool randomOption)
+double PostgresClient::performTransactions(bool randomOption)
 {
-    if (successPercentage < 0 || successPercentage > 100 || n <= 0)
-    {
-		return -1;
-    }
-
 	auto transaction = [&](int start, int end, bool random) {
 		try {
 			connection* postgres = new connection(connection_description);
