@@ -54,6 +54,22 @@ def getDataFromCSV(file) :
     return myMap 
 
 
+def combineMaps(m1, m500, m5K, m500K) :
+    myMap = {}
+
+    allMaps = [m1, m500, m5K, m500K]
+
+    for m in allMaps :
+        for key in m.keys() :
+            if key not in myMap :
+                myMap[key] = []
+
+            myMap[key].extend(m[key])
+
+
+    return myMap
+
+
 def getRunningDataFromCSV(filename) :
     df = pd.read_csv(filename)
     
@@ -85,37 +101,27 @@ def getRunningStatsGraph(db, num, title) :
 
 
 if __name__ == "__main__" :
-
-    redis = getDataFromCSV("stats/redis-stats.csv")
-    postgres = getDataFromCSV("stats/postgres-stats.csv")
-
-    #redis = getRunningDataFromCSV("stats/redis-running-stats.csv")
-    #postgres = getRunningDataFromCSV("stats/postgres-running-stats.csv")
-
-    #getRunningStatsGraph(redis, 1, 'Reading 1 Key') 
-
-    getCommandGraph(redis, 0, 'Redis Read')
-    getCommandGraph(postgres, 0, 'PostgreSQL Read')
-
-    getCommandGraph(redis, 1, 'Redis Insert')
-    getCommandGraph(postgres, 1, 'PostgreSQL Insert')
-
-    getCommandGraph(redis, 2, 'Redis Update')
-    getCommandGraph(postgres, 2, 'PostgreSQL Update')
-
-    getCommandGraph(redis, 3, 'Redis Delete')
-    getCommandGraph(postgres, 3, 'PostgreSQL Delete')
-
-
-    """
-    oneKeyCommand(redis, postgres, 0, 'Read 1 Key')
-    oneKeyCommand(redis, postgres, 1, 'Insert 1 Key')
-    oneKeyCommand(redis, postgres, 2, 'Update 1 Key')
-    oneKeyCommand(redis, postgres, 3, 'Delete 1 Key')
-
-    oneKeyCommand(redis, postgres, 13, 'Simultaneous Readers')
-    oneKeyCommand(redis, postgres, 14, 'Simultaneous Tasks')
-    oneKeyCommand(redis, postgres, 15, 'Simultaneous Transactions')
-    """
     
+    redis_1 = getDataFromCSV("stats/1/redis-stats.csv")
+    postgres_1= getDataFromCSV("stats/1/postgres-stats.csv") 
+    
+    redis_500 = getDataFromCSV("stats/500/redis-stats.csv") 
+    postgres_500 = getDataFromCSV("stats/500/postgres-stats.csv")  
+
+    redis_5K = getDataFromCSV("stats/5000/redis-stats.csv")  
+    postgres_5K = getDataFromCSV("stats/5000/postgres-stats.csv")  
+
+    redis_500K = getDataFromCSV("stats/500000/redis-stats.csv")  
+    postgres_500K = getDataFromCSV("stats/5000000/postgres-stats.csv")  
+
+    #redis_1M = getDataFromCSV("stats/1000000/redis-stats.csv")   
+    #postgres_1M = getDataFromCSV("stats/1000000/postgres-stats.csv")  
+
+    redis = combineMaps(redis_1, redis_500, redis_5K, redis_500K)
+
+    postgres = combineMaps(postgres_1, postgres_500, postgres_5K, postgres_500K)
+
+
+
+
         

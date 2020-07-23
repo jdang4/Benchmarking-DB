@@ -134,8 +134,6 @@ int main()
     bm->setThreads_and_Runs(10, 1000000);
     bm->connect();
 
-    bm->openCSV(numOfRuns);
-
     if (initialize_db)
     {
 	bm->initializeDB();
@@ -157,7 +155,8 @@ int main()
 
     while (elapsedTime < durationTime)
     {
-    
+	bm->openCSV(numOfRuns);
+
 	bm->setThreads_and_Runs(10, numOfRuns);
 
 	cout << "READING BENCHMARK: \n\n\n\n" << endl;
@@ -226,11 +225,12 @@ int main()
 	//csv << reader_1 << "," << reader_50 << "," << reader_100 << ",";
 	csv << task_1 << "," << task_50 << "," << task_100 << ",";
 	csv << transaction_1 << "," << transaction_50 << "," << transaction_100 << "\n";
+	
+	bm->closeCSV();
     }
 
-    csv.close();
 
-    bm->closeCSV();
+    csv.close();
 
     bm->disconnect();
 

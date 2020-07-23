@@ -101,7 +101,7 @@ void BenchmarkManager::closeCSV()
 
 double BenchmarkManager::getReadOutput()
 {
-    *csv << "Read Num, Time Elapsed (sec), \n";
+    *csv << "Read Num,Threads,Runs,Time Elapsed (sec)\n";
 
     vector<double> times;
 
@@ -122,7 +122,7 @@ double BenchmarkManager::getReadOutput()
 		cout << "time: " << time << " sec\n" << endl;
 	    }
 
-	    *csv << i << "," << time << "\n";
+	    *csv << i << "," << client->getThreads() << "," << client->getRuns() << "," << time << "\n";
 
 	    times.push_back(time);
 	}
@@ -153,7 +153,7 @@ double BenchmarkManager::getReadOutput()
 
 double BenchmarkManager::getInsertOutput()
 {
-    *csv << "Insert Num, Time Elapased (sec), \n";
+    *csv << "Insert Num,Threads,Runs,Time Elapased (sec)\n";
 
     vector<double> times;
 
@@ -169,7 +169,7 @@ double BenchmarkManager::getInsertOutput()
 		cout << "time: " << time << " sec\n" << endl;
 	    }
 
-	    *csv << i << "," << time << "\n";
+	    *csv << i << "," << client->getThreads() << "," << client->getRuns() << "," << time << "\n";
 
 	    times.push_back(time);
 	}
@@ -201,7 +201,7 @@ double BenchmarkManager::getInsertOutput()
 
 double BenchmarkManager::getUpdateOutput()
 {
-    *csv << "Update Num, Time Elapsed (sec), \n";
+    *csv << "Update Num,Threads,Runs,Time Elapsed (sec)\n";
 
     vector<double> times;
 
@@ -217,7 +217,7 @@ double BenchmarkManager::getUpdateOutput()
 		cout << "time: " << time << " sec\n" << endl;
 	    }
 
-	    *csv << i << "," << time << "\n";
+	    *csv << i << "," << client->getThreads() << "," << client->getRuns() << "," << time << "\n";
 
 	    times.push_back(time);
 	}
@@ -249,7 +249,7 @@ double BenchmarkManager::getUpdateOutput()
 
 double BenchmarkManager::getDeleteOutput()
 {
-    *csv << "Delete Num, Time Elapsed (sec), \n";
+    *csv << "Delete Num,Threads,Runs,Time Elapsed (sec)\n";
     vector<double> times;
 
     for (int i = 1; i <= trials; i++) 
@@ -264,7 +264,7 @@ double BenchmarkManager::getDeleteOutput()
 		cout << "time: " << time << " sec\n" << endl;
 	    }
 
-	    *csv << i << "," << time << "\n";
+	    *csv << i << "," << client->getThreads() << "," << client->getRuns() << "," << time << "\n";
 	    
 	    times.push_back(time);
 	}
@@ -364,7 +364,7 @@ double BenchmarkManager::getSimultaneousTasksOutput(int n, int num)
 {
     if (num <= 10)
     {
-	*csv << n << " Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, \n";
+	*csv << n << " Simul. Tasks Num,Threads,Runs,Time Elapsed (sec),Average Time per Tasks\n";
     }
 
     vector<double> times;
@@ -388,7 +388,7 @@ double BenchmarkManager::getSimultaneousTasksOutput(int n, int num)
 	
 	i = (num == 0) ? i : num;
 
-	*csv << i << "," << time << "," << avgTime_per_task << "\n";
+	*csv << i << "," << client->getThreads() << "," << client->getRuns() << "," << time << "," << avgTime_per_task << "\n";
 
 	times.push_back(time);
     }
@@ -426,7 +426,7 @@ double BenchmarkManager::getTransactionsOutput(int n, double successPercentage, 
 {
     if (num <= 10)
     {
-	*csv << n << " Simul. Transactions, Time Elapsed (sec), Average Time per Tasks, \n";
+	*csv << n << " Simul. Transactions,Threads,Runs,Time Elapsed (sec),Average Time per Tasks\n";
     }
 
     vector<double> times;
@@ -450,7 +450,7 @@ double BenchmarkManager::getTransactionsOutput(int n, double successPercentage, 
 
 	i = (num == 0) ? i : num;
 
-	*csv << i << "," << time << "," << avgTime_per_transaction << "\n";
+	*csv << i << "," << client->getThreads() << "," << client->getRuns() << "," << time << "," << avgTime_per_transaction << "\n";
 
 	times.push_back(time);
     }
