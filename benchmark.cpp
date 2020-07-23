@@ -56,11 +56,12 @@ int main()
 
     cout << "Select the number of operations to perform for each benchmark test:" << endl;
     cout << "1	-   Each operation is performed on 1 entry" << endl;
-    cout << "2	-   Each operation is performed on 100 entries" << endl;
+    cout << "2	-   Each operation is performed on 500 entries" << endl;
     cout << "3	-   Each operation is performed on 5,000 entries" << endl;
     cout << "4	-   Each operation is performed on 500,000 entries" << endl;
     cout << "5	-   Each operation is performed on 1,000,000 entries" << endl;
 
+    cout << "\nEnter in a number listed above: ";
     cin >> numOfRuns;
 
     switch(numOfRuns)

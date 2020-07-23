@@ -75,7 +75,7 @@ void BenchmarkManager::openCSV(int n)
 	    break;
 
 	case 2 :
-	    file = "stats" + to_string(n) + "/postgres-stats.csv";  
+	    file = "stats/" + to_string(n) + "/postgres-stats.csv";  
 	    break;
 
 	default :
