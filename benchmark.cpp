@@ -79,7 +79,7 @@ int main()
 	    break;
 
 	case 4:
-	    numOfRuns = 50000;
+	    numOfRuns = 500000;
 	    break;
 
 	case 5:
