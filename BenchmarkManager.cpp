@@ -71,11 +71,11 @@ void BenchmarkManager::openCSV(int n)
     switch(dbClient) 
     {
 	case 1 :
-	    file = "stats/" + n + "/redis-stats.csv";
+	    file = "stats/" + to_string(n) + "/redis-stats.csv";
 	    break;
 
 	case 2 :
-	    file = "stats" + n + "/postgres-stats.csv";  
+	    file = "stats" + to_string(n) + "/postgres-stats.csv";  
 	    break;
 
 	default :

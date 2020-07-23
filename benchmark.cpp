@@ -119,7 +119,7 @@ int main()
 
     BenchmarkManager* bm = new BenchmarkManager(1, printOutputs);
 
-    string file = (db == 1) ? "stats/" + numOfRuns + "/redis-running-stats.csv" : "stats/" + numOfRuns + "/postgres-running-stats.csv";
+    string file = (db == 1) ? "stats/" + to_string(numOfRuns) + "/redis-running-stats.csv" : "stats/" + to_string(numOfRuns) + "/postgres-running-stats.csv";
 
     if (remove(file.c_str()) != 0)
     {
