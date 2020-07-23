@@ -1,24 +1,40 @@
-Read Num, Time Elapsed (sec), 
-1,32.5181
+Read Num,Threads,Runs,Time Elapsed (sec)
+1,10,500000,76.6034
 
 
-Insert Num, Time Elapased (sec), 
-1,69.5247
+Insert Num,Threads,Runs,Time Elapased (sec)
+1,10,500000,91.9205
 
 
-Update Num, Time Elapsed (sec), 
-1,75.5745
+Update Num,Threads,Runs,Time Elapsed (sec)
+1,10,500000,95.7446
 
 
-Delete Num, Time Elapsed (sec), 
-1,43.198
+Delete Num,Threads,Runs,Time Elapsed (sec)
+1,10,500000,51.5662
 
 
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,74.9001,1.498
+1 Simul. Tasks Num,Threads,Runs,Time Elapsed (sec),Average Time per Tasks
+1,10,500000,95.6566,95.6566
 
 
-50 Simul. Transactions, Time Elapsed (sec), Average Time per Tasks, 
-1,73.373,1.46746
+50 Simul. Tasks Num,Threads,Runs,Time Elapsed (sec),Average Time per Tasks
+1,50,500000,36.4508,0.729017
+
+
+50 Simul. Tasks Num,Threads,Runs,Time Elapsed (sec),Average Time per Tasks
+1,100,500000,31.7395,0.634789
+
+
+1 Simul. Transactions,Threads,Runs,Time Elapsed (sec),Average Time per Tasks
+1,10,500000,116.127,116.127
+
+
+50 Simul. Transactions,Threads,Runs,Time Elapsed (sec),Average Time per Tasks
+1,50,500000,38.6196,0.772393
+
+
+100 Simul. Transactions,Threads,Runs,Time Elapsed (sec),Average Time per Tasks
+1,100,500000,32.8301,0.328301
 
 

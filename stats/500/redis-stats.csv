@@ -1,80 +1,40 @@
-Read Num, Time Elapsed (sec), 
-1,0.034543
+Read Num,Threads,Runs,Time Elapsed (sec)
+1,10,500,0.165829
 
 
-Insert Num, Time Elapased (sec), 
-1,0.036366
+Insert Num,Threads,Runs,Time Elapased (sec)
+1,10,500,0.241734
 
 
-Update Num, Time Elapsed (sec), 
-1,0.217045
+Update Num,Threads,Runs,Time Elapsed (sec)
+1,10,500,0.244443
 
 
-Delete Num, Time Elapsed (sec), 
-1,0.030774
+Delete Num,Threads,Runs,Time Elapsed (sec)
+1,10,500,0.100945
 
 
-1 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.037056,0.037056
+1 Simul. Tasks Num,Threads,Runs,Time Elapsed (sec),Average Time per Tasks
+1,10,500,0.238977,0.238977
 
 
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.03737,0.0007474
+50 Simul. Tasks Num,Threads,Runs,Time Elapsed (sec),Average Time per Tasks
+1,50,500,0.251767,0.00503534
 
 
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.038895,0.0007779
+50 Simul. Tasks Num,Threads,Runs,Time Elapsed (sec),Average Time per Tasks
+1,100,500,0.256396,0.00512792
 
 
-1 Simul. Transactions, Time Elapsed (sec), Average Time per Tasks, 
-1,0.054358,0.054358
+1 Simul. Transactions,Threads,Runs,Time Elapsed (sec),Average Time per Tasks
+1,10,500,0.371402,0.371402
 
 
-50 Simul. Transactions, Time Elapsed (sec), Average Time per Tasks, 
-1,0.057713,0.00115426
+50 Simul. Transactions,Threads,Runs,Time Elapsed (sec),Average Time per Tasks
+1,50,500,0.371298,0.00742596
 
 
-100 Simul. Transactions, Time Elapsed (sec), Average Time per Tasks, 
-1,0.063124,0.00063124
-
-
-Read Num, Time Elapsed (sec), 
-1,0.029273
-
-
-Insert Num, Time Elapased (sec), 
-1,0.035062
-
-
-Update Num, Time Elapsed (sec), 
-1,0.035683
-
-
-Delete Num, Time Elapsed (sec), 
-1,0.025784
-
-
-1 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.034309,0.034309
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.033751,0.00067502
-
-
-50 Simul. Tasks Num, Time Elapsed (sec), Average Time per Tasks, 
-1,0.03498,0.0006996
-
-
-1 Simul. Transactions, Time Elapsed (sec), Average Time per Tasks, 
-1,0.059512,0.059512
-
-
-50 Simul. Transactions, Time Elapsed (sec), Average Time per Tasks, 
-1,0.058678,0.00117356
-
-
-100 Simul. Transactions, Time Elapsed (sec), Average Time per Tasks, 
-1,0.05819,0.0005819
+100 Simul. Transactions,Threads,Runs,Time Elapsed (sec),Average Time per Tasks
+1,100,500,0.399593,0.00399593
 
 
