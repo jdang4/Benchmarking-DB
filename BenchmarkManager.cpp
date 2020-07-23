@@ -137,14 +137,12 @@ double BenchmarkManager::getReadOutput()
 
     double averageTime = sumTime / double(times.size());
 
-    double avgTimeThread = averageTime / double(client->getThreads());
- 
     double avg_op_per_sec = double(times.size() * client->getRuns()) / sumTime;
 
     cout << "\n----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
-    cout << "[ Read Average Time: " << averageTime << " sec\t\t Read Average Time per Thread: " << avgTimeThread << " sec\t\t Number of Trials: " << trials;
+    cout << "[ Read Average Time: " << averageTime << " sec\t\t Number of Threads: " << client->getThreads() << "\t\t Number of Trials: " << trials;
     cout << "\t\t Total Time: " << sumTime << " sec\t\t" << " Estimated " << avg_op_per_sec << " reads/sec ]\n" << endl;
-    cout << "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------n" << endl;
+    cout << "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
 
     *csv << "\n" << "\n";
 
@@ -187,14 +185,12 @@ double BenchmarkManager::getInsertOutput()
 
     double averageTime = sumTime / double(times.size());
 
-    double avgTimeThread = averageTime / double(client->getThreads());
- 
     double avg_op_per_sec = double(times.size() * client->getRuns()) / sumTime;
 
     cout << "\n----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
-    cout << "[ Insert Average Time: " << averageTime << " sec\t\t Insert Average Time per Thread: " << avgTimeThread << " sec\t\t Number of Trials: " << trials; 
+    cout << "[ Insert Average Time: " << averageTime << " sec\t\t Number of Threads: " << client->getThreads() << "\t\t Number of Trials: " << trials; 
     cout << "\t\t Total Time: " << sumTime << " sec\t\t" << " Estimated " << avg_op_per_sec << " inserts/sec ]\n" << endl; 
-    cout << "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------n" << endl;
+    cout << "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
 
     *csv << "\n" << "\n";
 
@@ -237,14 +233,12 @@ double BenchmarkManager::getUpdateOutput()
 
     double averageTime = sumTime / double(times.size());
 
-    double avgTimeThread = averageTime / double(client->getThreads());
- 
     double avg_op_per_sec = double(times.size() * client->getRuns()) / sumTime;
 
     cout << "\n----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
-    cout << "[ Update Average Time: " << averageTime << " sec\t\t Update Average Time per Thread: " << avgTimeThread << " sec\t\t Number of Trials: " << trials;
+    cout << "[ Update Average Time: " << averageTime << " sec\t\t Number of Threads: " << client->getThreads() << "\t\t Number of Trials: " << trials;
     cout << "\t\t Total Time: " << sumTime << " sec\t\t" << " Estimated " << avg_op_per_sec << " updates/sec ]\n" << endl;
-    cout << "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------n" << endl;
+    cout << "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
 
     *csv << "\n" << "\n";
     
@@ -274,7 +268,6 @@ double BenchmarkManager::getDeleteOutput()
 	    
 	    times.push_back(time);
 	}
-
     }
 
     double sumTime = 0;
@@ -286,14 +279,12 @@ double BenchmarkManager::getDeleteOutput()
 
     double averageTime = sumTime / double(times.size());
 
-    double avgTimeThread = averageTime / double(client->getThreads());
- 
     double avg_op_per_sec = double(times.size() * client->getRuns()) / sumTime;
 
     cout << "\n----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
-    cout << "[ Deletion Average Time: " << averageTime << " sec\t\t Update Average Time per Thread: " << avgTimeThread << " sec\t\t Number of Trials: " << trials; 
+    cout << "[ Deletion Average Time: " << averageTime << " sec\t\t Number of Threads: " << client->getThreads() << "\t\t Number of Trials: " << trials; 
     cout << "\t\t Total Time: " << sumTime << " sec\t\t" << " Estimated " << avg_op_per_sec << " deletions/sec ]\n" << endl;
-    cout << "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------n" << endl;
+    cout << "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
 
     *csv << "\n" << "\n";
     
@@ -411,16 +402,14 @@ double BenchmarkManager::getSimultaneousTasksOutput(int n, int num)
 
     double averageTime = sumTime / double(times.size());
 
-    double avgTimeThread = averageTime / double(client->getThreads());
- 
     double avg_op_per_sec = double(times.size() * client->getRuns()) / sumTime; 
 
     if (num == 0)
     {
-    cout << "\n----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
-	cout << "[ Simul. Tasks Average Time: " << averageTime << " sec\t\t Tasks Average Time per Thread: " << avgTimeThread << " sec\t\t Number of Trials: " << trials; 
+	cout << "\n----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
+	cout << "[ Simul. Tasks Average Time: " << averageTime << " sec\t\t Number of Threads: " << client->getThreads() << "\t\t Number of Trials: " << trials; 
 	cout << "\t\t Total Time: " << sumTime << " sec\t\t" << " Estimated " << avg_op_per_sec << " tasks/sec ]\n" << endl;
-    cout << "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------n" << endl;
+	cout << "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
     }
 
     if (num == 0 || num == 100)
@@ -475,16 +464,15 @@ double BenchmarkManager::getTransactionsOutput(int n, double successPercentage, 
     
     double averageTime = sumTime / double(times.size());
 
-    double avgTimeThread = averageTime / double(client->getThreads());
- 
     double avg_op_per_sec = double(times.size() * client->getRuns()) / sumTime; 
 
     if (num == 0)
     {
-    cout << "\n----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
-	cout << "[ Simul. Transactions Average Time: " << averageTime << " sec\t\t Transactions Average Time per Thread: " << avgTimeThread << " sec\t\t Number of Trials: " << trials; 
+	cout << "\n----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
+	cout << "[ Simul. Transactions Average Time: " << averageTime << " sec\t\t Number of Threads: " << client->getThreads() << "\t\t Number of Trials: " << trials; 
 	cout << "\t\t Total Time: " << sumTime << " sec\t\t" << " Estimated " << avg_op_per_sec << " transactions/sec ]\n" << endl;
-    cout << "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------n" << endl;
+	cout << "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
+
     }
 
     if (num == 0 || num == 100)
