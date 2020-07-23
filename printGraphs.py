@@ -10,7 +10,7 @@ def getCommandGraph(db, num, title) :
 
     for nums in data :
         x.append(int(nums[0]))
-        y.append(float(nums[1]))
+        y.append(float(nums[3]))
 
     plt.plot(x, y)
 
@@ -35,7 +35,7 @@ def getDataFromCSV(file) :
 
         count, index = 0, 0
 
-        limit = 5
+        limit = 1
 
         for row in csv_reader :
             if index > 12 :
@@ -112,7 +112,7 @@ if __name__ == "__main__" :
     postgres_5K = getDataFromCSV("stats/5000/postgres-stats.csv")  
 
     redis_500K = getDataFromCSV("stats/500000/redis-stats.csv")  
-    postgres_500K = getDataFromCSV("stats/5000000/postgres-stats.csv")  
+    postgres_500K = getDataFromCSV("stats/500000/postgres-stats.csv")  
 
     #redis_1M = getDataFromCSV("stats/1000000/redis-stats.csv")   
     #postgres_1M = getDataFromCSV("stats/1000000/postgres-stats.csv")  
