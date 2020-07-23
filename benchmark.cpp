@@ -9,7 +9,7 @@ using namespace std;
 
 int main() 
 {
-    int db;
+    int db, numOfRuns;
     string host, initialize_option, print_option;
 
     bool initialize_db = false;
@@ -52,6 +52,45 @@ int main()
     cout << "Enter time (in seconds): ";
     cin >> durationTime;
 
+    cout << endl;
+
+    cout << "Select the number of operations to perform for each benchmark test:" << endl;
+    cout << "1	-   Each operation is performed on 1 entry" << endl;
+    cout << "2	-   Each operation is performed on 100 entries" << endl;
+    cout << "3	-   Each operation is performed on 5,000 entries" << endl;
+    cout << "4	-   Each operation is performed on 500,000 entries" << endl;
+    cout << "5	-   Each operation is performed on 1,000,000 entries" << endl;
+
+    cin >> numOfRuns;
+
+    switch(numOfRuns)
+    {
+	case 1:
+	    numOfRuns = 1;
+	    break;
+
+	case 2:
+	    numOfRuns = 500;
+	    break;
+
+	case 3:
+	    numOfRuns = 5000;
+	    break;
+
+	case 4:
+	    numOfRuns = 50000;
+	    break;
+
+	case 5:
+	    numOfRuns = 1000000;
+	    break;
+
+	default:
+	    cout << "INVALID ENTRY!" << endl;
+	    exit(-1);
+    }
+
+
     durationTime = (durationTime > 0) ? durationTime : 1;
 
     if (db == 2)
@@ -80,7 +119,7 @@ int main()
 
     BenchmarkManager* bm = new BenchmarkManager(1, printOutputs);
 
-    string file = (db == 1) ? "stats/redis-running-stats.csv" : "stats/postgres-running-stats.csv";
+    string file = (db == 1) ? "stats/" + numOfRuns + "/redis-running-stats.csv" : "stats/" + numOfRuns + "/postgres-running-stats.csv";
 
     if (remove(file.c_str()) != 0)
     {
@@ -94,7 +133,7 @@ int main()
     bm->setThreads_and_Runs(10, 1000000);
     bm->connect();
 
-    bm->openCSV();
+    bm->openCSV(numOfRuns);
 
     if (initialize_db)
     {
@@ -118,7 +157,7 @@ int main()
     while (elapsedTime < durationTime)
     {
     
-	bm->setThreads_and_Runs(10, 1000000);
+	bm->setThreads_and_Runs(10, numOfRuns);
 
 	cout << "READING BENCHMARK: \n\n\n\n" << endl;
 
@@ -138,37 +177,37 @@ int main()
 	
 	cout << "SIMULTANEOUS TASKS [10] BENCHMARK: \n\n\n\n" << endl;
 
-	bm->setThreads_and_Runs(10, 1000000);
+	bm->setThreads_and_Runs(10, numOfRuns);
 
 	task_1 = bm->getSimultaneousTasksOutput(1);
 
 	cout << "SIMULTANEOUS TASKS [50] BENCHMARK: \n\n\n\n" << endl;
 
-	bm->setThreads_and_Runs(50, 1000000);
+	bm->setThreads_and_Runs(50, numOfRuns);
 	
 	task_50 = bm->getSimultaneousTasksOutput(50);
 
 	cout << "SIMULTANEOUS TASKS [100] BENCHMARK: \n\n\n\n" << endl;
 
-	bm->setThreads_and_Runs(100, 1000000);
+	bm->setThreads_and_Runs(100, numOfRuns);
 	
 	task_100 = bm->getSimultaneousTasksOutput(50);
 
 	cout << "SIMULTANEOUS TRANSACTIONS [10] BENCHMARK: \n\n\n\n" << endl;
 
-	bm->setThreads_and_Runs(10, 1000000);
+	bm->setThreads_and_Runs(10, numOfRuns);
 
 	transaction_1 = bm->getTransactionsOutput(1, 70.0);
 
 	cout << "SIMULTANEOUS TRANSACTIONS [50] BENCHMARK: \n\n\n\n" << endl;
 
-	bm->setThreads_and_Runs(50, 1000000);
+	bm->setThreads_and_Runs(50, numOfRuns);
 	
 	transaction_50 = bm->getTransactionsOutput(50, 70.0);
 
 	cout << "SIMULTANEOUS TRANSACTIONS [100] BENCHMARK: \n\n\n\n" << endl;
 
-	bm->setThreads_and_Runs(100, 1000000);
+	bm->setThreads_and_Runs(100, numOfRuns);
 	
 	transaction_100 = bm->getTransactionsOutput(100, 70.0);
 

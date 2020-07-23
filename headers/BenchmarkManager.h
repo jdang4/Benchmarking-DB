@@ -20,7 +20,7 @@ class BenchmarkManager
 	void initializeDB();
 	void connect();
 	void disconnect();
-	void openCSV();
+	void openCSV(int n);
 	void closeCSV();
 	double getReadOutput();
 	double getInsertOutput();

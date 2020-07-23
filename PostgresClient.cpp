@@ -68,6 +68,8 @@ double PostgresClient::run_threads(Lambda f, int begin, bool random, int n)
 
     int numOfRuns = (n == 0) ? runs : n;
 
+    threads = (threads > numOfRuns) ? numOfRuns : threads;
+
     int perThread = numOfRuns / threads;
 
     int remainingThreads = numOfRuns % threads;

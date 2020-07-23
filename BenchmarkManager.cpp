@@ -64,18 +64,18 @@ void BenchmarkManager::initializeDB()
 
 }
 
-void BenchmarkManager::openCSV()
+void BenchmarkManager::openCSV(int n)
 {
     string file;
 
     switch(dbClient) 
     {
 	case 1 :
-	    file = "stats/redis-stats.csv";
+	    file = "stats/" + n + "/redis-stats.csv";
 	    break;
 
 	case 2 :
-	    file = "stats/postgres-stats.csv";  
+	    file = "stats" + n + "/postgres-stats.csv";  
 	    break;
 
 	default :
