@@ -159,7 +159,7 @@ double RedisClient::readEntry(bool randomOption)
 /**
  * see description at DBClient::insertEntry()
  */
-double RedisClient::insertEntry()
+double RedisClient::insertEntry(int key)
 {
     auto insert = [&](int start, int end, bool random) {
         try {
@@ -174,13 +174,13 @@ double RedisClient::insertEntry()
         }
     };
 
-    return run_threads(insert, 2000000, false);
+    return run_threads(insert, key, false);
 }
 
 /**
  * see description at DBClient::updateEntry()
  */
-double RedisClient::updateEntry(bool randomOption) 
+double RedisClient::updateEntry(int key, bool randomOption) 
 {
     auto update = [&](int start, int end, bool random) {
 		try {
@@ -198,14 +198,14 @@ double RedisClient::updateEntry(bool randomOption)
 		}
 	};
 	
-	return run_threads(update, 2000000, randomOption);
+	return run_threads(update, key, randomOption);
 }
 
 
 /**
  * see description at DBClient::deleteEntry()
  */
-double RedisClient::deleteEntry(bool randomOption)
+double RedisClient::deleteEntry(int key, bool randomOption)
 {
     auto deletion = [&](int start, int end, bool random) {
 	try {
@@ -224,7 +224,7 @@ double RedisClient::deleteEntry(bool randomOption)
 	}
     };
 
-    return run_threads(deletion, 2000000, randomOption);
+    return run_threads(deletion, key, randomOption);
 }
 
 

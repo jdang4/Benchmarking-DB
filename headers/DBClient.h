@@ -15,9 +15,9 @@ class DBClient
 	virtual void disconnect();
 	virtual double initializeDB();
 	virtual double readEntry(bool randomOption);
-	virtual double insertEntry();
-	virtual double updateEntry(bool randomOption);
-	virtual double deleteEntry(bool randomOption);
+	virtual double insertEntry(int key);
+	virtual double updateEntry(int key, bool randomOption);
+	virtual double deleteEntry(int key, bool randomOption);
 	virtual double simultaneousTasks(bool randomOption);
 	virtual double performTransactions(bool randomOption);
 	

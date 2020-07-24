@@ -157,9 +157,13 @@ double BenchmarkManager::getInsertOutput()
 
     vector<double> times;
 
+    int64_t key = 2000000;
+
     for (int i = 1; i <= trials; i++)
     {
-	double time = client->insertEntry();
+	double time = client->insertEntry(key);
+
+    key += 1000000;
 
 	if (time != -1.0)
 	{
@@ -205,9 +209,14 @@ double BenchmarkManager::getUpdateOutput()
 
     vector<double> times;
 
+    int64_t key = 2000000;
+
     for (int i = 1; i <= trials; i++)
     {
-	double time = client->updateEntry(false);
+    
+	double time = client->updateEntry(key, false);
+
+    key += 1000000;
 
 	if (time != -1.0)
 	{
@@ -252,10 +261,15 @@ double BenchmarkManager::getDeleteOutput()
     *csv << "Delete Num,Threads,Runs,Time Elapsed (sec)\n";
     vector<double> times;
 
+    int64_t key = 2000000;
+
     for (int i = 1; i <= trials; i++) 
     {
-	double time = client->deleteEntry(false);
+    
+	double time = client->deleteEntry(key, false);
 
+    key += 1000000;
+    
 	if (time != -1.0) 
 	{
 	    if (showOutputs)

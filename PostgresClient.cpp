@@ -221,7 +221,7 @@ double PostgresClient::readEntry(bool randomOption)
 /*
  * see description at DBClient::insertEntry
  */
-double PostgresClient::insertEntry()
+double PostgresClient::insertEntry(int key)
 {
 	auto insert = [&](int start, int end, bool random) {
 		try {
@@ -255,14 +255,14 @@ double PostgresClient::insertEntry()
 		}
 	};
     
-	return run_threads(insert, 2000000, false);
+	return run_threads(insert, key, false);
 }
 
 
 /*
  * see description at DBClient::updateEntry
  */
-double PostgresClient::updateEntry(bool randomOption)
+double PostgresClient::updateEntry(int key, bool randomOption)
 {
 	auto update = [&](int start, int end, bool random) {
 		try {
@@ -303,14 +303,14 @@ double PostgresClient::updateEntry(bool randomOption)
 		}
 	};
     
-	return run_threads(update, 2000000, randomOption);
+	return run_threads(update, key, randomOption);
 }
 
 
 /*
  * see description at DBClient::deleteEntry
  */
-double PostgresClient::deleteEntry(bool randomOption)
+double PostgresClient::deleteEntry(int key, bool randomOption)
 {
     auto deletion = [&](int start, int end, bool random) {
 		try {
@@ -341,7 +341,7 @@ double PostgresClient::deleteEntry(bool randomOption)
 		}
 	};
     
-	return run_threads(deletion, 2000000, randomOption);
+	return run_threads(deletion, key, randomOption);
 }
 
 

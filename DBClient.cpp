@@ -143,7 +143,7 @@ double DBClient::readEntry(bool randomOption)
  *
  * @return the double value of the time it took to complete the insertion
  **/
-double DBClient::insertEntry()
+double DBClient::insertEntry(int key)
 {
     cout << "Method is ran from the DBClient...." << endl;
     return -1;
@@ -158,7 +158,7 @@ double DBClient::insertEntry()
  *
  * @return a double value of the time it took to complete an update
  **/
-double DBClient::updateEntry(bool randomOption) 
+double DBClient::updateEntry(int key, bool randomOption) 
 {
     cout << "Method is ran from the DBClient...." << endl; 
     return -1;
@@ -172,7 +172,7 @@ double DBClient::updateEntry(bool randomOption)
  *
  * @return a double value of the time it took to complete a deletion
  **/
-double DBClient::deleteEntry(bool randomOption)
+double DBClient::deleteEntry(int key, bool randomOption)
 {
     cout << "Method is ran from the DBClient...." << endl;
     return -1;

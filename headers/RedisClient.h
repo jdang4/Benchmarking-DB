@@ -16,9 +16,9 @@ class RedisClient : public DBClient
 	void connect() override;
 	double initializeDB() override;
 	double readEntry(bool randomOption) override;
-	double insertEntry() override;
-	double updateEntry(bool randomOption) override;
-	double deleteEntry(bool randomOption) override;
+	double insertEntry(int key) override;
+	double updateEntry(int key, bool randomOption) override;
+	double deleteEntry(int key, bool randomOption) override;
 	double simultaneousTasks(bool randomOption) override;
 	double performTransactions(bool randomOption) override;
 	 
