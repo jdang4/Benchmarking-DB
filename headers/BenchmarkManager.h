@@ -22,12 +22,12 @@ class BenchmarkManager
 	void disconnect();
 	void openCSV(int n);
 	void closeCSV();
-	double getReadOutput();
-	double getInsertOutput();
-	double getUpdateOutput();
-	double getDeleteOutput();
-	double getSimultaneousTasksOutput(int n, int num = 0);
-	double getTransactionsOutput(int n, double p, int num = 0);
+	double getReadOutput(int threads);
+	double getInsertOutput(int threads, int start);
+	double getUpdateOutput(int threads, int start);
+	double getDeleteOutput(int threads, int start);
+	double getSimultaneousTasksOutput(int threads, int num = 0);
+	double getTransactionsOutput(int threads, int num = 0);
 	
     private:
 	DBClient* client;
