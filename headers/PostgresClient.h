@@ -23,7 +23,7 @@ class PostgresClient : public DBClient
 	double updateEntry(int key, bool randomOption) override;
 	double deleteEntry(int key, bool randomOption) override;
 	double simultaneousTasks(bool randomOption) override;
-	double performTransactions(bool randomOption) override;
+	double performTransactions(int key) override;
 
     private:
 	std::string connection_description;

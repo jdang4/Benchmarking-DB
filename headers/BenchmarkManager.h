@@ -17,23 +17,25 @@ class BenchmarkManager
 
 	void selectDB(int db, std::string host);
 	void setThreads_and_Runs(int threads, int runs);
+	void performRandomization();
 	void initializeDB();
 	void connect();
 	void disconnect();
 	void openCSV(int n);
 	void closeCSV();
-	double getReadOutput(int threads);
-	double getInsertOutput(int threads, int start);
-	double getUpdateOutput(int threads, int start);
-	double getDeleteOutput(int threads, int start);
-	double getSimultaneousTasksOutput(int threads, int num = 0);
-	double getTransactionsOutput(int threads, int num = 0);
+	double getReadOutput(int threads, bool csvOption, bool random);
+	double getInsertOutput(int threads, int start, bool csvOption);
+	double getUpdateOutput(int threads, int start, bool csvOption, bool random);
+	double getDeleteOutput(int threads, int start, bool csvOption, bool random);
+	double getSimultaneousTasksOutput(int threads, bool csvOption, bool random, int num = 0);
+	double getTransactionsOutput(int threads, int start, bool csvOption, int num = 0);
 	
     private:
 	DBClient* client;
 	int trials;
 	int dbClient;
 	bool showOutputs;
+	bool randomOption;
 	std::ofstream* csv;
 };
 

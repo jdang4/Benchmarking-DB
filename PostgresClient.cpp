@@ -416,7 +416,7 @@ double PostgresClient::simultaneousTasks(bool randomOption)
 /*
  * see description at DBClient::performTransactions
  */
-double PostgresClient::performTransactions(bool randomOption)
+double PostgresClient::performTransactions(int key)
 {
 	auto transaction = [&](int start, int end, bool random) {
 		try {
@@ -499,5 +499,5 @@ double PostgresClient::performTransactions(bool randomOption)
 		}
 	};
 
-	return run_threads(transaction, 2000000, randomOption);
+	return run_threads(transaction, key, true);
 }

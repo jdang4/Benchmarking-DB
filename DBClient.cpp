@@ -209,7 +209,7 @@ double DBClient::simultaneousTasks(bool randomOption)
  * @return a double value of the time it took for all the 
  * simultaneous transactions going on
  */
-double DBClient::performTransactions(bool randomOption)
+double DBClient::performTransactions(int key)
 {
     cout << "Method is ran from the DBClient...." << endl;
     return -1;

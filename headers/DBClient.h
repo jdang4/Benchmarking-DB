@@ -19,7 +19,7 @@ class DBClient
 	virtual double updateEntry(int key, bool randomOption);
 	virtual double deleteEntry(int key, bool randomOption);
 	virtual double simultaneousTasks(bool randomOption);
-	virtual double performTransactions(bool randomOption);
+	virtual double performTransactions(int key);
 	
 	std::vector<int> getRandomKeys(int len, int min, int max);
 	void setThreads(int n);

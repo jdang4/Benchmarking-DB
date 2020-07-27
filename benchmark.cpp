@@ -9,7 +9,7 @@ using namespace std;
  
 int main() 
 {
-    int db, numOfRuns;
+    int db, numOfRuns, benchmarkOption;
     string host, initialize_option, print_option;
  
     bool initialize_db = false;
@@ -53,7 +53,14 @@ int main()
     cin >> durationTime;
  
     cout << endl;
- 
+
+	cout << "Select the option you want to use in the benchmark application:" << endl;
+	cout << "1	-	(Standard) Already defined set of benchmark tests" << endl;
+	cout << "2	-	Randomize Operations and Keys" << endl;
+	cin >> benchmarkOption;
+
+	cout << endl;
+
     cout << "Select the number of operations to perform for each benchmark test:" << endl;
     cout << "1  -   Each operation is performed on 1 entry" << endl;
     cout << "2  -   Each operation is performed on 500 entries" << endl;
@@ -169,89 +176,114 @@ int main()
  
     while (elapsedTime < durationTime)
     {
-        bm->openCSV(numOfRuns);
+		if (benchmarkOption == 1)
+		{
+			bm->openCSV(numOfRuns);
  
-        bm->setThreads_and_Runs(10, numOfRuns);
+        	bm->setThreads_and_Runs(10, numOfRuns);
  
-        cout << "READING BENCHMARK: \n\n" << endl;
+        	cout << "READING BENCHMARK: \n\n" << endl;
  
-        cout << "1 THREAD: \n\n" << endl;
+        	cout << "1 THREAD: \n\n" << endl;
  
-        read_1 = bm->getReadOutput(1);
+        	read_1 = bm->getReadOutput(1, true, false);
  
-        cout << "5 THREAD: \n\n" << endl;
+        	cout << "5 THREAD: \n\n" << endl;
  
-        read_5 = bm->getReadOutput(5);
+        	read_5 = bm->getReadOutput(5, true, false);
  
-        cout << "10 THREAD: \n\n" << endl;
+        	cout << "10 THREAD: \n\n" << endl;
  
-        read_10 = bm->getReadOutput(10);
+        	read_10 = bm->getReadOutput(10, true, false);
  
-        cout << "INSERTION BENCHMARK: \n\n" << endl; 
+        	cout << "INSERTION BENCHMARK: \n\n" << endl; 
  
-        cout << "1 THREAD: \n\n" << endl;
+        	cout << "1 THREAD: \n\n" << endl;
  
-        insert_1 = bm->getInsertOutput(1, start_1);
+        	insert_1 = bm->getInsertOutput(1, start_1, true);
  
-        cout << "5 THREAD: \n\n" << endl;
+        	cout << "5 THREAD: \n\n" << endl;
  
-        insert_5 = bm->getInsertOutput(5, start_5);
+        	insert_5 = bm->getInsertOutput(5, start_5, true);
  
-        cout << "10 THREAD: \n\n" << endl;
+        	cout << "10 THREAD: \n\n" << endl;
  
-        insert_10 = bm->getInsertOutput(10, start_10);
+        	insert_10 = bm->getInsertOutput(10, start_10, true);
  
-        cout << "UPDATING BENCHMARK: \n\n" << endl;
+        	cout << "UPDATING BENCHMARK: \n\n" << endl;
  
-        cout << "1 THREAD: \n\n" << endl;
+        	cout << "1 THREAD: \n\n" << endl;
  
-        update_1 = bm->getUpdateOutput(1, start_1); 
+        	update_1 = bm->getUpdateOutput(1, start_1, true, false); 
  
-        cout << "5 THREAD: \n\n" << endl;
+        	cout << "5 THREAD: \n\n" << endl;
         
-        update_5 = bm->getUpdateOutput(5, start_5);
+        	update_5 = bm->getUpdateOutput(5, start_5, true, false);
  
-        cout << "10 THREAD: \n\n" << endl;
+        	cout << "10 THREAD: \n\n" << endl;
         
-        update_10 = bm->getUpdateOutput(10, start_10);
+        	update_10 = bm->getUpdateOutput(10, start_10, true, false);
  
-        cout << "DELETION BENCHMARK: \n\n" << endl;
+        	cout << "DELETION BENCHMARK: \n\n" << endl;
  
-        cout << "1 THREAD: \n\n" << endl;
+        	cout << "1 THREAD: \n\n" << endl;
  
-        delete_1 = bm->getDeleteOutput(1, start_1);
+        	delete_1 = bm->getDeleteOutput(1, start_1, true, false);
  
-        cout << "5 THREAD: \n\n" << endl;
+        	cout << "5 THREAD: \n\n" << endl;
         
-        delete_5 = bm->getDeleteOutput(5, start_5);
+        	delete_5 = bm->getDeleteOutput(5, start_5, true, false);
  
-        cout << "10 THREAD: \n\n" << endl;
+        	cout << "10 THREAD: \n\n" << endl;
  
-        delete_10 = bm->getDeleteOutput(10, start_10);
+        	delete_10 = bm->getDeleteOutput(10, start_10, true, false);
     
-        cout << "SIMULTANEOUS TASKS [10] BENCHMARK: \n\n\n\n" << endl;
+        	cout << "SIMULTANEOUS TASKS [10] BENCHMARK: \n\n\n\n" << endl;
  
-        task_10 = bm->getSimultaneousTasksOutput(10);
+        	task_10 = bm->getSimultaneousTasksOutput(10, true, false);
  
-        cout << "SIMULTANEOUS TASKS [50] BENCHMARK: \n\n\n\n" << endl;
+        	cout << "SIMULTANEOUS TASKS [50] BENCHMARK: \n\n\n\n" << endl;
     
-        task_50 = bm->getSimultaneousTasksOutput(50);
+        	task_50 = bm->getSimultaneousTasksOutput(50, true, false);
  
-        cout << "SIMULTANEOUS TASKS [100] BENCHMARK: \n\n\n\n" << endl;
+  		    cout << "SIMULTANEOUS TASKS [100] BENCHMARK: \n\n\n\n" << endl;
     
-        task_100 = bm->getSimultaneousTasksOutput(100);
+        	task_100 = bm->getSimultaneousTasksOutput(100, true, false);
  
-        cout << "SIMULTANEOUS TRANSACTIONS [10] BENCHMARK: \n\n\n\n" << endl;
+        	cout << "SIMULTANEOUS TRANSACTIONS [10] BENCHMARK: \n\n\n\n" << endl;
  
-        transaction_10 = bm->getTransactionsOutput(10);
+        	transaction_10 = bm->getTransactionsOutput(10, start_1, true, false);
  
-        cout << "SIMULTANEOUS TRANSACTIONS [50] BENCHMARK: \n\n\n\n" << endl;
+        	cout << "SIMULTANEOUS TRANSACTIONS [50] BENCHMARK: \n\n\n\n" << endl;
     
-        transaction_50 = bm->getTransactionsOutput(50);
+        	transaction_50 = bm->getTransactionsOutput(50, start_5, true, false);
  
-        cout << "SIMULTANEOUS TRANSACTIONS [100] BENCHMARK: \n\n\n\n" << endl;
+        	cout << "SIMULTANEOUS TRANSACTIONS [100] BENCHMARK: \n\n\n\n" << endl;
     
-        transaction_100 = bm->getTransactionsOutput(100);
+        	transaction_100 = bm->getTransactionsOutput(100, start_10, true, false);
+
+			auto tmp_end = chrono::high_resolution_clock::now();
+
+			auto tmp_elapsed = chrono::duration_cast<chrono::microseconds>(tmp_end - start);
+
+			elapsedTime = tmp_elapsed.count() * 1e-6;
+
+			double elapsedTime_min = double(elapsedTime) / double(60);
+
+			csv << elapsedTime_min << "," << read_1 << "," << read_5 << "," << read_10 << ",";
+        	csv << insert_1 << "," << insert_5 << "," << insert_10 << ","; 
+        	csv << update_1 << "," << update_5 << "," << update_10 << ","; 
+        	csv << delete_1 << "," << delete_5 << "," << delete_10 << ",";
+        	csv << task_10 << "," << task_50 << "," << task_100 << ",";
+        	csv << transaction_10 << "," << transaction_50 << "," << transaction_100 << "\n";
+    
+        	bm->closeCSV();
+		}
+
+		else 
+		{
+			bm->performRandomization();
+		}   
  
  
         auto end = chrono::high_resolution_clock::now();
@@ -259,20 +291,8 @@ int main()
         auto elapsed = chrono::duration_cast<chrono::microseconds>(end - start);
  
         elapsedTime = elapsed.count() * 1e-6;
- 
-        double elapsedTime_min = double(elapsedTime) / double(60);
- 
-    
-        csv << elapsedTime_min << "," << read_1 << "," << read_5 << "," << read_10 << ",";
-        csv << insert_1 << "," << insert_5 << "," << insert_10 << ","; 
-        csv << update_1 << "," << update_5 << "," << update_10 << ","; 
-        csv << delete_1 << "," << delete_5 << "," << delete_10 << ",";
-        csv << task_10 << "," << task_50 << "," << task_100 << ",";
-        csv << transaction_10 << "," << transaction_50 << "," << transaction_100 << "\n";
-    
-        bm->closeCSV();
     }
- 
+	
  
     csv.close();
  

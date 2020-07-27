@@ -146,13 +146,13 @@ double RedisClient::readEntry(bool randomOption)
     auto read = [&](int start, int end, bool random) {
         try {
 		
-	    Redis* redis = new Redis(options, pool_options);
+	    	Redis* redis = new Redis(options, pool_options);
 		
             for (int i = start; i < end; i++)
             {
-		srand(time(0));
-		int randomNum = (rand() % (end + 1 - start)) + start;  
-		int key = (random) ? randomNum : i;
+				srand(time(0));
+				int randomNum = (rand() % (end + 1 - start)) + start;  
+				int key = (random) ? randomNum : i;
 
                 redis->get(to_string(key));
             }
@@ -229,9 +229,9 @@ double RedisClient::deleteEntry(int key, bool randomOption)
 
 	    for (int i = start; i < end; i++)
 	    {
-		srand(time(0));
-		int randomNum = (rand() % (end + 1 - start)) + start;  
-		int key = (random) ? randomNum : i;
+			srand(time(0));
+			int randomNum = (rand() % (end + 1 - start)) + start;  
+			int key = (random) ? randomNum : i;
 
 		redis->del(to_string(key));
 	    }
@@ -257,17 +257,17 @@ double RedisClient::simultaneousTasks(bool randomOption)
 	
 	auto read = [&](int key) {
 	    try {
-		redis->get(to_string(key));
+			redis->get(to_string(key));
 	    
 	    } catch (const Error &e) {
-		cout << "ERROR READING" << endl;
-		exit(-1);
+			cout << "ERROR READING" << endl;
+			exit(-1);
 	    }
 	};
 
 	auto write = [&](int key) {
 	    try {
-		redis->set(to_string(key), newVal);
+			redis->set(to_string(key), newVal);
 	    
 	    } catch (const Error &e) {
 			cout << "ERROR UPDATING" << endl;
@@ -303,10 +303,10 @@ double RedisClient::simultaneousTasks(bool randomOption)
 /*
  * see description at DBClient::performTransactions()
  */
-double RedisClient::performTransactions(bool randomOption)
+double RedisClient::performTransactions(int key)
 {
     auto transaction = [&](int start, int end, bool random) {
-	Redis* redis = new Redis(options, pool_options);
+		Redis* redis = new Redis(options, pool_options);
 
 		auto success = [&](int64_t aKey) {
 	    	try {
@@ -369,5 +369,5 @@ double RedisClient::performTransactions(bool randomOption)
 		}
     };
 
-    return run_threads(transaction, 2000000, randomOption);
+    return run_threads(transaction, key, true);
 }

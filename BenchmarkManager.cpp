@@ -97,11 +97,74 @@ void BenchmarkManager::closeCSV()
 {
     csv->close();
 }
- 
- 
-double BenchmarkManager::getReadOutput(int threads)
+
+
+void BenchmarkManager::performRandomization()
 {
-    *csv << "Read Num,Threads,Runs,Time Elapsed (sec)\n";
+    int option = (rand() % 6) + 1;
+
+    int starting_key = (rand() % (3000000 + 1 - 2000000)) + 2000000;
+
+    int thread_counts[3] = {1, 5, 10};
+
+    int index = (rand() % (3 + 1));
+
+    index--;
+
+    int thread = thread_counts[index];
+
+    string title;
+
+    switch(option)
+    {
+        case 1 :
+            title = "READING";
+            getReadOutput(thread, false, true);
+            break;
+
+        case 2 :
+            title = "INSERTION";
+            getInsertOutput(thread, starting_key, false);
+            getDeleteOutput(thread, starting_key, false, false);
+            break;
+
+        case 3 :
+            title = "UPDATING";
+            getUpdateOutput(thread, 1, false, true);
+            break;
+
+        case 4 :
+            title = "DELETION";
+            getDeleteOutput(thread, 1, false, true);
+            break;
+
+        case 5 :
+            title = to_string(thread) + " SIMULTANEOUS TASKS";
+            getSimultaneousTasksOutput(thread, starting_key, false, true);
+            break;
+
+        case 6 :
+            title = to_string(thread) + " SIMULTANEOUS TRANSACTIONS";
+            getTransactionsOutput(thread, starting_key, false, true);
+            break;
+
+        default :
+            cout << "ERROR" << endl;
+            exit(-1);
+    } 
+
+    cout << title << " BENCHMARK: \n\n" << endl;
+ 
+    cout << thread << " THREAD: \n\n" << endl;
+}
+ 
+double BenchmarkManager::getReadOutput(int threads, bool csvOption, bool random)
+{
+    if (csvOption)
+    {
+        *csv << "Read Num,Threads,Runs,Time Elapsed (sec)\n";
+    }
+    
  
     vector<double> times;
  
@@ -109,15 +172,19 @@ double BenchmarkManager::getReadOutput(int threads)
  
     for (int i = 1; i <= trials; i++)
     {
-        double time = client->readEntry(false);
+        double time = client->readEntry(random);
  
         if (showOutputs) 
         {
-                cout << "READ #" << i << ":\t\t\t\t\t";
-                cout << "time: " << time << " sec\n" << endl;
+            cout << "READ #" << i << ":\t\t\t\t\t";
+            cout << "time: " << time << " sec\n" << endl;
         }
-            
-        *csv << i << "," << client->getThreads() << "," << client->getRuns() << "," << time << "\n";
+
+        if (csvOption)
+        {
+             *csv << i << "," << client->getThreads() << "," << client->getRuns() << "," << time << "\n";
+        }
+       
  
         times.push_back(time);
  
@@ -138,17 +205,25 @@ double BenchmarkManager::getReadOutput(int threads)
     cout << "[ Read Average Time: " << averageTime << " sec\t\t Number of Threads: " << client->getThreads() << "\t\t Number of Trials: " << trials;
     cout << "\t\t Total Time: " << sumTime << " sec\t\t" << " Estimated " << avg_op_per_sec << " reads/sec ]\n" << endl;
     cout << "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
- 
-    *csv << "\n" << "\n";
+
+    if (csvOption)
+    {
+        *csv << "\n" << "\n";
+    }
+    
  
     return averageTime;
 }
  
  
  
-double BenchmarkManager::getInsertOutput(int threads, int start)
+double BenchmarkManager::getInsertOutput(int threads, int start, bool csvOption)
 {
-    *csv << "Insert Num,Threads,Runs,Time Elapased (sec)\n";
+    if (csvOption)
+    {
+        *csv << "Insert Num,Threads,Runs,Time Elapased (sec)\n";
+    }
+    
  
     vector<double> times;
  
@@ -167,8 +242,12 @@ double BenchmarkManager::getInsertOutput(int threads, int start)
             cout << "INSERTION #" << i << ":\t\t\t\t\t";
             cout << "time: " << time << " sec\n" << endl;
         }
- 
-        *csv << i << "," << client->getThreads() << "," << client->getRuns() << "," << time << "\n";
+
+        if (csvOption)
+        {
+            *csv << i << "," << client->getThreads() << "," << client->getRuns() << "," << time << "\n";
+        }
+        
  
         times.push_back(time);
  
@@ -189,17 +268,25 @@ double BenchmarkManager::getInsertOutput(int threads, int start)
     cout << "[ Insert Average Time: " << averageTime << " sec\t\t Number of Threads: " << client->getThreads() << "\t\t Number of Trials: " << trials; 
     cout << "\t\t Total Time: " << sumTime << " sec\t\t" << " Estimated " << avg_op_per_sec << " inserts/sec ]\n" << endl; 
     cout << "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
- 
-    *csv << "\n" << "\n";
+
+    if (csvOption)
+    {
+        *csv << "\n" << "\n";
+    }
+    
  
     return averageTime;
 }
  
  
  
-double BenchmarkManager::getUpdateOutput(int threads, int start)
+double BenchmarkManager::getUpdateOutput(int threads, int start, bool csvOption, bool random)
 {
-    *csv << "Update Num,Threads,Runs,Time Elapsed (sec)\n";
+    if (csvOption)
+    {
+        *csv << "Update Num,Threads,Runs,Time Elapsed (sec)\n";
+    }
+    
  
     vector<double> times;
  
@@ -209,7 +296,7 @@ double BenchmarkManager::getUpdateOutput(int threads, int start)
  
     for (int i = 1; i <= trials; i++)
     {
-        double time = client->updateEntry(key, false);
+        double time = client->updateEntry(key, random);
  
         key += 1000000;
  
@@ -218,8 +305,12 @@ double BenchmarkManager::getUpdateOutput(int threads, int start)
             cout << "UPDATE #" << i << ":\t\t\t\t\t";
             cout << "time: " << time << " sec\n" << endl;
         }
- 
-        *csv << i << "," << client->getThreads() << "," << client->getRuns() << "," << time << "\n";
+
+        if (csvOption)
+        {
+            *csv << i << "," << client->getThreads() << "," << client->getRuns() << "," << time << "\n";
+        }
+        
  
         times.push_back(time);
  
@@ -240,17 +331,25 @@ double BenchmarkManager::getUpdateOutput(int threads, int start)
     cout << "[ Update Average Time: " << averageTime << " sec\t\t Number of Threads: " << client->getThreads() << "\t\t Number of Trials: " << trials;
     cout << "\t\t Total Time: " << sumTime << " sec\t\t" << " Estimated " << avg_op_per_sec << " updates/sec ]\n" << endl;
     cout << "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
- 
-    *csv << "\n" << "\n";
+
+    if (csvOption)
+    {
+        *csv << "\n" << "\n";
+    }
+    
     
     return averageTime;
 }
  
  
  
-double BenchmarkManager::getDeleteOutput(int threads, int start)
+double BenchmarkManager::getDeleteOutput(int threads, int start, bool csvOption, bool random)
 {
-    *csv << "Delete Num,Threads,Runs,Time Elapsed (sec)\n";
+    if (csvOption)
+    {
+        *csv << "Delete Num,Threads,Runs,Time Elapsed (sec)\n";
+    }
+    
     vector<double> times;
  
     client->setThreads(threads);
@@ -260,7 +359,7 @@ double BenchmarkManager::getDeleteOutput(int threads, int start)
     for (int i = 1; i <= trials; i++) 
     {
     
-        double time = client->deleteEntry(key, false);
+        double time = client->deleteEntry(key, random);
  
         key += 1000000;
  
@@ -269,8 +368,12 @@ double BenchmarkManager::getDeleteOutput(int threads, int start)
             cout << "DELETION #" << i << ":\t\t\t\t\t"; 
             cout << "time: " << time << " sec\n" << endl;
         }
- 
-        *csv << i << "," << client->getThreads() << "," << client->getRuns() << "," << time << "\n";
+
+        if (csvOption)
+        {
+            *csv << i << "," << client->getThreads() << "," << client->getRuns() << "," << time << "\n";
+        }
+        
         
         times.push_back(time);
     }
@@ -290,16 +393,20 @@ double BenchmarkManager::getDeleteOutput(int threads, int start)
     cout << "[ Deletion Average Time: " << averageTime << " sec\t\t Number of Threads: " << client->getThreads() << "\t\t Number of Trials: " << trials; 
     cout << "\t\t Total Time: " << sumTime << " sec\t\t" << " Estimated " << avg_op_per_sec << " deletions/sec ]\n" << endl;
     cout << "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
- 
-    *csv << "\n" << "\n";
+
+    if (csvOption)
+    {
+        *csv << "\n" << "\n";
+    }
+    
     
     return averageTime;
 }
  
  
-double BenchmarkManager::getSimultaneousTasksOutput(int threads, int num)
+double BenchmarkManager::getSimultaneousTasksOutput(int threads, bool csvOption, bool random, int num)
 {
-    if (num <= 10)
+    if (num <= 10 && csvOption)
     {
         *csv << threads << " Simul. Tasks Num,Threads,Runs,Time Elapsed (sec),Average Time per Tasks\n";
     }
@@ -312,8 +419,7 @@ double BenchmarkManager::getSimultaneousTasksOutput(int threads, int num)
  
     for (int i = 1; i <= max; i++)
     {
-        double time = client->simultaneousTasks(true);
-        //double avgTime_per_task = time / double(threads);
+        double time = client->simultaneousTasks(random);
  
         if (num == 0)
         {
@@ -321,15 +427,15 @@ double BenchmarkManager::getSimultaneousTasksOutput(int threads, int num)
             {
                 cout << threads << " Simultaneous Tasks #" << i << ":\t\t\t";
                 cout << "time: " << time << " sec\n" << endl;
-                //cout << "average time per task: " << avgTime_per_task << " sec\n" << endl;
             }
         }
     
         i = (num == 0) ? i : num;
- 
-        //*csv << i << "," << client->getThreads() << "," << client->getRuns() << "," << time << "," << avgTime_per_task << "\n";
 
-        *csv << i << "," << client->getThreads() << "," << client->getRuns() << "," << time << "\n";
+        if (csvOption)
+        {
+            *csv << i << "," << client->getThreads() << "," << client->getRuns() << "," << time << "\n";
+        }
  
         times.push_back(time);
     }
@@ -353,7 +459,7 @@ double BenchmarkManager::getSimultaneousTasksOutput(int threads, int num)
         cout << "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
     }
  
-    if (num == 0 || num == 100)
+    if (csvOption && (num == 0 || num == 100))
     {
         *csv << "\n" << "\n";
     }
@@ -363,9 +469,9 @@ double BenchmarkManager::getSimultaneousTasksOutput(int threads, int num)
  
  
  
-double BenchmarkManager::getTransactionsOutput(int threads, int num)
+double BenchmarkManager::getTransactionsOutput(int threads, int start, bool csvOption, int num)
 {
-    if (num <= 10)
+    if (num <= 10 && csvOption)
     {
         *csv << threads << " Simul. Transactions,Threads,Runs,Time Elapsed (sec),Average Time per Tasks\n";
     }
@@ -378,8 +484,7 @@ double BenchmarkManager::getTransactionsOutput(int threads, int num)
  
     for (int i = 1; i <= max; i++)
     {
-        double time = client->performTransactions(false);
-        //double avgTime_per_transaction = time / double(threads);
+        double time = client->performTransactions(start);
  
         if (num == 0)
         {
@@ -387,15 +492,15 @@ double BenchmarkManager::getTransactionsOutput(int threads, int num)
             {
                 cout << threads << " Simultaneous Transactions #" << i << ":\t\t\t";
                 cout << "time: " << time << " sec\n" << endl;
-                //cout << "average time per transaction: " << avgTime_per_transaction << " sec\n" << endl;
             }
         }
  
         i = (num == 0) ? i : num;
- 
-        //*csv << i << "," << client->getThreads() << "," << client->getRuns() << "," << time << "," << avgTime_per_transaction << "\n";
 
-        *csv << i << "," << client->getThreads() << "," << client->getRuns() << "," << time << "\n";
+        if (csvOption)
+        {
+            *csv << i << "," << client->getThreads() << "," << client->getRuns() << "," << time << "\n";
+        }
 
         times.push_back(time);
     }
@@ -419,7 +524,7 @@ double BenchmarkManager::getTransactionsOutput(int threads, int num)
         cout << "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
     }
  
-    if (num == 0 || num == 100)
+    if (csvOption && (num == 0 || num == 100))
     {
         *csv << "\n" << "\n";
     }
