@@ -154,7 +154,7 @@ double BenchmarkManager::getInsertOutput(int threads, int start)
  
     client->setThreads(threads);
  
-    int64_t key = 2000000;
+    int64_t key = start;
  
     for (int i = 1; i <= trials; i++)
     {
@@ -205,7 +205,7 @@ double BenchmarkManager::getUpdateOutput(int threads, int start)
  
     client->setThreads(threads);
  
-    int64_t key = 2000000;
+    int64_t key = start;
  
     for (int i = 1; i <= trials; i++)
     {
@@ -255,7 +255,7 @@ double BenchmarkManager::getDeleteOutput(int threads, int start)
  
     client->setThreads(threads);
  
-    int64_t key = 2000000;
+    int64_t key = start;
  
     for (int i = 1; i <= trials; i++) 
     {

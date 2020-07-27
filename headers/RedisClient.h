@@ -23,9 +23,12 @@ class RedisClient : public DBClient
 	double performTransactions(bool randomOption) override;
 	 
     private:
-	sw::redis::Redis* redis;
 	char* dataVal;
 	char* newVal;
+	
+	sw::redis::ConnectionOptions options;
+	sw::redis::ConnectionPoolOptions pool_options;
+
 	
 	template<typename Lambda>	
 	double run_threads(Lambda f, int begin, bool random, int n = 0);

@@ -13,7 +13,11 @@ RedisClient::RedisClient() : DBClient()
 {
     dataVal = DBClient::getEntryVal('a');
     newVal = DBClient::getEntryVal('j');
+    
+    options.host = "10.0.1.2";
+    options.port = 6379;
 
+    pool_options.size = 15;
 }
 
 
@@ -26,7 +30,7 @@ RedisClient::~RedisClient() {}
 void RedisClient::connect()
 {
     try {
-	redis = new Redis("tcp://redis-master:6379");
+	Redis* redis = new Redis(options, pool_options);
 	 
 	// verifying the connection by sending a command
 	redis->set("foo", "bar");
@@ -98,6 +102,8 @@ double RedisClient::initializeDB()
     double time;
     
     try {
+		Redis* redis = new Redis(options, pool_options);
+ 		    
 		redis->command<void>("flushall");
 
 		cout << "Creating the SDB..." << endl;
@@ -110,10 +116,12 @@ double RedisClient::initializeDB()
 
     auto createDB = [&](int start, int end, bool random) {
 		try {
+		Redis* redis = new Redis(options, pool_options);
+
 	    	for (int64_t i = start; i < end; i++) 
 	    	{
-				auto key = to_string(i);
-				redis->set(key, dataVal);
+			auto key = to_string(i);
+			redis->set(key, dataVal);
 	    	}
 	
 		} catch (const Error &e) {
@@ -137,11 +145,14 @@ double RedisClient::readEntry(bool randomOption)
 {
     auto read = [&](int start, int end, bool random) {
         try {
+		
+	    Redis* redis = new Redis(options, pool_options);
+		
             for (int i = start; i < end; i++)
             {
-				srand(time(0));
-				int randomNum = (rand() % (end + 1 - start)) + start;  
-				int key = (random) ? randomNum : i;
+		srand(time(0));
+		int randomNum = (rand() % (end + 1 - start)) + start;  
+		int key = (random) ? randomNum : i;
 
                 redis->get(to_string(key));
             }
@@ -163,6 +174,9 @@ double RedisClient::insertEntry(int key)
 {
     auto insert = [&](int start, int end, bool random) {
         try {
+		
+	    Redis* redis = new Redis(options, pool_options);
+
             for (int i = start; i < end; i++)
             {
                 redis->set(to_string(i), dataVal);
@@ -184,6 +198,8 @@ double RedisClient::updateEntry(int key, bool randomOption)
 {
     auto update = [&](int start, int end, bool random) {
 		try {
+		Redis* redis = new Redis(options, pool_options);
+		
 	    	for (int i = start; i < end; i++)
 	    	{
 				srand(time(0));
@@ -209,6 +225,8 @@ double RedisClient::deleteEntry(int key, bool randomOption)
 {
     auto deletion = [&](int start, int end, bool random) {
 	try {
+	    Redis* redis = new Redis(options, pool_options);
+
 	    for (int i = start; i < end; i++)
 	    {
 		srand(time(0));
@@ -235,9 +253,11 @@ double RedisClient::simultaneousTasks(bool randomOption)
 {
     auto read_and_write = [&](int start, int end, bool random) {
 	
+	Redis* redis = new Redis(options, pool_options);
+	
 	auto read = [&](int key) {
 	    try {
-			redis->get(to_string(key));
+		redis->get(to_string(key));
 	    
 	    } catch (const Error &e) {
 		cout << "ERROR READING" << endl;
@@ -247,7 +267,7 @@ double RedisClient::simultaneousTasks(bool randomOption)
 
 	auto write = [&](int key) {
 	    try {
-			redis->set(to_string(key), newVal);
+		redis->set(to_string(key), newVal);
 	    
 	    } catch (const Error &e) {
 			cout << "ERROR UPDATING" << endl;
@@ -286,6 +306,7 @@ double RedisClient::simultaneousTasks(bool randomOption)
 double RedisClient::performTransactions(bool randomOption)
 {
     auto transaction = [&](int start, int end, bool random) {
+	Redis* redis = new Redis(options, pool_options);
 
 		auto success = [&](int64_t aKey) {
 	    	try {

@@ -125,7 +125,7 @@ int main()
     int start_1 = 2000000;
  
     int start_5 = start_1 + incrementor;
- 
+
     int start_10 = start_5 + incrementor;
  
  
@@ -175,57 +175,57 @@ int main()
  
         cout << "READING BENCHMARK: \n\n" << endl;
  
-        cout << "1 THREAD: \n" << endl;
+        cout << "1 THREAD: \n\n" << endl;
  
         read_1 = bm->getReadOutput(1);
  
-        cout << "5 THREAD: \n" << endl;
+        cout << "5 THREAD: \n\n" << endl;
  
         read_5 = bm->getReadOutput(5);
  
-        cout << "10 THREAD: \n" << endl;
+        cout << "10 THREAD: \n\n" << endl;
  
         read_10 = bm->getReadOutput(10);
  
         cout << "INSERTION BENCHMARK: \n\n" << endl; 
  
-        cout << "1 THREAD: \n" << endl;
+        cout << "1 THREAD: \n\n" << endl;
  
         insert_1 = bm->getInsertOutput(1, start_1);
  
-        cout << "5 THREAD: \n" << endl;
+        cout << "5 THREAD: \n\n" << endl;
  
         insert_5 = bm->getInsertOutput(5, start_5);
  
-        cout << "10 THREAD: \n" << endl;
+        cout << "10 THREAD: \n\n" << endl;
  
         insert_10 = bm->getInsertOutput(10, start_10);
  
-        cout << "UPDATING BENCHMARK: \n\n\n\n" << endl;
+        cout << "UPDATING BENCHMARK: \n\n" << endl;
  
-        cout << "1 THREAD: \n" << endl;
+        cout << "1 THREAD: \n\n" << endl;
  
         update_1 = bm->getUpdateOutput(1, start_1); 
  
-        cout << "5 THREAD: \n" << endl;
+        cout << "5 THREAD: \n\n" << endl;
         
         update_5 = bm->getUpdateOutput(5, start_5);
  
-        cout << "10 THREAD: \n" << endl;
+        cout << "10 THREAD: \n\n" << endl;
         
         update_10 = bm->getUpdateOutput(10, start_10);
  
-        cout << "DELETION BENCHMARK: \n\n\n\n" << endl;
+        cout << "DELETION BENCHMARK: \n\n" << endl;
  
-        cout << "1 THREAD: \n" << endl;
+        cout << "1 THREAD: \n\n" << endl;
  
         delete_1 = bm->getDeleteOutput(1, start_1);
  
-        cout << "5 THREAD: \n" << endl;
+        cout << "5 THREAD: \n\n" << endl;
         
         delete_5 = bm->getDeleteOutput(5, start_5);
  
-        cout << "10 THREAD: \n" << endl;
+        cout << "10 THREAD: \n\n" << endl;
  
         delete_10 = bm->getDeleteOutput(10, start_10);
     
