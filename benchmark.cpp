@@ -55,8 +55,9 @@ int main()
     cout << endl;
 
 	cout << "Select the option you want to use in the benchmark application:" << endl;
-	cout << "1	-	(Standard) Already defined set of benchmark tests" << endl;
-	cout << "2	-	Randomize Operations and Keys" << endl;
+	cout << "1  -  (Standard) Already defined set of benchmark tests" << endl;
+	cout << "2  -  Randomize Operations and Keys" << endl;
+	cout << "\nEnter in a number listed above: ";
 	cin >> benchmarkOption;
 
 	cout << endl;

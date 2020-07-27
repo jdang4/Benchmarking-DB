@@ -1,2 +1,2 @@
-Timestamp,Reading,Inserting,Updating,Deleting,10 Simul. Tasks,50 Simul. Task,100 Simul. Task,10 Simul. Transactions,50 Simul. Transaction,100 Simul. Transaction
-0.459206,1.96127,2.76567,2.49526,1.10019,2.44173,2.5324,2.65939,3.94753,3.91576,3.7316
+Timestamp,Reading 1,Reading 5, Reading 10, Inserting 1,Inserting 5,Inserting 10, Updating 1,Updating 5,Updating 10, Deleting 1,Deleting 5,Deleting  10, 10 Simul. Readers,50 Simul. Reader,100 Simul. Readers,10 Simul. Tasks,50 Simul. Tasks,100 Simul. Tasks,10 Simul. Transactions,50 Simul. Transactions,100 Simul. Transactions
+0.653948,1.87873,0.478004,0.297983,2.10004,0.572999,0.34085,2.38979,0.561878,0.34027,0.903595,0.225201,0.145684,0.447375,0.367912,0.369922,0.682025,0.499266,0.475976

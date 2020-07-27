@@ -17,7 +17,7 @@ RedisClient::RedisClient() : DBClient()
     options.host = "10.0.1.2";
     options.port = 6379;
 
-    pool_options.size = 15;
+    pool_options.size = 50;
 }
 
 
@@ -37,6 +37,9 @@ void RedisClient::connect()
 
 
 	cout << "CONNECTED TO REDIS!\n" << endl;
+
+	redis->command<void>("quit");
+
     
     } catch (const Error &e) {
 	cout << "UNABLE TO CONNECT TO REDIS\n" << endl;
@@ -106,6 +109,9 @@ double RedisClient::initializeDB()
  		    
 		redis->command<void>("flushall");
 
+		redis->command<void>("quit");
+		
+
 		cout << "Creating the SDB..." << endl;
 	
     } catch (const Error &e) {
@@ -123,6 +129,9 @@ double RedisClient::initializeDB()
 			auto key = to_string(i);
 			redis->set(key, dataVal);
 	    	}
+
+		redis->command<void>("quit");
+
 	
 		} catch (const Error &e) {
 	    	cout << "ERROR CREATING THE DATABASE" << endl;
@@ -156,6 +165,9 @@ double RedisClient::readEntry(bool randomOption)
 
                 redis->get(to_string(key));
             }
+
+	    redis->command<void>("quit");
+
         
         } catch (const Error &e) {
             cerr << "ERROR DURING READ" << endl;
@@ -181,6 +193,8 @@ double RedisClient::insertEntry(int key)
             {
                 redis->set(to_string(i), dataVal);
             }
+	    redis->command<void>("quit");
+	    
         
         } catch (const Error &e) {
             cerr << "ERROR DURING INSERT" << endl;
@@ -207,7 +221,9 @@ double RedisClient::updateEntry(int key, bool randomOption)
 				int key = (random) ? randomNum : i;
 				redis->set(to_string(key), newVal);
 	    	}
-	
+
+		redis->command<void>("quit");
+
 		} catch (const Error &e) {
 	    	cerr << "ERROR DURING UPDATE" << endl;
 	    	exit(-1);
@@ -235,6 +251,9 @@ double RedisClient::deleteEntry(int key, bool randomOption)
 
 		redis->del(to_string(key));
 	    }
+
+	    redis->command<void>("quit");
+
 	
 	} catch (const Error &e) {
 	    cerr << "ERROR DURING DELETION" << endl;
@@ -293,6 +312,8 @@ double RedisClient::simultaneousTasks(bool randomOption)
 			write(key);
 	    }
 	}
+
+	redis->command<void>("quit");
 
     };
 
@@ -367,6 +388,9 @@ double RedisClient::performTransactions(int key)
 				fail(i);
 	    	}
 		}
+
+		redis->command<void>("quit");
+
     };
 
     return run_threads(transaction, key, true);
