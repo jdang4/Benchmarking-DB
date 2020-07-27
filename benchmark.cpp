@@ -87,16 +87,16 @@ int main()
         	numOfRuns = 5000;
         	break;
  
-	case 4:
-		numOfRuns = 500000;
+	    case 4:
+		    numOfRuns = 500000;
         	break;
  
-	case 5:
-		numOfRuns = 1000000;
+	    case 5:
+		    numOfRuns = 1000000;
         	break;
  
-	default:
-		cout << "INVALID ENTRY!" << endl;
+	    default:
+		    cout << "INVALID ENTRY!" << endl;
         	exit(-1);
     }
  

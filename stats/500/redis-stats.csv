@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 Read Num,Threads,Runs,Time Elapsed (sec)
 1,1,500,0.163152
 2,1,500,0.164588
@@ -107,5 +106,3 @@ Delete Num,Threads,Runs,Time Elapsed (sec)
 3,100,500,0.041291
 
 
-=======
->>>>>>> 069faf2c8ebeacdc223abc825943cfa2a288d0fb

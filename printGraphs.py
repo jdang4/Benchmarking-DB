@@ -35,7 +35,7 @@ def getDataFromCSV(file) :
 
         count, index = 0, 0
 
-        limit = 1
+        limit = 3
 
         for row in csv_reader :
             if index > 12 :
@@ -103,23 +103,23 @@ def getRunningStatsGraph(db, num, title) :
 if __name__ == "__main__" :
     
     redis_1 = getDataFromCSV("stats/1/redis-stats.csv")
-    postgres_1= getDataFromCSV("stats/1/postgres-stats.csv") 
+    #postgres_1= getDataFromCSV("stats/1/postgres-stats.csv") 
     
     redis_500 = getDataFromCSV("stats/500/redis-stats.csv") 
-    postgres_500 = getDataFromCSV("stats/500/postgres-stats.csv")  
+    #postgres_500 = getDataFromCSV("stats/500/postgres-stats.csv")  
 
     redis_5K = getDataFromCSV("stats/5000/redis-stats.csv")  
-    postgres_5K = getDataFromCSV("stats/5000/postgres-stats.csv")  
+    #postgres_5K = getDataFromCSV("stats/5000/postgres-stats.csv")  
 
     redis_500K = getDataFromCSV("stats/500000/redis-stats.csv")  
-    postgres_500K = getDataFromCSV("stats/500000/postgres-stats.csv")  
+    #postgres_500K = getDataFromCSV("stats/500000/postgres-stats.csv")  
 
     #redis_1M = getDataFromCSV("stats/1000000/redis-stats.csv")   
     #postgres_1M = getDataFromCSV("stats/1000000/postgres-stats.csv")  
 
     redis = combineMaps(redis_1, redis_500, redis_5K, redis_500K)
 
-    postgres = combineMaps(postgres_1, postgres_500, postgres_5K, postgres_500K)
+    #postgres = combineMaps(postgres_1, postgres_500, postgres_5K, postgres_500K)
 
 
 
