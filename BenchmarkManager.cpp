@@ -38,6 +38,7 @@ void BenchmarkManager::setThreads_and_Runs(int threads, int runs)
     client->setThreads(threads);
     client->setRuns(runs);
 }
+
  
 void BenchmarkManager::connect()
 {
@@ -115,36 +116,50 @@ void BenchmarkManager::performRandomization()
 
     string title;
 
+    trials = 1;
+
     switch(option)
     {
         case 1 :
             title = "READING";
+            cout << title << " BENCHMARK: \n\n" << endl;
+            cout << thread << " THREAD: \n\n" << endl;
             getReadOutput(thread, false, true);
             break;
 
         case 2 :
             title = "INSERTION";
+            cout << title << " BENCHMARK: \n\n" << endl;
+            cout << thread << " THREAD: \n\n" << endl;
             getInsertOutput(thread, starting_key, false);
             getDeleteOutput(thread, starting_key, false, false);
             break;
 
         case 3 :
             title = "UPDATING";
+            cout << title << " BENCHMARK: \n\n" << endl;
+            cout << thread << " THREAD: \n\n" << endl;
             getUpdateOutput(thread, 1, false, true);
             break;
 
         case 4 :
             title = "DELETION";
+            cout << title << " BENCHMARK: \n\n" << endl;
+            cout << thread << " THREAD: \n\n" << endl;
             getDeleteOutput(thread, 1, false, true);
             break;
 
         case 5 :
             title = to_string(thread) + " SIMULTANEOUS TASKS";
+            cout << title << " BENCHMARK: \n\n" << endl;
+            cout << thread << " THREAD: \n\n" << endl;
             getSimultaneousTasksOutput(thread, starting_key, false, true);
             break;
 
         case 6 :
             title = to_string(thread) + " SIMULTANEOUS TRANSACTIONS";
+            cout << title << " BENCHMARK: \n\n" << endl;
+            cout << thread << " THREAD: \n\n" << endl;
             getTransactionsOutput(thread, starting_key, false, true);
             break;
 
@@ -152,10 +167,6 @@ void BenchmarkManager::performRandomization()
             cout << "ERROR" << endl;
             exit(-1);
     } 
-
-    cout << title << " BENCHMARK: \n\n" << endl;
- 
-    cout << thread << " THREAD: \n\n" << endl;
 }
  
 double BenchmarkManager::getReadOutput(int threads, bool csvOption, bool random)
