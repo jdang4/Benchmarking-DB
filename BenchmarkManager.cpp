@@ -20,7 +20,7 @@ void BenchmarkManager::selectDB(int db, string host)
     switch(db)
     {
     case 1: 
-        client = new RedisClient();
+        client = new RedisClient(host);
         break;
  
     case 2:

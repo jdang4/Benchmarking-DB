@@ -9,12 +9,12 @@ using namespace sw::redis;
 using namespace std;
 
 
-RedisClient::RedisClient() : DBClient()
+RedisClient::RedisClient(string host_name) : DBClient()
 {
     dataVal = DBClient::getEntryVal('a');
     newVal = DBClient::getEntryVal('j');
     
-    options.host = "10.0.1.2";
+    options.host = host_name;
     options.port = 6379;
 
     pool_options.size = 50;
@@ -29,22 +29,23 @@ RedisClient::~RedisClient() {}
  */
 void RedisClient::connect()
 {
-    try {
-	Redis* redis = new Redis(options, pool_options);
-	 
-	// verifying the connection by sending a command
-	redis->set("foo", "bar");
+	try
+	{
+		Redis *redis = new Redis(options, pool_options);
 
+		// verifying the connection by sending a command
+		redis->set("foo", "bar");
 
-	cout << "CONNECTED TO REDIS!\n" << endl;
+		cout << "CONNECTED TO REDIS!\n" << endl;
 
-	redis->command<void>("quit");
-
-    
-    } catch (const Error &e) {
-	cout << "UNABLE TO CONNECT TO REDIS\n" << endl;
-	exit(1);
-    }
+		redis->command<void>("quit");
+	}
+	
+	catch (const Error &e)
+	{
+		cout << "UNABLE TO CONNECT TO REDIS\n" << endl;
+		exit(1);
+	}
 }
 
 
@@ -116,25 +117,27 @@ double RedisClient::initializeDB()
 	
     } catch (const Error &e) {
 		cout << "ERROR DURING INITIALIZATION" << endl;
+		cerr << e.what() << endl;
 		time = -1.0;
     }
 
 
     auto createDB = [&](int start, int end, bool random) {
 		try {
-		Redis* redis = new Redis(options, pool_options);
+			Redis* redis = new Redis(options, pool_options);
 
 	    	for (int64_t i = start; i < end; i++) 
 	    	{
-			auto key = to_string(i);
-			redis->set(key, dataVal);
+				auto key = to_string(i);
+				redis->set(key, dataVal);
 	    	}
 
-		redis->command<void>("quit");
+			redis->command<void>("quit");
 
 	
 		} catch (const Error &e) {
 	    	cout << "ERROR CREATING THE DATABASE" << endl;
+			cerr << e.what() << endl;
 	    	exit(-1);
 		}
     };
@@ -160,7 +163,8 @@ double RedisClient::readEntry(bool randomOption)
             for (int i = start; i < end; i++)
             {
 				srand(time(0));
-				int randomNum = (rand() % (end + 1 - start)) + start;  
+				int lastDigit = (end  > (start + 100)) ? start + 100 : end;
+				int randomNum = (rand() % (lastDigit + 1 - start)) + start; 
 				int key = (random) ? randomNum : i;
 
                 redis->get(to_string(key));
@@ -171,6 +175,7 @@ double RedisClient::readEntry(bool randomOption)
         
         } catch (const Error &e) {
             cerr << "ERROR DURING READ" << endl;
+			cerr << e.what() << endl;
             exit(-1);
         }
     };
@@ -187,17 +192,19 @@ double RedisClient::insertEntry(int key)
     auto insert = [&](int start, int end, bool random) {
         try {
 		
-	    Redis* redis = new Redis(options, pool_options);
+	    	Redis* redis = new Redis(options, pool_options);
 
-            for (int i = start; i < end; i++)
+            for (int64_t i = start; i < end; i++)
             {
                 redis->set(to_string(i), dataVal);
             }
-	    redis->command<void>("quit");
+			
+			redis->command<void>("quit");
 	    
         
         } catch (const Error &e) {
             cerr << "ERROR DURING INSERT" << endl;
+			cerr << e.what() << endl;
             exit(-1);
         }
     };
@@ -212,20 +219,22 @@ double RedisClient::updateEntry(int key, bool randomOption)
 {
     auto update = [&](int start, int end, bool random) {
 		try {
-		Redis* redis = new Redis(options, pool_options);
+			Redis* redis = new Redis(options, pool_options);
 		
 	    	for (int i = start; i < end; i++)
 	    	{
 				srand(time(0));
-				int randomNum = (rand() % (end + 1 - start)) + start;  
+				int lastDigit = (end  > (start + 100)) ? start + 100 : end;
+				int randomNum = (rand() % (lastDigit + 1 - start)) + start;   
 				int key = (random) ? randomNum : i;
 				redis->set(to_string(key), newVal);
 	    	}
 
-		redis->command<void>("quit");
+			redis->command<void>("quit");
 
 		} catch (const Error &e) {
 	    	cerr << "ERROR DURING UPDATE" << endl;
+			cerr << e.what() << endl;
 	    	exit(-1);
 		}
 	};
@@ -249,7 +258,7 @@ double RedisClient::deleteEntry(int key, bool randomOption)
 			int randomNum = (rand() % (end + 1 - start)) + start;  
 			int key = (random) ? randomNum : i;
 
-		redis->del(to_string(key));
+			redis->del(to_string(key));
 	    }
 
 	    redis->command<void>("quit");
@@ -257,6 +266,7 @@ double RedisClient::deleteEntry(int key, bool randomOption)
 	
 	} catch (const Error &e) {
 	    cerr << "ERROR DURING DELETION" << endl;
+		cerr << e.what() << endl;
 	    exit(-1);
 	}
     };
@@ -270,54 +280,59 @@ double RedisClient::deleteEntry(int key, bool randomOption)
  */
 double RedisClient::simultaneousTasks(bool randomOption)
 {
-    auto read_and_write = [&](int start, int end, bool random) {
-	
-	Redis* redis = new Redis(options, pool_options);
-	
-	auto read = [&](int key) {
-	    try {
-			redis->get(to_string(key));
-	    
-	    } catch (const Error &e) {
-			cout << "ERROR READING" << endl;
-			exit(-1);
-	    }
+	auto read_and_write = [&](int start, int end, bool random) {
+		Redis *redis = new Redis(options, pool_options);
+
+		auto read = [&](int key) {
+			try
+			{
+				redis->get(to_string(key));
+			}
+			catch (const Error &e)
+			{
+				cout << "ERROR READING" << endl;
+				cerr << e.what() << endl;
+				exit(-1);
+			}
+		};
+
+		auto write = [&](int key) {
+			try
+			{
+				redis->set(to_string(key), newVal);
+			}
+			catch (const Error &e)
+			{
+				cout << "ERROR UPDATING" << endl;
+				cerr << e.what() << endl;
+				exit(-1);
+			}
+		};
+
+		int halfMark = (end - start) / 2;
+
+		for (int i = start; i < end; i++)
+		{
+			srand(time(0));
+			int lastDigit = (end > (start + 100)) ? start + 100 : end;
+			int randomNum = (rand() % (lastDigit + 1 - start)) + start;
+			int key = (random) ? randomNum : i;
+
+			if (i < halfMark)
+			{
+				read(key);
+			}
+
+			else
+			{
+				write(key);
+			}
+		}
+
+		redis->command<void>("quit");
 	};
 
-	auto write = [&](int key) {
-	    try {
-			redis->set(to_string(key), newVal);
-	    
-	    } catch (const Error &e) {
-			cout << "ERROR UPDATING" << endl;
-			exit(-1);
-	    }
-	};
-
-	int halfMark = (end - start) / 2;
-
-	for (int i = start; i < end; i++) 
-	{
-	    srand(time(0));
-	    int randomNum = (rand() % (end + 1 - start)) + start;  
-	    int key = (random) ? randomNum : i;
-
-	    if (i < halfMark)
-	    {
-			read(key);
-	    }
-
-	    else
-	    {
-			write(key);
-	    }
-	}
-
-	redis->command<void>("quit");
-
-    };
-
-    return run_threads(read_and_write, 1, randomOption);
+	return run_threads(read_and_write, 1, randomOption);
 }
 
 
@@ -329,69 +344,26 @@ double RedisClient::performTransactions(int key)
     auto transaction = [&](int start, int end, bool random) {
 		Redis* redis = new Redis(options, pool_options);
 
-		auto success = [&](int64_t aKey) {
-	    	try {
-				redis->set(to_string(aKey), dataVal);
-
-				for (int i = 0; i < 8; i++) 
-				{
-		    		srand(time(0));
-		    		int randomKey = (rand() % (1000000 + 1 - 1)) + 1;
-
-		    		if (i < 4) 
-			    	{
-						redis->get(to_string(randomKey));
-			    	}	
-
-		    		else
-		    		{
-						redis->set(to_string(randomKey), newVal);
-			    	}
-				}
-
-				redis->get(to_string(aKey));
-
-				redis->del(to_string(aKey));
-	    
-		    } catch (const Error &e) {
-				cout << "ERROR DURING TRANSACTION SUCCESS" << endl;
-				exit(-1);
-	    	}
-		};
-
-		auto fail = [&](int64_t aKey) {
-	    	try {
-				redis->set(to_string(aKey), dataVal);
-
-				redis->del(to_string(aKey));
+		auto write_and_delete = [&](int64_t key) {
+			try {
+				redis->set(to_string(key), dataVal);
+				
+				redis->del(to_string(key));
 	    
 	    	} catch (const Error &e) {
-				cout << "ERROR DURING TRANSACTION FAIL" << endl;
+				cout << "ERROR UPDATING AND DELETING" << endl;
+				cerr << e.what() << endl;
 				exit(-1);
 	    	}
 		};
-
-		int range = end - start;
-
-		int numOfSuccess = range * 0.7;
 
 		for (int64_t i = start; i < end; i++) 
 		{
-	    	int index = i;
-	    	if (index < numOfSuccess)
-	    	{
-				success(i);
-	    	}
-
-	    	else
-	    	{
-				fail(i);
-	    	}
+			write_and_delete(i);
 		}
 
 		redis->command<void>("quit");
-
     };
 
-    return run_threads(transaction, key, true);
+    return run_threads(transaction, key, false);
 }

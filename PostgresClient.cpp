@@ -191,7 +191,8 @@ double PostgresClient::readEntry(bool randomOption)
 			for (int i = start; i < end; i++)
 			{
 				srand(time(0));
-				int randomNum = (rand() % (end + 1 - start)) + start;  
+				int lastDigit = (end  > (start + 100)) ? start + 100 : end;
+				int randomNum = (rand() % (lastDigit + 1 - start)) + start; 
 				int randomKey = (random) ? randomNum : i;
 
 				string key = to_string(randomKey);
@@ -225,13 +226,9 @@ double PostgresClient::insertEntry(int key)
 {
 	auto insert = [&](int start, int end, bool random) {
 		try {
-			mutex mtx;
-
-			mtx.lock();
-
 			connection* postgres = new connection(connection_description);
 
-			for (int i = start; i < end; i++)
+			for (int64_t i = start; i < end; i++)
 			{
 				string key = to_string(i);
 
@@ -246,8 +243,6 @@ double PostgresClient::insertEntry(int key)
 			}
 
 			postgres->disconnect();
-
-			mtx.unlock();
 
 		} catch (const exception &e) {
 			cerr << e.what() << endl;
@@ -266,16 +261,13 @@ double PostgresClient::updateEntry(int key, bool randomOption)
 {
 	auto update = [&](int start, int end, bool random) {
 		try {
-			mutex mtx;
-
-			mtx.lock();
-
 			connection* postgres = new connection(connection_description);
 
 			for (int i = start; i < end; i++)
 			{
 				srand(time(0));
-				int randomNum = (rand() % (end + 1 - start)) + start;  
+				int lastDigit = (end  > (start + 100)) ? start + 100 : end;
+				int randomNum = (rand() % (lastDigit + 1 - start)) + start; 
 				int randomKey = (random) ? randomNum : i;
 
 				string key = to_string(randomKey);
@@ -294,8 +286,6 @@ double PostgresClient::updateEntry(int key, bool randomOption)
 			}
 
 			postgres->disconnect();
-
-			mtx.unlock();
 
 		} catch (const exception &e) {
 			cerr << e.what() << endl;
@@ -387,7 +377,8 @@ double PostgresClient::simultaneousTasks(bool randomOption)
 			for (int i = start; i < end; i++)
 			{
 				srand(time(0));
-				int randomNum = (rand() % (end + 1 - start)) + start;  
+				int lastDigit = (end  > (start + 100)) ? start + 100 : end;
+				int randomNum = (rand() % (lastDigit + 1 - start)) + start;  
 				int key = (random) ? randomNum : i;
 
 				if (i < halfMark)
@@ -422,45 +413,7 @@ double PostgresClient::performTransactions(int key)
 		try {
 			connection* postgres = new connection(connection_description);
 
-			auto success = [&](int64_t aKey) {
-				string key = to_string(aKey);
-				work query(*postgres);
-				
-				string stmt = "INSERT INTO session (ID, DATA) VALUES (" \
-				+ key + ", '" + dataVal + "' );";
-
-				query.exec(stmt);
-
-				for (int i = 0; i < 8; i++)
-				{
-					srand(time(0));
-					int randomKey = (rand() % (1000000 + 1 - 1)) + 1;
-					string tempKey = to_string(randomKey);
-
-					if (i < 4)
-					{
-						stmt = "SELECT * FROM session WHERE ID = " + tempKey + ";";
-						query.exec(stmt);
-					}
-
-					else 
-					{
-						stmt = "UPDATE session set DATA = '";
-						
-						stmt.append(newVal);
-						
-						stmt += "' WHERE ID = " + tempKey + ";";
-					}
-				}
-
-				stmt = "SELECT * FROM session WHERE ID = " + key + ";";
-				query.exec(stmt);
-
-				stmt = "DELETE FROM session WHERE ID = " + key + ";";
-				query.exec(stmt);
-			};
-
-			auto fail = [&](int64_t aKey) {
+			auto write_and_delete = [&](int64_t aKey) {
 				string key = to_string(aKey);
 				work query(*postgres);
 
@@ -472,23 +425,10 @@ double PostgresClient::performTransactions(int key)
 				stmt = "DELETE FROM session WHERE ID = " + key + ";";
 				query.exec(stmt);
 			};
-
-			int range = end - start;
-
-			int numOfSuccess = range * 0.7;
 
 			for (int64_t i = start; i < end; i++)
 			{
-				if (i < numOfSuccess)
-				{
-					success(i);
-				}
-
-				else
-				{
-					fail(i);
-				}
-				
+				write_and_delete(i);
 			}
 
 			postgres->disconnect();

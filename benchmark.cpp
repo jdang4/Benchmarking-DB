@@ -102,28 +102,25 @@ int main()
  
  
     durationTime = (durationTime > 0) ? durationTime : 1;
- 
-    if (db == 2)
+
+    cout << "\n############################################################################################################################################\n" << endl;
+    cout << "HELP GUIDE\n"<< endl;
+    cout << "To find the IP Address of the PostgreSQL Primary Container: " << endl;
+    cout << "\t1) outside of this application, locate the desired container's Container ID by entering 'docker ps' in the terminal" << endl;
+    cout << "\t2) copy the Container ID and enter 'docker inspect <insert container id> | grep IPAddress'" << endl;
+    cout << "\t3) the resulted address is the address to enter in the below prompt" << endl;
+
+    cout << "\nNOTE: at the prompt below, enter 'q' to exit application to follow these instructions (if needed)" << endl;
+    cout << "\n############################################################################################################################################" << endl;
+
+    cout << "\nEnter in IP Addess of the PostgreSQL Primary Container: ";
+    cin >> host;
+
+    if (host == "q")
     {
-        cout << "\n############################################################################################################################################\n" << endl;
-        cout << "HELP GUIDE\n" << endl;
-        cout << "To find the IP Address of the PostgreSQL Primary Container: " << endl;
-        cout << "\t1) outside of this application, locate the desired container's Container ID by entering 'docker ps' in the terminal" << endl;
-        cout << "\t2) copy the Container ID and enter 'docker inspect <insert container id> | grep IPAddress'" << endl;
-        cout << "\t3) the resulted address is the address to enter in the below prompt" << endl;
-    
-        cout << "\nNOTE: at the prompt below, enter 'q' to exit application to follow these instructions (if needed)" << endl;
-        cout << "\n############################################################################################################################################" << endl;
-    
-        cout << "\nEnter in IP Addess of the PostgreSQL Primary Container: ";
-        cin >> host;
- 
-    	if (host == "q")
-    	{
-        	exit(1);
-    	}
+        exit(1);
     }
- 
+
     cout << endl << endl;
  
  
@@ -188,15 +185,15 @@ int main()
  
 		    cout << "1 THREAD: \n\n" << endl;
  
-		    read_1 = bm->getReadOutput(1, true, false);
+		    read_1 = bm->getReadOutput(1, true, true);
  
 		    cout << "5 THREAD: \n\n" << endl;
  
-		    read_5 = bm->getReadOutput(5, true, false);
+		    read_5 = bm->getReadOutput(5, true, true);
  
 		    cout << "10 THREAD: \n\n" << endl;
  
-		    read_10 = bm->getReadOutput(10, true, false);
+		    read_10 = bm->getReadOutput(10, true, true);
  
 		    cout << "INSERTION BENCHMARK: \n\n" << endl; 
  
@@ -216,15 +213,15 @@ int main()
  
 		    cout << "1 THREAD: \n\n" << endl;
  
-		    update_1 = bm->getUpdateOutput(1, start_1, true, false); 
+		    update_1 = bm->getUpdateOutput(1, start_1, true, true); 
  
 		    cout << "5 THREAD: \n\n" << endl;
         
-		    update_5 = bm->getUpdateOutput(5, start_5, true, false);
+		    update_5 = bm->getUpdateOutput(5, start_5, true, true);
  
 		    cout << "10 THREAD: \n\n" << endl;
         
-		    update_10 = bm->getUpdateOutput(10, start_10, true, false);
+		    update_10 = bm->getUpdateOutput(10, start_10, true, true);
  
 		    cout << "DELETION BENCHMARK: \n\n" << endl;
  
@@ -242,15 +239,15 @@ int main()
     
 		    cout << "SIMULTANEOUS TASKS [10] BENCHMARK: \n\n\n\n" << endl;
  
-		    task_10 = bm->getSimultaneousTasksOutput(10, true, false);
+		    task_10 = bm->getSimultaneousTasksOutput(10, true, true);
  
 		    cout << "SIMULTANEOUS TASKS [50] BENCHMARK: \n\n\n\n" << endl;
     
-		    task_50 = bm->getSimultaneousTasksOutput(50, true, false);
+		    task_50 = bm->getSimultaneousTasksOutput(50, true, true);
  
 		    cout << "SIMULTANEOUS TASKS [100] BENCHMARK: \n\n\n\n" << endl;
     
-		    task_100 = bm->getSimultaneousTasksOutput(100, true, false);
+		    task_100 = bm->getSimultaneousTasksOutput(100, true, true);
  
 		    cout << "SIMULTANEOUS TRANSACTIONS [10] BENCHMARK: \n\n\n\n" << endl;
  
