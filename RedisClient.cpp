@@ -162,10 +162,10 @@ double RedisClient::readEntry(bool randomOption)
 		
             for (int i = start; i < end; i++)
             {
-				srand(time(0));
-				int lastDigit = (end  > (start + 100)) ? start + 100 : end;
-				int randomNum = (rand() % (lastDigit + 1 - start)) + start; 
-				int key = (random) ? randomNum : i;
+		srand(time(0));
+		int lastDigit = (end  > (start + 1000)) ? start + 1000 : end;
+		int randomNum = (rand() % (lastDigit + 1 - start)) + start; 
+		int key = (random) ? randomNum : i;
 
                 redis->get(to_string(key));
             }
@@ -223,11 +223,11 @@ double RedisClient::updateEntry(int key, bool randomOption)
 		
 	    	for (int i = start; i < end; i++)
 	    	{
-				srand(time(0));
-				int lastDigit = (end  > (start + 100)) ? start + 100 : end;
-				int randomNum = (rand() % (lastDigit + 1 - start)) + start;   
-				int key = (random) ? randomNum : i;
-				redis->set(to_string(key), newVal);
+		    srand(time(0));
+		    int lastDigit = (end  > (start + 1000)) ? start + 1000 : end;
+		    int randomNum = (rand() % (lastDigit + 1 - start)) + start;   
+		    int key = (random) ? randomNum : i;
+		    redis->set(to_string(key), newVal);
 	    	}
 
 			redis->command<void>("quit");
@@ -314,7 +314,7 @@ double RedisClient::simultaneousTasks(bool randomOption)
 		for (int i = start; i < end; i++)
 		{
 			srand(time(0));
-			int lastDigit = (end > (start + 100)) ? start + 100 : end;
+			int lastDigit = (end > (start + 1000)) ? start + 1000 : end;
 			int randomNum = (rand() % (lastDigit + 1 - start)) + start;
 			int key = (random) ? randomNum : i;
 

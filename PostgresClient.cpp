@@ -191,7 +191,7 @@ double PostgresClient::readEntry(bool randomOption)
 			for (int i = start; i < end; i++)
 			{
 				srand(time(0));
-				int lastDigit = (end  > (start + 100)) ? start + 100 : end;
+				int lastDigit = (end  > (start + 1000)) ? start + 1000 : end;
 				int randomNum = (rand() % (lastDigit + 1 - start)) + start; 
 				int randomKey = (random) ? randomNum : i;
 
@@ -266,7 +266,7 @@ double PostgresClient::updateEntry(int key, bool randomOption)
 			for (int i = start; i < end; i++)
 			{
 				srand(time(0));
-				int lastDigit = (end  > (start + 100)) ? start + 100 : end;
+				int lastDigit = (end  > (start + 1000)) ? start + 1000 : end;
 				int randomNum = (rand() % (lastDigit + 1 - start)) + start; 
 				int randomKey = (random) ? randomNum : i;
 
@@ -377,7 +377,7 @@ double PostgresClient::simultaneousTasks(bool randomOption)
 			for (int i = start; i < end; i++)
 			{
 				srand(time(0));
-				int lastDigit = (end  > (start + 100)) ? start + 100 : end;
+				int lastDigit = (end  > (start + 1000)) ? start + 1000 : end;
 				int randomNum = (rand() % (lastDigit + 1 - start)) + start;  
 				int key = (random) ? randomNum : i;
 
