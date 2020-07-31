@@ -113,7 +113,7 @@ int main()
     cout << "\nNOTE: at the prompt below, enter 'q' to exit application to follow these instructions (if needed)" << endl;
     cout << "\n############################################################################################################################################" << endl;
 
-    cout << "\nEnter in IP Addess of the PostgreSQL Primary Container: ";
+    cout << "\nEnter in IP Addess of the Primary Container: ";
     cin >> host;
 
     if (host == "q")
@@ -124,9 +124,9 @@ int main()
     cout << endl << endl;
  
  
-    BenchmarkManager* bm = new BenchmarkManager(3, printOutputs);
+    BenchmarkManager* bm = new BenchmarkManager(1, printOutputs);
  
-    int incrementor = 3 * 1000000;
+    int incrementor = 1 * 1000000;
  
     int start_1 = 2000000;
  
@@ -208,7 +208,7 @@ int main()
 		    cout << "10 THREAD: \n\n" << endl;
  
 		    insert_10 = bm->getInsertOutput(10, start_10, true);
- 
+
 		    cout << "UPDATING BENCHMARK: \n\n" << endl;
  
 		    cout << "1 THREAD: \n\n" << endl;
@@ -222,7 +222,7 @@ int main()
 		    cout << "10 THREAD: \n\n" << endl;
         
 		    update_10 = bm->getUpdateOutput(10, start_10, true, true);
- 
+
 		    cout << "DELETION BENCHMARK: \n\n" << endl;
  
 		    cout << "1 THREAD: \n\n" << endl;
@@ -236,7 +236,7 @@ int main()
 		    cout << "10 THREAD: \n\n" << endl;
  
 		    delete_10 = bm->getDeleteOutput(10, start_10, true, false);
-    
+
 		    cout << "SIMULTANEOUS TASKS [10] BENCHMARK: \n\n\n\n" << endl;
  
 		    task_10 = bm->getSimultaneousTasksOutput(10, true, true);
@@ -248,7 +248,7 @@ int main()
 		    cout << "SIMULTANEOUS TASKS [100] BENCHMARK: \n\n\n\n" << endl;
     
 		    task_100 = bm->getSimultaneousTasksOutput(100, true, true);
- 
+
 		    cout << "SIMULTANEOUS TRANSACTIONS [10] BENCHMARK: \n\n\n\n" << endl;
  
 		    transaction_10 = bm->getTransactionsOutput(10, start_1, true, false);
@@ -275,6 +275,9 @@ int main()
 		    csv << delete_1 << "," << delete_5 << "," << delete_10 << ",";
 		    csv << task_10 << "," << task_50 << "," << task_100 << ",";
 		    csv << transaction_10 << "," << transaction_50 << "," << transaction_100 << "\n";
+
+		    usleep(100000);
+
     
 		    bm->closeCSV();
 		}
