@@ -27,8 +27,8 @@ class BenchmarkManager
 	double getInsertOutput(int threads, int start, bool csvOption);
 	double getUpdateOutput(int threads, int start, bool csvOption, bool random);
 	double getDeleteOutput(int threads, int start, bool csvOption, bool random);
-	double getSimultaneousTasksOutput(int threads, bool csvOption, bool random, int num = 0);
-	double getTransactionsOutput(int threads, int start, bool csvOption, int num = 0);
+	double getSimultaneousTasksOutput(int threads, bool csvOption, bool random);
+	double getTransactionsOutput(int threads, int start, bool csvOption);
 	
     private:
 	DBClient* client;

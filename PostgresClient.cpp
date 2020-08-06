@@ -191,11 +191,21 @@ double PostgresClient::readEntry(bool randomOption)
 			for (int i = start; i < end; i++)
 			{
 				srand(time(0));
-				int lastDigit = (end  > (start + 1000)) ? start + 1000 : end;
-				int randomNum = (rand() % (lastDigit + 1 - start)) + start; 
-				int randomKey = (random) ? randomNum : i;
+				int threads = DBClient::getThreads();
+				int runs = DBClient::getRuns();
 
-				string key = to_string(randomKey);
+				int maxNum = runs / threads;
+
+				if (threads > runs)
+				{
+					maxNum = threads;
+				}
+
+				int randomNum = (rand() % maxNum) + 1;
+
+				int key_int = (random) ? randomNum : i;
+
+				string key = to_string(key_int);
 
 				string stmt = "SELECT * FROM session WHERE ID = " + key + ";";
 
@@ -266,11 +276,21 @@ double PostgresClient::updateEntry(int key, bool randomOption)
 			for (int i = start; i < end; i++)
 			{
 				srand(time(0));
-				int lastDigit = (end  > (start + 1000)) ? start + 1000 : end;
-				int randomNum = (rand() % (lastDigit + 1 - start)) + start; 
-				int randomKey = (random) ? randomNum : i;
+				int threads = DBClient::getThreads();
+				int runs = DBClient::getRuns();
 
-				string key = to_string(randomKey);
+				int maxNum = runs / threads;
+
+				if (threads > runs)
+				{
+					maxNum = threads;
+				}
+
+				int randomNum = (rand() % maxNum) + 1;
+
+				int key_int = (random) ? randomNum : i;
+
+				string key = to_string(key_int);
 
 				string stmt = "UPDATE session set DATA = '";
 
@@ -309,10 +329,21 @@ double PostgresClient::deleteEntry(int key, bool randomOption)
 			for (int i = start; i < end; i++)
 			{
 				srand(time(0));
-				int randomNum = (rand() % (end + 1 - start)) + start;  
-				int randomKey = (random) ? randomNum : i;
+				int threads = DBClient::getThreads();
+				int runs = DBClient::getRuns();
 
-				string key = to_string(randomKey);
+				int maxNum = runs / threads;
+
+				if (threads > runs)
+				{
+					maxNum = threads;
+				}
+
+				int randomNum = (rand() % maxNum) + 1;
+
+				int key_int = (random) ? randomNum : i;
+
+				string key = to_string(key_int);
 
 				string stmt = "DELETE FROM session WHERE ID = " + key + ";";
 
@@ -377,8 +408,18 @@ double PostgresClient::simultaneousTasks(bool randomOption)
 			for (int i = start; i < end; i++)
 			{
 				srand(time(0));
-				int lastDigit = (end  > (start + 1000)) ? start + 1000 : end;
-				int randomNum = (rand() % (lastDigit + 1 - start)) + start;  
+				int threads = DBClient::getThreads();
+				int runs = DBClient::getRuns();
+
+				int maxNum = runs / threads;
+
+				if (threads > runs)
+				{
+					maxNum = threads;
+				}
+
+				int randomNum = (rand() % maxNum) + 1;
+
 				int key = (random) ? randomNum : i;
 
 				if (i < halfMark)

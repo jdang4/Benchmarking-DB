@@ -155,34 +155,45 @@ double RedisClient::initializeDB()
  */
 double RedisClient::readEntry(bool randomOption)
 {
-    auto read = [&](int start, int end, bool random) {
-        try {
-		
-	    	Redis* redis = new Redis(options, pool_options);
-		
-            for (int i = start; i < end; i++)
-            {
-		srand(time(0));
-		int lastDigit = (end  > (start + 1000)) ? start + 1000 : end;
-		int randomNum = (rand() % (lastDigit + 1 - start)) + start; 
-		int key = (random) ? randomNum : i;
+	auto read = [&](int start, int end, bool random) {
+		try
+		{
 
-                redis->get(to_string(key));
-            }
+			Redis *redis = new Redis(options, pool_options);
 
-	    redis->command<void>("quit");
+			for (int i = start; i < end; i++)
+			{
+				srand(time(0));
 
-        
-        } catch (const Error &e) {
-            cerr << "ERROR DURING READ" << endl;
+				int threads = DBClient::getThreads();
+				int runs = DBClient::getRuns();
+
+				int maxNum = runs / threads;
+
+				if (threads > runs)
+				{
+					maxNum = threads;
+				}
+
+				int randomNum = (rand() % maxNum) + 1;
+
+				int key = (random) ? randomNum : i;
+
+				redis->get(to_string(key));
+			}
+
+			redis->command<void>("quit");
+		}
+		catch (const Error &e)
+		{
+			cerr << "ERROR DURING READ" << endl;
 			cerr << e.what() << endl;
-            exit(-1);
-        }
-    };
-    
-    return run_threads(read, 1, randomOption);
-}
+			exit(-1);
+		}
+	};
 
+	return run_threads(read, 1, randomOption);
+}
 
 /**
  * see description at DBClient::insertEntry()
@@ -215,65 +226,88 @@ double RedisClient::insertEntry(int key)
 /**
  * see description at DBClient::updateEntry()
  */
-double RedisClient::updateEntry(int key, bool randomOption) 
+double RedisClient::updateEntry(int key, bool randomOption)
 {
-    auto update = [&](int start, int end, bool random) {
-		try {
-			Redis* redis = new Redis(options, pool_options);
-		
-	    	for (int i = start; i < end; i++)
-	    	{
-		    srand(time(0));
-		    int lastDigit = (end  > (start + 1000)) ? start + 1000 : end;
-		    int randomNum = (rand() % (lastDigit + 1 - start)) + start;   
-		    int key = (random) ? randomNum : i;
-		    redis->set(to_string(key), newVal);
-	    	}
+	auto update = [&](int start, int end, bool random) {
+		try
+		{
+			Redis *redis = new Redis(options, pool_options);
+
+			for (int i = start; i < end; i++)
+			{
+				srand(time(0));
+				int threads = DBClient::getThreads();
+				int runs = DBClient::getRuns();
+
+				int maxNum = runs / threads;
+
+				if (threads > runs)
+				{
+					maxNum = threads;
+				}
+
+				int randomNum = (rand() % maxNum) + 1;
+
+				int key = (random) ? randomNum : i;
+
+				redis->set(to_string(key), newVal);
+			}
 
 			redis->command<void>("quit");
-
-		} catch (const Error &e) {
-	    	cerr << "ERROR DURING UPDATE" << endl;
+		}
+		catch (const Error &e)
+		{
+			cerr << "ERROR DURING UPDATE" << endl;
 			cerr << e.what() << endl;
-	    	exit(-1);
+			exit(-1);
 		}
 	};
-	
+
 	return run_threads(update, key, randomOption);
 }
-
 
 /**
  * see description at DBClient::deleteEntry()
  */
 double RedisClient::deleteEntry(int key, bool randomOption)
 {
-    auto deletion = [&](int start, int end, bool random) {
-	try {
-	    Redis* redis = new Redis(options, pool_options);
+	auto deletion = [&](int start, int end, bool random) {
+		try
+		{
+			Redis *redis = new Redis(options, pool_options);
 
-	    for (int i = start; i < end; i++)
-	    {
-			srand(time(0));
-			int randomNum = (rand() % (end + 1 - start)) + start;  
-			int key = (random) ? randomNum : i;
+			for (int i = start; i < end; i++)
+			{
+				srand(time(0));
+				int threads = DBClient::getThreads();
+				int runs = DBClient::getRuns();
 
-			redis->del(to_string(key));
-	    }
+				int maxNum = runs / threads;
 
-	    redis->command<void>("quit");
+				if (threads > runs)
+				{
+					maxNum = threads;
+				}
 
-	
-	} catch (const Error &e) {
-	    cerr << "ERROR DURING DELETION" << endl;
-		cerr << e.what() << endl;
-	    exit(-1);
-	}
-    };
+				int randomNum = (rand() % maxNum) + 1;
 
-    return run_threads(deletion, key, randomOption);
+				int key = (random) ? randomNum : i;
+
+				redis->del(to_string(key));
+			}
+
+			redis->command<void>("quit");
+		}
+		catch (const Error &e)
+		{
+			cerr << "ERROR DURING DELETION" << endl;
+			cerr << e.what() << endl;
+			exit(-1);
+		}
+	};
+
+	return run_threads(deletion, key, randomOption);
 }
-
 
 /*
  * see description at DBClient::simultaneousTasks()
@@ -314,8 +348,18 @@ double RedisClient::simultaneousTasks(bool randomOption)
 		for (int i = start; i < end; i++)
 		{
 			srand(time(0));
-			int lastDigit = (end > (start + 1000)) ? start + 1000 : end;
-			int randomNum = (rand() % (lastDigit + 1 - start)) + start;
+			int threads = DBClient::getThreads();
+			int runs = DBClient::getRuns();
+
+			int maxNum = runs / threads;
+
+			if (threads > runs)
+			{
+				maxNum = threads;
+			}
+
+			int randomNum = (rand() % maxNum) + 1;
+
 			int key = (random) ? randomNum : i;
 
 			if (i < halfMark)

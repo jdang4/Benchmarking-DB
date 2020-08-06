@@ -91,10 +91,10 @@ def getRunningStatsGraph(db, num, title) :
 
     plt.plot(timeStamp, values)
 
-    plt.xlim(0, 1200)
+    #plt.xlim(0, 410)
 
     plt.title(title)
-    plt.xlabel('Running Time (sec)')
+    plt.xlabel('Running Time (min)')
     plt.ylabel('Average Elapsed Time (sec)')
 
     plt.show()
@@ -117,9 +117,14 @@ if __name__ == "__main__" :
     #redis_1M = getDataFromCSV("stats/1000000/redis-stats.csv")   
     #postgres_1M = getDataFromCSV("stats/1000000/postgres-stats.csv")  
 
-    redis = combineMaps(redis_1, redis_500, redis_5K, redis_500K)
+    running_redis = getRunningDataFromCSV("stats/500000/redis-running-stats.csv")
 
-    #postgres = combineMaps(postgres_1, postgres_500, postgres_5K, postgres_500K)
+    running_postgres = getRunningDataFromCSV("stats/500000/postgres-running-stats.csv")
+
+    getRunningStatsGraph(running_redis, 16, "Redis 10 Simultaneous Transactions")
+
+    getRunningStatsGraph(running_postgres, 16, "PostgreSQL 10 Simultaneous Transactions")
+
 
 
 

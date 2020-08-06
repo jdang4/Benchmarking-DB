@@ -14,6 +14,7 @@ int main()
  
     bool initialize_db = false;
     bool printOutputs = true;
+    bool randomizeKey = false;
  
     double durationTime = 1;
  
@@ -56,10 +57,16 @@ int main()
 
     cout << "Select the option you want to use in the benchmark application:" << endl;
     cout << "1  -  (Standard) Already defined set of benchmark tests" << endl;
-    cout << "2  -  Randomize Operations and Keys" << endl;
+    cout << "2  -  (Standard) Already defined set of benchmark tests with Randomize Keys" << endl;
+    cout << "3  -  Randomize Operations and Keys" << endl;
     
     cout << "\nEnter in option: ";
     cin >> benchmarkOption;
+
+    if (benchmarkOption == 2)
+    {
+        randomizeKey = true;
+    }
 
     cout << endl;
 
@@ -185,15 +192,15 @@ int main()
  
 		    cout << "1 THREAD: \n\n" << endl;
  
-		    read_1 = bm->getReadOutput(1, true, true);
+		    read_1 = bm->getReadOutput(1, true, randomizeKey);
  
 		    cout << "5 THREAD: \n\n" << endl;
  
-		    read_5 = bm->getReadOutput(5, true, true);
+		    read_5 = bm->getReadOutput(5, true, randomizeKey);
  
 		    cout << "10 THREAD: \n\n" << endl;
  
-		    read_10 = bm->getReadOutput(10, true, true);
+		    read_10 = bm->getReadOutput(10, true, randomizeKey);
  
 		    cout << "INSERTION BENCHMARK: \n\n" << endl; 
  
@@ -213,53 +220,53 @@ int main()
  
 		    cout << "1 THREAD: \n\n" << endl;
  
-		    update_1 = bm->getUpdateOutput(1, start_1, true, true); 
+		    update_1 = bm->getUpdateOutput(1, start_1, true, randomizeKey); 
  
 		    cout << "5 THREAD: \n\n" << endl;
         
-		    update_5 = bm->getUpdateOutput(5, start_5, true, true);
+		    update_5 = bm->getUpdateOutput(5, start_5, true, randomizeKey);
  
 		    cout << "10 THREAD: \n\n" << endl;
         
-		    update_10 = bm->getUpdateOutput(10, start_10, true, true);
+		    update_10 = bm->getUpdateOutput(10, start_10, true, randomizeKey);
 
 		    cout << "DELETION BENCHMARK: \n\n" << endl;
  
 		    cout << "1 THREAD: \n\n" << endl;
  
-		    delete_1 = bm->getDeleteOutput(1, start_1, true, false);
+		    delete_1 = bm->getDeleteOutput(1, start_1, true, randomizeKey);
  
 		    cout << "5 THREAD: \n\n" << endl;
         
-		    delete_5 = bm->getDeleteOutput(5, start_5, true, false);
+		    delete_5 = bm->getDeleteOutput(5, start_5, true, randomizeKey);
  
 		    cout << "10 THREAD: \n\n" << endl;
  
-		    delete_10 = bm->getDeleteOutput(10, start_10, true, false);
+		    delete_10 = bm->getDeleteOutput(10, start_10, true, randomizeKey);
 
 		    cout << "SIMULTANEOUS TASKS [10] BENCHMARK: \n\n\n\n" << endl;
  
-		    task_10 = bm->getSimultaneousTasksOutput(10, true, true);
+		    task_10 = bm->getSimultaneousTasksOutput(10, true, randomizeKey);
  
 		    cout << "SIMULTANEOUS TASKS [50] BENCHMARK: \n\n\n\n" << endl;
     
-		    task_50 = bm->getSimultaneousTasksOutput(50, true, true);
+		    task_50 = bm->getSimultaneousTasksOutput(50, true, randomizeKey);
  
 		    cout << "SIMULTANEOUS TASKS [100] BENCHMARK: \n\n\n\n" << endl;
     
-		    task_100 = bm->getSimultaneousTasksOutput(100, true, true);
+		    task_100 = bm->getSimultaneousTasksOutput(100, true, randomizeKey);
 
 		    cout << "SIMULTANEOUS TRANSACTIONS [10] BENCHMARK: \n\n\n\n" << endl;
  
-		    transaction_10 = bm->getTransactionsOutput(10, start_1, true, false);
+		    transaction_10 = bm->getTransactionsOutput(10, start_1, true);
  
 		    cout << "SIMULTANEOUS TRANSACTIONS [50] BENCHMARK: \n\n\n\n" << endl;
     
-		    transaction_50 = bm->getTransactionsOutput(50, start_5, true, false);
+		    transaction_50 = bm->getTransactionsOutput(50, start_5, true);
  
 		    cout << "SIMULTANEOUS TRANSACTIONS [100] BENCHMARK: \n\n\n\n" << endl;
     
-		    transaction_100 = bm->getTransactionsOutput(100, start_10, true, false);
+		    transaction_100 = bm->getTransactionsOutput(100, start_10, true);
 
 		    auto tmp_end = chrono::high_resolution_clock::now();
 
