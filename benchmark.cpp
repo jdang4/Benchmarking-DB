@@ -129,17 +129,24 @@ int main()
     }
 
     cout << endl << endl;
+
+   int trials = 3; 
  
+    BenchmarkManager* bm = new BenchmarkManager(trials, printOutputs);
  
-    BenchmarkManager* bm = new BenchmarkManager(1, printOutputs);
- 
-    int incrementor = 1 * 1000000;
+    int incrementor = trials * 1000000;
  
     int start_1 = 2000000;
  
     int start_5 = start_1 + incrementor;
 
     int start_10 = start_5 + incrementor;
+
+    int start_10_transaction = start_10 + incrementor;
+
+    int start_50 = start_10_transaction + incrementor;
+
+    int start_100 = start_50 + incrementor;
  
  
     string file = (db == 1) ? "stats/" + to_string(numOfRuns) + "/redis-running-stats.csv" : "stats/" + to_string(numOfRuns) + "/postgres-running-stats.csv";
@@ -182,11 +189,12 @@ int main()
  
     while (elapsedTime < durationTime)
     {
-		if (benchmarkOption == 1)
+		if (benchmarkOption != 3)
 		{
 		    bm->openCSV(numOfRuns);
  
 		    bm->setThreads_and_Runs(10, numOfRuns);
+		    /*
  
 		    cout << "READING BENCHMARK: \n\n" << endl;
  
@@ -255,18 +263,19 @@ int main()
 		    cout << "SIMULTANEOUS TASKS [100] BENCHMARK: \n\n\n\n" << endl;
     
 		    task_100 = bm->getSimultaneousTasksOutput(100, true, randomizeKey);
+		    */
 
 		    cout << "SIMULTANEOUS TRANSACTIONS [10] BENCHMARK: \n\n\n\n" << endl;
- 
-		    transaction_10 = bm->getTransactionsOutput(10, start_1, true);
+
+		    transaction_10 = bm->getTransactionsOutput(10, start_10_transaction, true);
  
 		    cout << "SIMULTANEOUS TRANSACTIONS [50] BENCHMARK: \n\n\n\n" << endl;
     
-		    transaction_50 = bm->getTransactionsOutput(50, start_5, true);
+		    transaction_50 = bm->getTransactionsOutput(50, start_50, true);
  
 		    cout << "SIMULTANEOUS TRANSACTIONS [100] BENCHMARK: \n\n\n\n" << endl;
     
-		    transaction_100 = bm->getTransactionsOutput(100, start_10, true);
+		    transaction_100 = bm->getTransactionsOutput(100, start_100, true);
 
 		    auto tmp_end = chrono::high_resolution_clock::now();
 
