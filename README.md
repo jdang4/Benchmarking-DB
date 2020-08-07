@@ -131,9 +131,20 @@ $ docker run --name running-redis -e ALLOW_EMPTY_PASSWORD=yes --rm -itd --networ
 > NOTE: you would need to edit the filepath to the stats directory
 
 ```console
-$ docker run -it --rm --name jonathan-client --network benchmark-network -v ~/docker/Benchmarking-DB/stats:/benchmark/stats jonathan-cpp
+$ docker run -it --rm --network benchmark-network -v ~/docker/Benchmarking-DB/stats:/benchmark/stats jonathan-cpp
 ```
 
 ### 
 
 For a more in-depth reference please visit the [Docker Swarm Walkthrough](https://docs.docker.com/network/network-tutorial-overlay/).
+
+
+# Customize the Config file for the Database Servers
+
+## Redis
+
+Please follow this path to edit the config file for Redis config->redis.conf 
+
+## PostgreSQL
+
+Please follow this path to make adjustments to the config file for PostgreSQL config->conf.d->extended.conf

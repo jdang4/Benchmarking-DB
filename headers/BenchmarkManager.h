@@ -16,7 +16,7 @@ class BenchmarkManager
 	~BenchmarkManager();
 
 	void selectDB(int db, std::string host);
-	void setThreads_and_Runs(int threads, int runs);
+	void setThreads_and_Entries(int threads, int entries);
 	void performRandomization();
 	void initializeDB();
 	void connect();
@@ -34,6 +34,7 @@ class BenchmarkManager
 	DBClient* client;
 	int trials;
 	int dbClient;
+	std::string dbName;
 	bool showOutputs;
 	bool randomOption;
 	std::ofstream* csv;

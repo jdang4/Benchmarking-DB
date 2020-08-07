@@ -12,7 +12,6 @@ class DBClient
     public:
 	char* getEntryVal(char startingChar);
 	virtual void connect();
-	virtual void disconnect();
 	virtual double initializeDB();
 	virtual double readEntry(bool randomOption);
 	virtual double insertEntry(int key);
@@ -23,17 +22,17 @@ class DBClient
 	
 	std::vector<int> getRandomKeys(int len, int min, int max);
 	void setThreads(int n);
-	void setRuns(int n);
+	void setEntries(int n);
 	int getThreads();
-	int getRuns();
+	int getEntries();
 
 
     protected:
 	double calculateTime(std::chrono::time_point<std::chrono::high_resolution_clock> start, std::chrono::time_point<std::chrono::high_resolution_clock> end); 
-	
-	private:
 	int threads;
-	int runs;
+	int entries;
+	
+	
 };
 
 #endif

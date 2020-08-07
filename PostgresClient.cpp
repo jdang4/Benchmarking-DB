@@ -19,7 +19,6 @@ PostgresClient::PostgresClient(string host_name) : DBClient()
 PostgresClient::~PostgresClient() {}
 
 
-
 /*
  * see description at DBClient::connect
  */
@@ -47,16 +46,6 @@ void PostgresClient::connect()
 }
 
 
-/*
- * see description at DBClient::disconnect
- */
-void PostgresClient::disconnect()
-{
-    //postgres->disconnect();
-    cout << "POSTGRESQL DISCONNECTED\n" << endl;
-}
-
-
 /**
  * This method is used to create the running threads. It first calculates how many
  * entries are allocated to each thread. Once it completes that it would then add 
@@ -79,17 +68,13 @@ double PostgresClient::run_threads(Lambda f, int begin, bool random, int n)
 {
     vector<thread> thread_pool;
 
-    int threads = DBClient::getThreads();
+    int numOfEntries = (n == 0) ? entries : n;
 
-    int runs = DBClient::getRuns();
+    threads = (threads > numOfEntries) ? numOfEntries : threads;
 
-    int numOfRuns = (n == 0) ? runs : n;
+    int perThread = numOfEntries / threads;
 
-    threads = (threads > numOfRuns) ? numOfRuns : threads;
-
-    int perThread = numOfRuns / threads;
-
-    int remainingThreads = numOfRuns % threads;
+    int remainingThreads = numOfEntries % threads;
 
     int beginRange, endRange;
 
@@ -208,12 +193,10 @@ double PostgresClient::readEntry(bool randomOption)
 			for (int i = start; i < end; i++)
 			{
 				srand(time(0));
-				int threads = DBClient::getThreads();
-				int runs = DBClient::getRuns();
 
-				int maxNum = runs / threads;
+				int maxNum = entries / threads;
 
-				if (threads > runs)
+				if (threads > entries)
 				{
 					maxNum = threads;
 				}
@@ -293,12 +276,10 @@ double PostgresClient::updateEntry(int key, bool randomOption)
 			for (int i = start; i < end; i++)
 			{
 				srand(time(0));
-				int threads = DBClient::getThreads();
-				int runs = DBClient::getRuns();
 
-				int maxNum = runs / threads;
+				int maxNum = entries / threads;
 
-				if (threads > runs)
+				if (threads > entries)
 				{
 					maxNum = threads;
 				}
@@ -346,12 +327,10 @@ double PostgresClient::deleteEntry(int key, bool randomOption)
 			for (int i = start; i < end; i++)
 			{
 				srand(time(0));
-				int threads = DBClient::getThreads();
-				int runs = DBClient::getRuns();
 
-				int maxNum = runs / threads;
+				int maxNum = entries / threads;
 
-				if (threads > runs)
+				if (threads > entries)
 				{
 					maxNum = threads;
 				}
@@ -425,12 +404,10 @@ double PostgresClient::simultaneousTasks(bool randomOption)
 			for (int i = start; i < end; i++)
 			{
 				srand(time(0));
-				int threads = DBClient::getThreads();
-				int runs = DBClient::getRuns();
 
-				int maxNum = runs / threads;
+				int maxNum = entries / threads;
 
-				if (threads > runs)
+				if (threads > entries)
 				{
 					maxNum = threads;
 				}

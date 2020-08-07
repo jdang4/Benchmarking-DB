@@ -9,7 +9,7 @@ using namespace std;
  
 int main() 
 {
-    int db, numOfRuns, benchmarkOption;
+    int db, numOfEntries, benchmarkOption;
     string host, initialize_option, print_option;
  
     bool initialize_db = false;
@@ -78,28 +78,28 @@ int main()
     cout << "5  -   Each operation is performed on 1,000,000 entries" << endl;
  
     cout << "\nEnter in a number listed above: ";
-    cin >> numOfRuns;
+    cin >> numOfEntries;
  
-    switch(numOfRuns)
+    switch(numOfEntries)
     {
     	case 1:
-        	numOfRuns = 1;
+        	numOfEntries = 1;
         	break;
  
     	case 2:
-        	numOfRuns = 500;
+        	numOfEntries = 500;
         	break;
  
     	case 3:
-        	numOfRuns = 5000;
+        	numOfEntries = 5000;
         	break;
  
 	    case 4:
-		    numOfRuns = 500000;
+		    numOfEntries = 500000;
         	break;
  
 	    case 5:
-		    numOfRuns = 1000000;
+		    numOfEntries = 1000000;
         	break;
  
 	    default:
@@ -149,7 +149,7 @@ int main()
     int start_100 = start_50 + incrementor;
  
  
-    string file = (db == 1) ? "stats/" + to_string(numOfRuns) + "/redis-running-stats.csv" : "stats/" + to_string(numOfRuns) + "/postgres-running-stats.csv";
+    string file = (db == 1) ? "stats/" + to_string(numOfEntries) + "/redis-running-stats.csv" : "stats/" + to_string(numOfEntries) + "/postgres-running-stats.csv";
  
     if (remove(file.c_str()) != 0)
     {
@@ -160,7 +160,7 @@ int main()
     ofstream csv(file);
  
     bm->selectDB(db, host);
-    bm->setThreads_and_Runs(10, 1000000);
+    bm->setThreads_and_Entries(10, 1000000);
     bm->connect();
  
     if (initialize_db)
@@ -191,10 +191,7 @@ int main()
     {
 		if (benchmarkOption != 3)
 		{
-		    bm->openCSV(numOfRuns);
- 
-		    bm->setThreads_and_Runs(10, numOfRuns);
-		    /*
+		    bm->openCSV(numOfEntries);
  
 		    cout << "READING BENCHMARK: \n\n" << endl;
  
@@ -263,7 +260,6 @@ int main()
 		    cout << "SIMULTANEOUS TASKS [100] BENCHMARK: \n\n\n\n" << endl;
     
 		    task_100 = bm->getSimultaneousTasksOutput(100, true, randomizeKey);
-		    */
 
 		    cout << "SIMULTANEOUS TRANSACTIONS [10] BENCHMARK: \n\n\n\n" << endl;
 
@@ -292,9 +288,6 @@ int main()
 		    csv << task_10 << "," << task_50 << "," << task_100 << ",";
 		    csv << transaction_10 << "," << transaction_50 << "," << transaction_100 << "\n";
 
-		    usleep(100000);
-
-    
 		    bm->closeCSV();
 		}
 
@@ -313,7 +306,7 @@ int main()
 	
  
     csv.close();
- 
+
     bm->disconnect();
  
 }

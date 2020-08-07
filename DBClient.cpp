@@ -11,7 +11,7 @@ using namespace std;
  * This method creates a value with a size of 6K bytes
  *
  * @return a pointer to a char array with a size of 6K bytes
- **/
+ */
 char* DBClient::getEntryVal(char startingChar)
 {
     char* val = new char[ENTRY_SIZE];
@@ -41,7 +41,7 @@ char* DBClient::getEntryVal(char startingChar)
  * @param end - the ending timestamp
  *
  * @return a double value of the elapsed time
- **/
+ */
 double DBClient::calculateTime(chrono::time_point<std::chrono::high_resolution_clock> start, chrono::time_point<std::chrono::high_resolution_clock> end)
 {
     auto elapsed = chrono::duration_cast<chrono::microseconds>(end - start);
@@ -61,7 +61,7 @@ double DBClient::calculateTime(chrono::time_point<std::chrono::high_resolution_c
  * @param max - the maximum number that the random number can be
  *
  * @return - returns a set of n random numbers
- **/
+ */
 vector<int> DBClient::getRandomKeys(int n, int lower, int upper)
 {
     srand(time(0));
@@ -78,37 +78,60 @@ vector<int> DBClient::getRandomKeys(int n, int lower, int upper)
     return keySet;
 }
 
+/**
+ * sets the threads
+ * 
+ * @param n - the number to set for threads
+ */
 void DBClient::setThreads(int n)
 {
     threads = n;
 }
 
-void DBClient::setRuns(int n)
+
+/**
+ * sets the entries
+ * 
+ * @param n - the number to set for entries
+ */
+void DBClient::setEntries(int n)
 {
-    runs = n;
+    entries = n;
 }
 
+
+/**
+ * returns the threads
+ * 
+ * @return the value set for threads
+ */
 int DBClient::getThreads()
 {
     return threads;
 }
 
-int DBClient::getRuns()
+
+/**
+ * returns the entries
+ * 
+ * @return the value set for entries
+ */
+int DBClient::getEntries()
 {
-    return runs;
+    return entries;
 }
 
+
+/**
+ * makes a connection to the DB
+ * 
+ */
 void DBClient::connect()
 {
     cout << "Method is ran from the DBClient...." << endl;
     exit(1);
 }
 
-
-void DBClient::disconnect() 
-{
-    cout << "DB disconnected\n" << endl;
-}
 
 /**
  * Initializes the DB by inserting 1 million entries with each having a data 

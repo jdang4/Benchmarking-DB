@@ -50,6 +50,7 @@ void RedisClient::connect()
 	}
 }
 
+
 /**
  * This method is used to create the running threads. It first calculates how many
  * entries are allocated to each thread. Once it completes that it would then add 
@@ -63,7 +64,7 @@ void RedisClient::connect()
  * @param random - the ranomize key option
  * @param n - used to define how many entries in total will be handled. It is predefined to 0
  * 	- if n == 0 ==> handle the number of entries that the user have defined
- * - if n != 0 ==> handle the number of entries that is defined by this parameter
+ *  - if n != 0 ==> handle the number of entries that is defined by this parameter
  * 
  * @return the time it took to complete all the threads that were used  
  */
@@ -71,17 +72,14 @@ template<typename Lambda>
 double RedisClient::run_threads(Lambda f, int begin, bool random, int n)
 {
     vector<thread> thread_pool;
-    int threads = DBClient::getThreads();
 
-    int runs = DBClient::getRuns();
+    int numOfEntries = (n == 0) ? DBClient::entries : n;
 
-    int numOfRuns = (n == 0) ? runs : n;
+    threads = (threads > numOfEntries) ? numOfEntries : threads; 
 
-    threads = (threads > numOfRuns) ? numOfRuns : threads; 
+    int perThread = numOfEntries / threads;
 
-    int perThread = numOfRuns / threads;
-
-    int remainingThreads = numOfRuns % threads;
+    int remainingThreads = numOfEntries % threads;
 
     int beginRange, endRange;
 
@@ -176,19 +174,15 @@ double RedisClient::readEntry(bool randomOption)
 	auto read = [&](int start, int end, bool random) {
 		try
 		{
-
 			Redis *redis = new Redis(options, pool_options);
 
 			for (int i = start; i < end; i++)
 			{
 				srand(time(0));
 
-				int threads = DBClient::getThreads();
-				int runs = DBClient::getRuns();
+				int maxNum = entries / threads;
 
-				int maxNum = runs / threads;
-
-				if (threads > runs)
+				if (threads > entries)
 				{
 					maxNum = threads;
 				}
@@ -202,6 +196,7 @@ double RedisClient::readEntry(bool randomOption)
 
 			redis->command<void>("quit");
 		}
+
 		catch (const Error &e)
 		{
 			cerr << "ERROR DURING READ" << endl;
@@ -212,6 +207,7 @@ double RedisClient::readEntry(bool randomOption)
 
 	return run_threads(read, 1, randomOption);
 }
+
 
 /**
  * see description at DBClient::insertEntry()
@@ -241,6 +237,7 @@ double RedisClient::insertEntry(int key)
     return run_threads(insert, key, false);
 }
 
+
 /**
  * see description at DBClient::updateEntry()
  */
@@ -254,12 +251,10 @@ double RedisClient::updateEntry(int key, bool randomOption)
 			for (int i = start; i < end; i++)
 			{
 				srand(time(0));
-				int threads = DBClient::getThreads();
-				int runs = DBClient::getRuns();
 
-				int maxNum = runs / threads;
+				int maxNum = entries / threads;
 
-				if (threads > runs)
+				if (threads > entries)
 				{
 					maxNum = threads;
 				}
@@ -284,6 +279,7 @@ double RedisClient::updateEntry(int key, bool randomOption)
 	return run_threads(update, key, randomOption);
 }
 
+
 /**
  * see description at DBClient::deleteEntry()
  */
@@ -297,12 +293,10 @@ double RedisClient::deleteEntry(int key, bool randomOption)
 			for (int i = start; i < end; i++)
 			{
 				srand(time(0));
-				int threads = DBClient::getThreads();
-				int runs = DBClient::getRuns();
 
-				int maxNum = runs / threads;
+				int maxNum = entries / threads;
 
-				if (threads > runs)
+				if (threads > entries)
 				{
 					maxNum = threads;
 				}
@@ -316,6 +310,7 @@ double RedisClient::deleteEntry(int key, bool randomOption)
 
 			redis->command<void>("quit");
 		}
+
 		catch (const Error &e)
 		{
 			cerr << "ERROR DURING DELETION" << endl;
@@ -326,6 +321,7 @@ double RedisClient::deleteEntry(int key, bool randomOption)
 
 	return run_threads(deletion, key, randomOption);
 }
+
 
 /*
  * see description at DBClient::simultaneousTasks()
@@ -366,12 +362,10 @@ double RedisClient::simultaneousTasks(bool randomOption)
 		for (int i = start; i < end; i++)
 		{
 			srand(time(0));
-			int threads = DBClient::getThreads();
-			int runs = DBClient::getRuns();
 
-			int maxNum = runs / threads;
+			int maxNum = entries / threads;
 
-			if (threads > runs)
+			if (threads > entries)
 			{
 				maxNum = threads;
 			}

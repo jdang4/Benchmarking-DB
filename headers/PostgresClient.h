@@ -16,7 +16,6 @@ class PostgresClient : public DBClient
 	PostgresClient(std::string host);
 	~PostgresClient();
 	void connect() override;
-	void disconnect() override;
 	double initializeDB() override;
 	double readEntry(bool randomOption) override;
 	double insertEntry(int key) override;
