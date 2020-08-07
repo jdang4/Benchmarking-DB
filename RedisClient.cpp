@@ -36,6 +36,8 @@ void RedisClient::connect()
 		// verifying the connection by sending a command
 		redis->set("foo", "bar");
 
+		redis->del("foo");
+
 		cout << "CONNECTED TO REDIS!\n" << endl;
 
 		redis->command<void>("quit");
@@ -48,7 +50,23 @@ void RedisClient::connect()
 	}
 }
 
-
+/**
+ * This method is used to create the running threads. It first calculates how many
+ * entries are allocated to each thread. Once it completes that it would then add 
+ * a thread that performs the provided lambda function within its given range into the 
+ * thread pool. After creating and adding the threads to the pool it would wait until
+ * all are finsihed and it is timing how long it takes to do so
+ * 
+ * @tparam Lambda 
+ * @param f - the lambda function to have each thread run
+ * @param begin - the starting entry key
+ * @param random - the ranomize key option
+ * @param n - used to define how many entries in total will be handled. It is predefined to 0
+ * 	- if n == 0 ==> handle the number of entries that the user have defined
+ * - if n != 0 ==> handle the number of entries that is defined by this parameter
+ * 
+ * @return the time it took to complete all the threads that were used  
+ */
 template<typename Lambda>
 double RedisClient::run_threads(Lambda f, int begin, bool random, int n)
 {
