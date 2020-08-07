@@ -1,6 +1,8 @@
 # Benchmarking DB Application
 
-#
+This project is to offer a benchmark application that is able to help in the selection of a Cloud Database to use in the Control/User Plane Separation (CUPS) project.
+In this project, it is capable of handling multiple of different database clients to benchmark against and it will record to recorded data into a generated CSV file for 
+further analysis on the information.
 
 # Before Running
 
@@ -17,7 +19,10 @@ My reccomendation is to get the Bitnami Redis Docker Image is to pull the prebui
 $ docker pull bitnami/redis:latest
 ```
 
-After pulling the prebuilt image you can go ahead and get the Redis container running in the Docker Engine. The following commands is what I use that includes my own Redis config file, persistence, and replication. Please note that the filepaths included in my commands must be changed to fit with your system.
+After pulling the prebuilt image you can go ahead and get the Redis container running in the Docker Engine. The following commands is what I use that includes my own Redis config file, persistence, and replication. 
+
+> NOTE: Please note that the filepaths included in my commands must be changed to fit with your local machine. There is no need to edit the path that follows after the ":"
+in the file path, only the path before the colon.
 
 
 **Redis Primary Container:**
@@ -46,18 +51,18 @@ $ docker pull bitnami/postgresql:latest
 
 After pulling the prebuilt image you can go ahead and get the PostgreSQL container running in the Docker Engine. The following commands is what I use that includes my own Redis config file, persistence, and replication. Please note that the filepaths included in my commands must be changed to fit with your system.
 
-> NOTE: To edit the PostgreSQL config file, follow the path in this repository config/conf.d/ and make your adjustments in the extended.conf file
+> NOTE: When using your own username/password, please make the edit in the PostgresClient.cpp file in order to allow the application to make a connection
 
 **PostgreSQL Primary Container:**
 
 ```console
-$ docker run -itd --rm --name postgres-master -v ~/postgres-data/master:/bitnami/postgresql -v ~/docker/Benchmark/config/conf.d/:/bitnami/postgresql/conf/conf.d -e POSTGRESQL_USERNAME=postgres -e POSTGRESQL_PASSWORD=<insert password> -e POSTGRESQL_DATABASE="SDB" -e POSTGRESQL_REPLICATION_MODE=master -e POSTGRESQL_REPLICATION_USER=primary -e POSTGRESQL_REPLICATION_PASSWORD=replication bitnami/postgresql:latest
+$ docker run -itd --rm --name postgres-master -v ~/postgres-data/master:/bitnami/postgresql -v ~/docker/Benchmark/config/conf.d/:/bitnami/postgresql/conf/conf.d -e POSTGRESQL_USERNAME=postgres -e POSTGRESQL_PASSWORD=Juni#20 -e POSTGRESQL_DATABASE="SDB" -e POSTGRESQL_REPLICATION_MODE=master -e POSTGRESQL_REPLICATION_USER=primary -e POSTGRESQL_REPLICATION_PASSWORD=replication bitnami/postgresql:latest
 ```
 
 **PostgreSQL Replica Container:**
 
 ```console
-$ docker run -itd --rm --name postgres-replica --link postgres-master:master -v ~/postgres-data/replica:/bitnami/postgresql -v ~/docker/Benchmark/config/conf.d/:/bitnami/postgresql/conf/conf.d -e POSTGRESQL_USERNAME=postgres -e POSTGRESQL_PASSWORD=<insert password> -e POSTGRESQL_DATABASE="SDB" -e POSTGRESQL_REPLICATION_MODE=slave -e POSTGRESQL_MASTER_HOST=master -e POSTGRESQL_REPLICATION_USER=primary -e POSTGRESQL_REPLICATION_PASSWORD=replication bitnami/postgresql:latest
+$ docker run -itd --rm --name postgres-replica --link postgres-master:master -v ~/postgres-data/replica:/bitnami/postgresql -v ~/docker/Benchmark/config/conf.d/:/bitnami/postgresql/conf/conf.d -e POSTGRESQL_USERNAME=postgres -e POSTGRESQL_PASSWORD=Juni#20 -e POSTGRESQL_DATABASE="SDB" -e POSTGRESQL_REPLICATION_MODE=slave -e POSTGRESQL_MASTER_HOST=master -e POSTGRESQL_REPLICATION_USER=primary -e POSTGRESQL_REPLICATION_PASSWORD=replication bitnami/postgresql:latest
 ```
 
 For more information on Bitnami PostgreSQL, please refer to the [bitnami-docker-postgresql](https://github.com/bitnami/bitnami-docker-postgresql) repository.
@@ -112,10 +117,18 @@ On host1, create an attachable overlay network:
 $ docker network create --driver=overlay --attachable benchmark-network
 ```
 
-After creating the network, still on host1, run the containers containing the database servers while including the "-it" and "--network benchmark-network" flags somwhere within the lines of the run command to connect to your created network. Please refer to the example below as a guide.
+After creating the network, still on host1, run the containers containing the database servers while including the "-it" and "--network benchmark-network" flags somwhere within the lines of the run command to connect to your created network. Please refer to the examples for Redis below as a guide. Again, please adjust the file path according to your local machine.
+
+**Redis Primary**
 
 ```console
 $ docker run --name redis-master -v ~/docker/Benchmark/config/redis.conf:/opt/bitnami/redis/mounted-etc/redis.conf -v /var/lib/redis:/bitnami/redis/data -e REDIS_REPLICATION_MODE=master -e ALLOW_EMPTY_PASSWORD=yes --rm -itd --network benchmark-network bitnami/redis:latest
+```
+
+**Redis Replica**
+
+```console
+$ docker run --name redis-replica -v /home/jonathand/docker/Benchmark/config/redis.conf:/opt/bitnami/redis/mounted-etc/redis.conf -v /var/lib/redis:/bitnami/redis/data --link redis-master:master -e REDIS_REPLICATION_MODE=slave -e REDIS_MASTER_HOST=master -e ALLOW_EMPTY_PASSWORD=yes --rm -itd --network benchmark-network bitnami/redis:latest
 ```
 
 ## 3) Get the network to be created on host2
@@ -128,10 +141,10 @@ $ docker run --name running-redis -e ALLOW_EMPTY_PASSWORD=yes --rm -itd --networ
 
 **Running the application from different host**
 
-> NOTE: you would need to edit the filepath to the stats directory
+> NOTE: the stats directory is provided in this repository
 
 ```console
-$ docker run -it --rm --network benchmark-network -v ~/docker/Benchmarking-DB/stats:/benchmark/stats jonathan-cpp
+$ docker run -it --rm --network benchmark-network -v ~/docker/Benchmarking-DB/stats:/benchmark/stats <insert image name of app>
 ```
 
 ### 
@@ -143,10 +156,8 @@ For a more in-depth reference please visit the [Docker Swarm Walkthrough](https:
 
 ## Redis
 
-Please follow this path to edit the config file for Redis config->redis.conf 
+In the repository there exists a config folder. In order to edit the config file for Redis, please make the edit to the following file: config/redis.conf
 
 ## PostgreSQL
 
-Please follow this path to make adjustments to the config file for PostgreSQL config->conf.d->extended.conf
-
-Test
+In the repository there exists a config folder. In order to edit the config file for PostgreSQL, please make the edit to the following file: config/conf.d/extended.conf
