@@ -5,7 +5,7 @@ The README file was to describe how to set up and run this application, and this
 
 # Overall Structure and Flow of the Application
 
----
+```console
                      ----------------                   ----------------------                       -----------------
                      |              |                   |                    |                       |               |
                      |              |                   |                    | --------------------> |               |
@@ -16,7 +16,7 @@ user --------------> |  benchmark   | ----------------> |  BenchmarkManager  |  
                      |              |                   |                    |                       |               |
                      ----------------                   ----------------------                       -----------------
 
----
+```
 
 This project is split across 3 main files: benchmark, BenchmarkManager, DBClient. 
 
