@@ -4,6 +4,7 @@
 #include "headers/BenchmarkManager.h"
 #include <chrono>
 #include <unistd.h>
+#include <fstream>
  
 using namespace std;
  
@@ -156,7 +157,16 @@ int main()
         cout << "ERROR DELETING RUNNING STATS CSV FILE" << endl;
         exit(1);
     }
- 
+
+    ifstream stats_file;
+
+    stats_file.open(file);
+
+    if (!stats_file)
+    {
+        ofstream create_file {file};
+    }
+    
     ofstream csv(file);
  
     bm->selectDB(db, host);
