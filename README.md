@@ -5,10 +5,10 @@ In this project, it is capable of handling multiple of different database client
 further analysis on the information.
 
 # Table of Contents  
-[Before Running](#BeforeRunning)  
-[Running the Application](#RunningtheApplication)  
+[Before Running](#beforerunning)  
+[Running the Application](#runningtheapplication)  
 ...snip...    
-<a name="Before Running"/>
+<a name="beforerunning"/>
 
 
 # Before Running
