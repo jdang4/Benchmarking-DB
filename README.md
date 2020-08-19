@@ -31,7 +31,7 @@ $ docker pull bitnami/redis:latest
 After pulling the prebuilt image you can go ahead and get the Redis container running in the Docker Engine. The following commands is what I use that includes my own Redis config file, persistence, and replication. 
 
 > NOTE: Please note that the filepaths included in my commands must be changed to fit with your local machine. There is no need to edit the path that follows after the ":"
-in the file path, only the path before the colon.
+in the file path, only the path before the colon. In this case, change the following path to the project directory "~/docker/Benchmark/" to fit your local machine.
 
 
 **Redis Primary Container:**
