@@ -5,14 +5,13 @@ In this project, it is capable of handling multiple of different database client
 further analysis on the information.
 
 # Table of Contents  
-[Before Running](#beforerunning)  
-[Running the Application](#runningtheapplication)  
+[Before Running](#before-running)  
+[Running the Application](#running-the-application)  
 ...snip...    
-<a name="beforerunning"/>
-<a name="runningtheapplication"/>
 
 
-# Before Running
+
+# Before Running <a name="before-running"></a>
 
 This application is designed to run in an individual docker container and connects with the running database servers that are all in their own docker containers as well. So before running this application, it is required that the containers that hold the database server are up and running.
 
@@ -76,7 +75,7 @@ $ docker run -itd --rm --name postgres-replica --link postgres-master:master -v 
 For more information on Bitnami PostgreSQL, please refer to the [bitnami-docker-postgresql](https://github.com/bitnami/bitnami-docker-postgresql) repository.
 
 
-# Running the Application
+# Running the Application <a name="running-the-application"></a>
 
 After getting the database servers up and running in a Docker container, you can now proceed to run the application. Before running, you would first need to build the application image.
 
