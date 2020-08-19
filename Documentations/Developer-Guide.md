@@ -44,9 +44,9 @@ The "run_threads" method is responsible for creating and making use of the threa
 
 Please click on the following links below to see the used C++ db clients:
 
-* [Redis C++ Client](#https://github.com/sewenew/redis-plus-plus)
+* [Redis C++ Client](https://github.com/sewenew/redis-plus-plus)
 
-* [PostgreSQL C++ Client](#https://github.com/jtv/libpqxx)
+* [PostgreSQL C++ Client](https://github.com/jtv/libpqxx)
 
 
 # Adding Additional Database Clients
