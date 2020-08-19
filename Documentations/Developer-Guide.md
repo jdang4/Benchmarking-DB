@@ -40,6 +40,15 @@ After defining the lambda function, call the "run_threads" method and pass the l
 The "run_threads" method is responsible for creating and making use of the threads during the benchmark. Its main responsibility is to define how many entries each of the available threads would manager and it would add the provided lambda function to the thread functionality. As the method is waiting for all the threads to finish, it is timing how long it takes to do so and it would return the elapsed time as a double value. The method that calls the "run_threads" method should return the double value that the "run_threads" method returns.
 
 
+# Guides to the Used C++ DB Clients
+
+Please click on the following links below to see the used C++ db clients:
+
+* [Redis C++ Client](#https://github.com/sewenew/redis-plus-plus)
+
+* [PostgreSQL C++ Client](#https://github.com/jtv/libpqxx)
+
+
 # Adding Additional Database Clients
 
 I tried to make this step as simple as possible by using the concept of inheritance. By doing so, the BenchmarkManager would not need to know too much of the implementation of the database client other than its existence. The most critical steps when adding an additional database client are to define the added db client to inherit from the base class (DBClient) and to override the implementation of the methods defined in the base class. There are some methods within the DBClient that should not be overrided that are used as helper methods. When inserting/updating an entry, to get a 6K byte value, you can call the "getEntryVal" method, which would return a 6K byte value. The other method is "calculateTime" which takes 2 chrono::time_point values and calculates the elapsed time based on the provided timestamps. Please refer to the documentation of the 2 methods in the DBClient.cpp file for more details.
@@ -54,5 +63,4 @@ Because the project is ran in a Docker environment, it is necessary (if needed) 
 ## Areas to Make the Small Adjustments in the Code
 
 Since this application is recording the outputted numbers into a CSV file and also handling different database clients, I named each of the CSV files by the different database names. For example, if I was benchmarking Redis, the application would record the data into a CSV file with Redis in the name of the file. Due to this implementation, when adding a new database client, it is necessary to make an edit within the application that allows the program to record the data into a CSV file. In the "benchmark.cpp" file, there is a string variable named "file", and that is where the edit should be made. On a similar note, it is also important to include the option to select the new database in the user prompt as well. These are very minor edits that are still important to make when adding a new database client.
-
 

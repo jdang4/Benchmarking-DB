@@ -9,7 +9,7 @@ further analysis on the information.
 2. [Running the Application](#running-the-application)  
     1. [Running the Application from Different Host](#running-the-application-diff-host)
 3. [Customize the Config file for the Database Servers](#customize-configs)
-4. [Understanding the Options in Benchmark App](#options-in-app)
+4. [Understanding the User Options in Benchmark App](#options-in-app)
 
 
 
@@ -43,7 +43,7 @@ $ docker run --name redis-master -v ~/docker/Benchmark/config/redis.conf:/opt/bi
 **Redis Replica Container:**
 
 ```console
-$ docker run --name redis-replica -v /home/jonathand/docker/Benchmark/config/redis.conf:/opt/bitnami/redis/mounted-etc/redis.conf -v /var/lib/redis:/bitnami/redis/data --link redis-master:master -e REDIS_REPLICATION_MODE=slave -e REDIS_MASTER_HOST=master -e ALLOW_EMPTY_PASSWORD=yes --rm -d bitnami/redis:latest
+$ docker run --name redis-replica -v ~/docker/Benchmark/config/redis.conf:/opt/bitnami/redis/mounted-etc/redis.conf -v /var/lib/redis:/bitnami/redis/data --link redis-master:master -e REDIS_REPLICATION_MODE=slave -e REDIS_MASTER_HOST=master -e ALLOW_EMPTY_PASSWORD=yes --rm -d bitnami/redis:latest
 ```
 
 For more information on Bitnami Redis, please refer to the [bitnami-docker-redis](https://github.com/bitnami/bitnami-docker-redis) repository.
@@ -137,7 +137,7 @@ $ docker run --name redis-master -v ~/docker/Benchmark/config/redis.conf:/opt/bi
 **Redis Replica**
 
 ```console
-$ docker run --name redis-replica -v /home/jonathand/docker/Benchmark/config/redis.conf:/opt/bitnami/redis/mounted-etc/redis.conf -v /var/lib/redis:/bitnami/redis/data --link redis-master:master -e REDIS_REPLICATION_MODE=slave -e REDIS_MASTER_HOST=master -e ALLOW_EMPTY_PASSWORD=yes --rm -itd --network benchmark-network bitnami/redis:latest
+$ docker run --name redis-replica -v ~/docker/Benchmark/config/redis.conf:/opt/bitnami/redis/mounted-etc/redis.conf -v /var/lib/redis:/bitnami/redis/data --link redis-master:master -e REDIS_REPLICATION_MODE=slave -e REDIS_MASTER_HOST=master -e ALLOW_EMPTY_PASSWORD=yes --rm -itd --network benchmark-network bitnami/redis:latest
 ```
 
 **PostgreSQL Primary**
@@ -184,7 +184,7 @@ In the repository there exists a config folder. In order to edit the config file
 In the repository there exists a config folder. In order to edit the config file for PostgreSQL, please make the edit to the following file: config/conf.d/extended.conf
 
 
-# Understanding the Options in Benchmark App <a name="options-in-app"></a>
+# Understanding the User Options in Benchmark App <a name="options-in-app"></a>
 
 When running the application, the user would be given options to choose from:
 

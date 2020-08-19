@@ -1,6 +1,5 @@
 FROM ubuntu:latest
 FROM gcc:4.9
-#ENV PATH="/jonathand/:${PATH}"
 
 
 RUN apt-get update && apt-get install -y cmake apt-utils
@@ -10,6 +9,8 @@ RUN apt-get install -y postgresql postgresql-contrib libpqxx-4.0 libpq-dev libpq
 WORKDIR /benchmark
 
 COPY . /benchmark
+
+# adding the C++ db clients installation
 
 WORKDIR /benchmark/include
 
@@ -39,12 +40,10 @@ CMD ["./configure"]
 
 RUN make
 
+# compiling the benchmark app
+
 WORKDIR /benchmark/
 
 RUN make
 
 CMD ["./benchmark"]
-
-#WORKDIR /etc/postgresql/9.4/main 
-
-#RUN ls
