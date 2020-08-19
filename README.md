@@ -188,7 +188,6 @@ In the repository there exists a config folder. In order to edit the config file
 
 When running the application, the user would be given options to choose from:
 
-```console
 * Selecting a Database
     
 * Whether to initialize the database (deletes all the entries in the db and re-insert 1M entries)
@@ -200,5 +199,5 @@ When running the application, the user would be given options to choose from:
 * Select how you want to test the operations. The first performs a test on each of the operations used without randomizing the keys, and the second one does the same as the first but it randomizes the key. The third option would randomly select an operation to benchmark and does a test on it while randomizng the keys
     
 * Select the number of entries you want to perform on each operation
-```
+
 
