@@ -55,3 +55,4 @@ Because the project is ran in a Docker environment, it is necessary (if needed) 
 
 Since this application is recording the outputted numbers into a CSV file and also handling different database clients, I named each of the CSV files by the different database names. For example, if I was benchmarking Redis, the application would record the data into a CSV file with Redis in the name of the file. Due to this implementation, when adding a new database client, it is necessary to make an edit within the application that allows the program to record the data into a CSV file. In the "benchmark.cpp" file, there is a string variable named "file", and that is where the edit should be made. On a similar note, it is also important to include the option to select the new database in the user prompt as well. These are very minor edits that are still important to make when adding a new database client.
 
+
