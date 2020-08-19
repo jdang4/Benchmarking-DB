@@ -10,6 +10,7 @@ further analysis on the information.
     1. [Running the Application from Different Host](#running-the-application-diff-host)
 3. [Customize the Config file for the Database Servers](#customize-configs)
 4. [Understanding the User Options in Benchmark App](#options-in-app)
+6. [Possible Errors that May Occur When Running App](#errors)
 5. [Contact](#contact)
 
 
@@ -200,6 +201,11 @@ When running the application, the user would be given options to choose from:
 * Select how you want to test the operations. The first performs a test on each of the operations used without randomizing the keys, and the second one does the same as the first but it randomizes the key. The third option would randomly select an operation to benchmark and does a test on it while randomizng the keys
     
 * Select the number of entries you want to perform on each operation
+
+
+# Possible Errors that May Occur When Running App <a name="errors"></a>
+
+I have found that as the program runs for a while eventually it would cause out of memory errors, causing the program to fail. Although I am sure there are better solutions than mine, but for a quick solution, I cleared the folders where the persistent files of the database would reside in and reboot the database containers (stopping then starting it up again). Again, please note that this is not the most effective solution and is just one simple way to get the application working again.
 
 
 # Contact
