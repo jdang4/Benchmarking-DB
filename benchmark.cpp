@@ -291,6 +291,7 @@ int main()
 
 		    double elapsedTime_min = double(elapsedTime) / double(60);
 
+            // recording in the CSV file with running in the title
 		    csv << elapsedTime_min << "," << read_1 << "," << read_5 << "," << read_10 << ",";
 		    csv << insert_1 << "," << insert_5 << "," << insert_10 << ","; 
 		    csv << update_1 << "," << update_5 << "," << update_10 << ","; 

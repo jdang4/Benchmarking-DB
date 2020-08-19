@@ -2,7 +2,6 @@
 #include <chrono>
 #include <vector>
 #include <thread>
-#include <mutex>
 #include "headers/PostgresClient.h"
 
 using namespace std;
@@ -148,9 +147,6 @@ double PostgresClient::initializeDB()
 
 	auto createDB = [&](int start, int end, bool random) {
 		try {
-			mutex mtx;
-
-			mtx.lock();
 			connection* postgres = new connection(connection_description);
 
 			for (int64_t i = start; i < end; i++)
@@ -163,8 +159,6 @@ double PostgresClient::initializeDB()
 			}
 
 			postgres->disconnect();
-
-			mtx.unlock();
 		
 		} catch (const exception &e) {
 			cerr << e.what() << endl;
@@ -184,10 +178,6 @@ double PostgresClient::readEntry(bool randomOption)
 {
 	auto read = [&](int start, int end, bool random) {
 		try {
-			mutex mtx;
-
-			mtx.lock();
-
 			connection* postgres = new connection(connection_description);
 
 			for (int i = start; i < end; i++)
@@ -217,8 +207,6 @@ double PostgresClient::readEntry(bool randomOption)
 			}
 
 			postgres->disconnect();
-
-			mtx.unlock();
 
 		} catch (const exception &e) {
 			cerr << e.what() << endl;

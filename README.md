@@ -10,6 +10,7 @@ further analysis on the information.
     1. [Running the Application from Different Host](#running-the-application-diff-host)
 3. [Customize the Config file for the Database Servers](#customize-configs)
 4. [Understanding the User Options in Benchmark App](#options-in-app)
+5. [Contact](#contact)
 
 
 
@@ -201,3 +202,6 @@ When running the application, the user would be given options to choose from:
 * Select the number of entries you want to perform on each operation
 
 
+# Contact
+
+If you have any additional questions about this project, feel free to contact me at jdang@wpi.edu.

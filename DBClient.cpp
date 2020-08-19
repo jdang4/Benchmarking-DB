@@ -222,9 +222,7 @@ double DBClient::simultaneousTasks(bool randomOption)
 
 /**
  * Simulates having multiple of transactions happening at the same time.
- * The transactions done are either a success or a failure. A success transaction performs
- * 1 insert, 8 simultaneous read/modify, and 1 delete. A fail transaction performs 1 insert and
- * 1 delete.
+ * A transactin consists of performing an insert and then a delete.
  *
  * @param n - the number of simultaneous threads
  * @double p - the success percentage
