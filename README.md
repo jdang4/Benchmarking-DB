@@ -5,9 +5,11 @@ In this project, it is capable of handling multiple of different database client
 further analysis on the information.
 
 # Table of Contents  
-[Before Running](#before-running)  
-[Running the Application](#running-the-application)  
-...snip...    
+1. [Before Running](#before-running)  
+2. [Running the Application](#running-the-application)  
+    1. [Running the Application from Different Host](#running-the-application-diff-host)
+3. [Customize the Config file for the Database Servers](#customize-configs)
+4. [Understanding the Options in Benchmark App](#options-in-app)
 
 
 
@@ -92,9 +94,9 @@ $ docker run -it --rm --name benchmark-client --link postgres-master:bitnami/pos
 ```
 
 
-# Running the Application from a Different Host
+## Running the Application from a Different Host <a name="running-the-application-diff-host"></a>
 
-## 1) Set up the Docker Swarm
+### 1) Set up the Docker Swarm
 
 1) On host1, initialize the Docker Swarm:
 
@@ -116,7 +118,7 @@ To add a manager to this swarm, run 'docker swarm join-token manager' and follow
 $ docker swarm join --token <insert token> <insert ip address>:2377
 ```
 
-## 2) Create an Attachable Overlay Network
+### 2) Create an Attachable Overlay Network
 
 On host1, create an attachable overlay network:
 
@@ -150,7 +152,7 @@ $ docker run -itd --rm --name postgres-master -v ~/postgres-data/master:/bitnami
 $ docker run -itd --rm --name postgres-replica --link postgres-master:master -v ~/postgres-data/replica:/bitnami/postgresql -v ~/docker/Benchmark/config/conf.d/:/bitnami/postgresql/conf/conf.d -e POSTGRESQL_USERNAME=postgres -e POSTGRESQL_PASSWORD=Juni#20 -e POSTGRESQL_DATABASE="SDB" -e POSTGRESQL_REPLICATION_MODE=slave -e POSTGRESQL_MASTER_HOST=master -e POSTGRESQL_REPLICATION_USER=primary -e POSTGRESQL_REPLICATION_PASSWORD=replication --network benchmark-network bitnami/postgresql:latest
 ```
 
-## 3) Get the network to be created on host2
+### 3) Get the network to be created on host2
 
 From my experience, in order to get the network that was created on host1, I had to create a running container that connects to that network on host2. Once I am able to verify that the network that was created on host1 is now created on host2, I can then run the application on a different host
 
@@ -171,7 +173,7 @@ $ docker run -it --rm --network benchmark-network -v ~/docker/Benchmarking-DB/st
 For a more in-depth reference please visit the [Docker Swarm Walkthrough](https://docs.docker.com/network/network-tutorial-overlay/).
 
 
-# Customize the Config file for the Database Servers
+# Customize the Config file for the Database Servers <a name="customize-configs"></a>
 
 ## Redis
 
@@ -182,7 +184,7 @@ In the repository there exists a config folder. In order to edit the config file
 In the repository there exists a config folder. In order to edit the config file for PostgreSQL, please make the edit to the following file: config/conf.d/extended.conf
 
 
-# Understanding the Options in Benchmark App
+# Understanding the Options in Benchmark App <a name="options-in-app"></a>
 
 When running the application, the user would be given options to choose from:
 
