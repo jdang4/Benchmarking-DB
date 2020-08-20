@@ -1,0 +1,108 @@
+Read Num,Threads,Runs,Time Elapsed (sec)
+1,1,500,0.163152
+2,1,500,0.164588
+3,1,500,0.167214
+
+
+Read Num,Threads,Runs,Time Elapsed (sec)
+1,5,500,0.039303
+2,5,500,0.054832
+3,5,500,0.052638
+
+
+Read Num,Threads,Runs,Time Elapsed (sec)
+1,10,500,0.034006
+2,10,500,0.035579
+3,10,500,0.032325
+
+
+Insert Num,Threads,Runs,Time Elapased (sec)
+1,1,500,0.205029
+2,1,500,0.253147
+3,1,500,0.257384
+
+
+Insert Num,Threads,Runs,Time Elapased (sec)
+1,5,500,0.059787
+2,5,500,0.080304
+3,5,500,0.05723
+
+
+Insert Num,Threads,Runs,Time Elapased (sec)
+1,10,500,0.039083
+2,10,500,0.036423
+3,10,500,0.03805
+
+
+Update Num,Threads,Runs,Time Elapsed (sec)
+1,1,500,0.253264
+2,1,500,0.260415
+3,1,500,0.213451
+
+
+Update Num,Threads,Runs,Time Elapsed (sec)
+1,5,500,0.075992
+2,5,500,0.064444
+3,5,500,0.0593
+
+
+Update Num,Threads,Runs,Time Elapsed (sec)
+1,10,500,0.061047
+2,10,500,0.034869
+3,10,500,0.034843
+
+
+Delete Num,Threads,Runs,Time Elapsed (sec)
+1,1,500,0.096865
+2,1,500,0.09168
+3,1,500,0.094678
+
+
+Delete Num,Threads,Runs,Time Elapsed (sec)
+1,5,500,0.023821
+2,5,500,0.024709
+3,5,500,0.023146
+
+
+Delete Num,Threads,Runs,Time Elapsed (sec)
+1,10,500,0.017621
+2,10,500,0.017317
+3,10,500,0.017254
+
+
+10 Simul. Tasks Num,Threads,Runs,Time Elapsed (sec),Average Time per Tasks
+1,10,500,0.036758
+2,10,500,0.034343
+3,10,500,0.035723
+
+
+50 Simul. Tasks Num,Threads,Runs,Time Elapsed (sec),Average Time per Tasks
+1,50,500,0.043338
+2,50,500,0.032243
+3,50,500,0.033126
+
+
+100 Simul. Tasks Num,Threads,Runs,Time Elapsed (sec),Average Time per Tasks
+1,100,500,0.037064
+2,100,500,0.06776
+3,100,500,0.03343
+
+
+10 Simul. Transactions,Threads,Runs,Time Elapsed (sec),Average Time per Tasks
+1,10,500,0.061476
+2,10,500,0.057527
+3,10,500,0.055738
+
+
+50 Simul. Transactions,Threads,Runs,Time Elapsed (sec),Average Time per Tasks
+1,50,500,0.035232
+2,50,500,0.036189
+3,50,500,0.035632
+
+
+100 Simul. Transactions,Threads,Runs,Time Elapsed (sec),Average Time per Tasks
+1,100,500,0.039957
+2,100,500,0.043341
+3,100,500,0.041291
+
+
