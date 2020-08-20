@@ -4,13 +4,12 @@
 #include <vector>
 #include <chrono>
 
-#define ENTRY_SIZE 6000
 #define NUM_OF_ENTRIES 1000000
 
 class DBClient 
 {
     public:
-	char* getEntryVal(char startingChar);
+	char* getEntryVal(char recordChar, int recordSize);
 	virtual void connect();
 	virtual double initializeDB();
 	virtual double readEntry(bool randomOption);
@@ -23,14 +22,15 @@ class DBClient
 	std::vector<int> getRandomKeys(int len, int min, int max);
 	void setThreads(int n);
 	void setEntries(int n);
+	void setRecordSize(int n);
 	int getThreads();
 	int getEntries();
-
 
     protected:
 	double calculateTime(std::chrono::time_point<std::chrono::high_resolution_clock> start, std::chrono::time_point<std::chrono::high_resolution_clock> end); 
 	int threads;
 	int entries;
+	int recordSize;
 	
 	
 };

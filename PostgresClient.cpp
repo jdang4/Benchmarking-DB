@@ -9,8 +9,8 @@ using namespace pqxx;
 
 PostgresClient::PostgresClient(string host_name) : DBClient() 
 {
-    dataVal = DBClient::getEntryVal('a');
-    newVal = DBClient::getEntryVal('j');
+    dataVal = DBClient::getEntryVal('a', recordSize);
+    newVal = DBClient::getEntryVal('j', recordSize);
     connection_description = "dbname = SDB user = postgres password = Juni#20 \
 		hostaddr = " + host_name + " port = 5432";
 }

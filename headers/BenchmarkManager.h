@@ -15,7 +15,7 @@ class BenchmarkManager
 	BenchmarkManager(int n, bool option);
 	~BenchmarkManager();
 
-	void selectDB(int db, std::string host);
+	void selectDB(int db, std::string host, int recordSize);
 	void setThreads_and_Entries(int threads, int entries);
 	void performRandomization();
 	void initializeDB();

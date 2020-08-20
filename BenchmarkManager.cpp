@@ -19,7 +19,7 @@ BenchmarkManager::~BenchmarkManager() {}
  * @param db - the db to benchmark
  * @param host - the host of the primary container to connect to
  */
-void BenchmarkManager::selectDB(int db, string host)
+void BenchmarkManager::selectDB(int db, string host, int recordSize)
 {
     dbClient = db;
 
@@ -39,6 +39,8 @@ void BenchmarkManager::selectDB(int db, string host)
         cout << "INVALID DB CHOICE!" << endl;
         exit(1);
     }
+
+    client->setRecordSize(recordSize);
 }
 
 /**

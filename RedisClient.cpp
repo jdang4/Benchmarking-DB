@@ -11,9 +11,13 @@ using namespace std;
 
 RedisClient::RedisClient(string host_name) : DBClient()
 {
-    dataVal = DBClient::getEntryVal('a');
-    newVal = DBClient::getEntryVal('j');
+    dataVal = DBClient::getEntryVal('a', recordSize);
+    newVal = DBClient::getEntryVal('j', recordSize);
     
+	int sizeOfArray = sizeof(dataVal) / sizeof(dataVal[0]);
+
+	cout << sizeOfArray << endl;
+
     options.host = host_name;
     options.port = 6379;
 

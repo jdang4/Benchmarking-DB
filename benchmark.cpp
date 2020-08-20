@@ -10,7 +10,7 @@ using namespace std;
  
 int main() 
 {
-    int db, numOfEntries, benchmarkOption;
+    int db, numOfEntries, benchmarkOption, recordSize;
     string host, initialize_option, print_option;
  
     bool initialize_db = false;
@@ -53,6 +53,9 @@ int main()
     
     cout << "Enter time (in seconds): ";
     cin >> durationTime;
+
+    // error checking
+    durationTime = (durationTime > 0) ? durationTime : 1;
  
     cout << endl;
 
@@ -107,9 +110,39 @@ int main()
 		    cout << "INVALID ENTRY!" << endl;
         	exit(-1);
     }
+
+    cout << endl;
+
+    cout << "Select which record size to use during the benchmark test:" << endl;
+    cout << "1  -   Record Size is 256 bytes" << endl;
+    cout << "2  -   Record Size is 2K bytes" << endl;
+    cout << "3  -   Record Size is 10K bytes" << endl;
+    cout << "4  -   Record Size is 6K bytes (default)" << endl;
  
- 
-    durationTime = (durationTime > 0) ? durationTime : 1;
+    cout << "\nEnter in a number listed above: ";
+    cin >> recordSize;
+
+    switch (recordSize)
+    {
+        case 1 :
+            recordSize = 256;
+            initialize_db = true;
+            break;
+
+        case 2 :
+            recordSize = 2000;
+            initialize_db = true;
+            break;
+
+        case 3 :
+            recordSize = 10000;
+            initialize_db = true;
+            break;
+
+        default :
+            recordSize = 6000;
+            break;
+    }
 
     cout << "\n############################################################################################################################################\n" << endl;
     cout << "HELP GUIDE\n"<< endl;
@@ -150,7 +183,7 @@ int main()
     int start_100 = start_50 + incrementor;
  
  
-    string file = (db == 1) ? "stats/" + to_string(numOfEntries) + "/redis-running-stats.csv" : "stats/" + to_string(numOfEntries) + "/postgres-running-stats.csv";
+    string file = (db == 1) ? "stats/" + to_string(recordSize) + "/" + to_string(numOfEntries) + "/redis-running-stats.csv" : "stats/" + to_string(numOfEntries) + "/postgres-running-stats.csv";
  
     if (remove(file.c_str()) != 0)
     {
@@ -169,7 +202,7 @@ int main()
     
     ofstream csv(file);
  
-    bm->selectDB(db, host);
+    bm->selectDB(db, host, recordSize);
     bm->setThreads_and_Entries(10, 1000000);
     bm->connect();
  

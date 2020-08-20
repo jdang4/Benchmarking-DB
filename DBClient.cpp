@@ -12,23 +12,15 @@ using namespace std;
  *
  * @return a pointer to a char array with a size of 6K bytes
  */
-char* DBClient::getEntryVal(char startingChar)
+char* DBClient::getEntryVal(char recordChar, int recordSize)
 {
-    char* val = new char[ENTRY_SIZE];
+    char* val = new char[recordSize];
     strncpy(val, "", 1);
 
-    int letter = int(startingChar);
-
-    for (int i = 0; i < ENTRY_SIZE; i++)
+    for (int i = 0; i < recordSize; i++)
     {
-	if (i != 0 && i % 1200 == 0)
-	{
-	    letter++;
-	}
-
-	char c = char(letter);
-	const char* str_letter = &c;
-	strncat(val, str_letter, 1);
+        const char* str_letter = &recordChar;
+	    strncat(val, str_letter, 1);
     }
 
     return val;
@@ -97,6 +89,17 @@ void DBClient::setThreads(int n)
 void DBClient::setEntries(int n)
 {
     entries = n;
+}
+
+
+/**
+ * sets the record size
+ * 
+ * @param n - the number to set for recordSize
+ */
+void DBClient::setRecordSize(int n)
+{
+    recordSize = n;
 }
 
 
