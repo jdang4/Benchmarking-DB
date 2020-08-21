@@ -196,7 +196,7 @@ When running the application, the user would be given options to choose from:
     
 * Whether to show each individual print output and not just show the summary of the benchmark for the particular operation
     
-* How long you want the program to run. It uses a while loop to repeatably run the whole benchmark test and stores the collected data into a CSV file with "running" in the name. To run the benchmark tests once, use a very small double value
+* How long you want the program to run. It uses a while loop to repeatably run the whole benchmark test and stores the collected data into a CSV file with "running" in the name. To run the benchmark tests once, use a very small double value. Also, keep in mind that when using a small number of entries (1 entry) for each operation test, you may want to do a small value like 0.1 to get the program to run the tests in only one round. Smaller number of entries being used for each test tend to allow the program to finish quickly
     
 * Select how you want to test the operations. The first performs a test on each of the operations used without randomizing the keys, and the second one does the same as the first but it randomizes the key. The third option would randomly select an operation to benchmark and does a test on it while randomizng the keys
     

@@ -27,18 +27,6 @@ int main()
  
     cout << endl;
 
-   /* 
-    cout << "Do you want to initialize the DB? [y/n]: ";
-    cin >> initialize_option;
- 
-    if (initialize_option == "y") 
-    {
-    	initialize_db = true;
-    }
- 
-    cout << endl;
-    */
-
     cout << "Do you want to show all the print outputs? [y/n]: ";
     cin >> print_option;
  
@@ -127,17 +115,14 @@ int main()
     {
         case 1 :
             recordSize = 256;
-            //initialize_db = true;
             break;
 
         case 2 :
             recordSize = 2000;
-            //initialize_db = true;
             break;
 
         case 3 :
             recordSize = 10000;
-            //initialize_db = true;
             break;
 
         default :
@@ -165,7 +150,7 @@ int main()
 
     cout << endl << endl;
 
-   int trials = 1; 
+    int trials = 1; 
  
     BenchmarkManager* bm = new BenchmarkManager(trials, printOutputs);
  
