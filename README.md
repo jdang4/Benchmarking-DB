@@ -11,6 +11,7 @@ further analysis on the information.
 3. [Customize the Config file for the Database Servers](#customize-configs)
 4. [Understanding the User Options in Benchmark App](#options-in-app)
 6. [Possible Errors that May Occur When Running App](#errors)
+7. [Navigativing Through Stats Directory](#stats)
 5. [Contact](#contact)
 
 
@@ -192,13 +193,13 @@ When running the application, the user would be given options to choose from:
 
 * Selecting a Database
     
-* Whether to initialize the database (deletes all the entries in the db and re-insert 1M entries)
-    
 * Whether to show each individual print output and not just show the summary of the benchmark for the particular operation
     
 * How long you want the program to run. It uses a while loop to repeatably run the whole benchmark test and stores the collected data into a CSV file with "running" in the name. To run the benchmark tests once, use a very small double value. Also, keep in mind that when using a small number of entries (1 entry) for each operation test, you may want to do a small value like 0.1 to get the program to run the tests in only one round. Smaller number of entries being used for each test tend to allow the program to finish quickly
     
 * Select how you want to test the operations. The first performs a test on each of the operations used without randomizing the keys, and the second one does the same as the first but it randomizes the key. The third option would randomly select an operation to benchmark and does a test on it while randomizng the keys
+
+* Select the Record Size that you want to benchmark against
     
 * Select the number of entries you want to perform on each operation
 
@@ -206,6 +207,11 @@ When running the application, the user would be given options to choose from:
 # Possible Errors that May Occur When Running App <a name="errors"></a>
 
 I have found that as the program runs for a while eventually it would cause out of memory errors, causing the program to fail. Although I am sure there are better solutions than mine, but for a quick solution, I cleared the folders where the persistent files of the database would reside in and reboot the database containers (stopping then starting it up again). Again, please note that this is not the most effective solution and is just one simple way to get the application working again.
+
+
+# Navigativing Through Stats Directory <a name="stats"></a>
+
+When going into the stats directory, you'll see different folders, those folders indicate the record sizes. Choose the desired directory and in that directory you'll see additional directories. Those directories correspond the number of entries that were being used in the test, and selecting the desired one you'll be able to see the generated csv files.
 
 
 # Contact
