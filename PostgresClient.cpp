@@ -69,6 +69,7 @@ double PostgresClient::run_threads(Lambda f, int begin, bool random, int n)
 
     int numOfEntries = (n == 0) ? entries : n;
 
+	// makes adjustments on the number of threads to use based on the number of entries
     threads = (threads > numOfEntries) ? numOfEntries : threads;
 
     int perThread = numOfEntries / threads;
@@ -359,7 +360,7 @@ double PostgresClient::simultaneousTasks(bool randomOption)
 		try {
 			connection* postgres = new connection(connection_description);
 
-			auto read = [&](int aKey) {
+			auto read_write = [&](int aKey) {
 				string key = to_string(aKey);
 
 				string stmt = "SELECT * FROM session WHERE ID = " + key + ";";
@@ -368,26 +369,14 @@ double PostgresClient::simultaneousTasks(bool randomOption)
 
 				query.exec(stmt);
 
-				query.commit();
-			};
-
-			auto write = [&](int aKey) {
-				string key = to_string(aKey);
-
-				string stmt = "UPDATE session set DATA = '";
+				stmt = "UPDATE session set DATA = '";
 
 				stmt.append(newVal);
 
 				stmt += "' WHERE ID = " + key + ";";
 
-				work query(*postgres);
-
 				query.exec(stmt);
-
-				query.commit();
 			};
-
-			int halfMark = (end - start) / 2;
 
 			for (int i = start; i < end; i++)
 			{
@@ -404,15 +393,7 @@ double PostgresClient::simultaneousTasks(bool randomOption)
 
 				int key = (random) ? randomNum : i;
 
-				if (i < halfMark)
-				{
-					read(key);
-				}
-
-				else 
-				{
-					write(key);
-				}
+				read_write(key);
 			}
 
 			postgres->disconnect();
