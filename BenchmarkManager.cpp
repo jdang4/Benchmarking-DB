@@ -143,11 +143,13 @@ void BenchmarkManager::performRandomization()
 
     int option = (rand() % 6) + 1;
 
+    // selects a random number from 2M to 3M and would act as the starting key
     int starting_key = (rand() % (3000000 + 1 - 2000000)) + 2000000;
 
-    int thread_counts[3] = {1, 5, 10};
+    int thread_counts[5] = {1, 5, 10, 50, 100};
 
-    int index = (rand() % (2 + 1));
+    // random index position of the thread_counts array
+    int index = (rand() % (4 + 1));
 
     int thread = thread_counts[index];
 

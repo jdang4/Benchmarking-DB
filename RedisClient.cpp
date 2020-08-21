@@ -12,10 +12,7 @@ using namespace std;
 RedisClient::RedisClient(string host_name, int record_size) : DBClient()
 {
     dataVal = DBClient::getEntryVal('a', record_size);
-    newVal = DBClient::getEntryVal('j', record_size);
-    
-
-    cout << strlen(dataVal) << endl;
+    newVal = DBClient::getEntryVal('b', record_size);
 
     options.host = host_name;
     options.port = 6379;
@@ -78,6 +75,7 @@ double RedisClient::run_threads(Lambda f, int begin, bool random, int n)
 
     int numOfEntries = (n == 0) ? DBClient::entries : n;
 
+	// makes adjustments on the number of threads to use based on the number of entries
     threads = (threads > numOfEntries) ? numOfEntries : threads; 
 
     int perThread = numOfEntries / threads;
@@ -123,7 +121,8 @@ double RedisClient::run_threads(Lambda f, int begin, bool random, int n)
 double RedisClient::initializeDB() 
 {
     double time;
-    
+
+	// attempt doing a clear of the database first before initializing the db
     try {
 		Redis* redis = new Redis(options, pool_options);
  		    
@@ -334,33 +333,20 @@ double RedisClient::simultaneousTasks(bool randomOption)
 	auto read_and_write = [&](int start, int end, bool random) {
 		Redis *redis = new Redis(options, pool_options);
 
-		auto read = [&](int key) {
+		auto read_write = [&](int key) {
 			try
 			{
 				redis->get(to_string(key));
-			}
-			catch (const Error &e)
-			{
-				cout << "ERROR READING" << endl;
-				cerr << e.what() << endl;
-				exit(-1);
-			}
-		};
-
-		auto write = [&](int key) {
-			try
-			{
 				redis->set(to_string(key), newVal);
 			}
 			catch (const Error &e)
 			{
-				cout << "ERROR UPDATING" << endl;
+				cout << "ERROR IN READING AND WRITING" << endl;
 				cerr << e.what() << endl;
 				exit(-1);
 			}
 		};
 
-		int halfMark = (end - start) / 2;
 
 		for (int i = start; i < end; i++)
 		{
@@ -377,15 +363,7 @@ double RedisClient::simultaneousTasks(bool randomOption)
 
 			int key = (random) ? randomNum : i;
 
-			if (i < halfMark)
-			{
-				read(key);
-			}
-
-			else
-			{
-				write(key);
-			}
+			read_write(key);
 		}
 
 		redis->command<void>("quit");

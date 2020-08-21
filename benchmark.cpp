@@ -50,7 +50,7 @@ int main()
     cout << endl;
  
     cout << "Select how long (in seconds) you want program to last:" << endl;
-    cout << "NOTE: roughly less than 1 second, the program will run once\n" << endl;
+    cout << "NOTE: roughly less than 1 second would cause the program will run in one round. Refer to README for additional details \n" << endl;
     
     cout << "Enter time (in seconds): ";
     cin >> durationTime;
@@ -182,8 +182,8 @@ int main()
     int start_50 = start_10_transaction + incrementor;
 
     int start_100 = start_50 + incrementor;
- 
- 
+
+    // creating the file path based on the selected DB
     string file = (db == 1) ? "stats/" + to_string(recordSize) + "/" + to_string(numOfEntries) + "/redis-running-stats.csv" : "stats/" + to_string(recordSize) + "/" + to_string(numOfEntries) + "/postgres-running-stats.csv";
  
     if (remove(file.c_str()) != 0)
@@ -212,7 +212,8 @@ int main()
     auto start = chrono::high_resolution_clock::now();
  
     double elapsedTime = 0;
- 
+
+    // this csv file is for the one with running in the filename
     csv << "Timestamp,Reading 1,Reading 5, Reading 10, ";
     csv << "Inserting 1,Inserting 5,Inserting 10, "; 
     csv << "Updating 1,Updating 5,Updating 10, ";
@@ -227,9 +228,12 @@ int main()
     double delete_1 = 0, delete_5 = 0, delete_10 = 0;
     double task_10 = 0, task_50 = 0, task_100 = 0;
     double transaction_10 = 0, transaction_50 = 0, transaction_100 = 0;
- 
+
+    // using while loop to allow program to run for at least the amount of time the user wants it to run, by running the program
+    // in multiple rounds (if needed)
     while (elapsedTime < durationTime)
     {
+        // performing the standard tests
 		if (benchmarkOption != 3)
 		{
 		    bm->openCSV(numOfEntries, recordSize);
@@ -322,7 +326,7 @@ int main()
 
 		    double elapsedTime_min = double(elapsedTime) / double(60);
 
-            // recording in the CSV file with running in the title
+            // recording in the CSV file with running in the filename
 		    csv << elapsedTime_min << "," << read_1 << "," << read_5 << "," << read_10 << ",";
 		    csv << insert_1 << "," << insert_5 << "," << insert_10 << ","; 
 		    csv << update_1 << "," << update_5 << "," << update_10 << ","; 
@@ -333,6 +337,7 @@ int main()
 		    bm->closeCSV();
 		}
 
+        // perform the complete randomization test
 		else 
 		{
 		    bm->performRandomization();
