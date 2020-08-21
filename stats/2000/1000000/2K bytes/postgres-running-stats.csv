@@ -1,2 +1,0 @@
-Timestamp,Reading 1,Reading 5, Reading 10, Inserting 1,Inserting 5,Inserting 10, Updating 1,Updating 5,Updating 10, Deleting 1,Deleting 5,Deleting  10, 10 Simul. Readers,50 Simul. Reader,100 Simul. Readers,10 Simul. Tasks,50 Simul. Tasks,100 Simul. Tasks,10 Simul. Transactions,50 Simul. Transactions,100 Simul. Transactions
-99.9941,967.03,232.941,130.805,1082.58,247.434,131.781,1116.96,246.113,138.253,883.072,189.683,102.082,138.974,47.5449,80.0963,169.171,48.5849,46.5329
