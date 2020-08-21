@@ -26,12 +26,12 @@ void BenchmarkManager::selectDB(int db, string host, int recordSize)
     switch (db)
     {
     case 1:
-        client = new RedisClient(host);
+        client = new RedisClient(host, recordSize);
         dbName = "REDIS";
         break;
 
     case 2:
-        client = new PostgresClient(host);
+        client = new PostgresClient(host, recordSize);
         dbName = "POSTGRESQL";
         break;
 
@@ -39,8 +39,6 @@ void BenchmarkManager::selectDB(int db, string host, int recordSize)
         cout << "INVALID DB CHOICE!" << endl;
         exit(1);
     }
-
-    client->setRecordSize(recordSize);
 }
 
 /**
@@ -97,18 +95,18 @@ void BenchmarkManager::initializeDB()
  * 
  * @param n - denotes which DB CSV file to record the data to
  */
-void BenchmarkManager::openCSV(int n)
+void BenchmarkManager::openCSV(int n, int recordSize)
 {
     string file;
 
     switch (dbClient)
     {
     case 1:
-        file = "stats/" + to_string(n) + "/redis-stats.csv";
+        file = "stats/" + to_string(recordSize) + "/" + to_string(n) + "/redis-stats.csv";
         break;
 
     case 2:
-        file = "stats/" + to_string(n) + "/postgres-stats.csv";
+        file = "stats/" + to_string(recordSize) + "/" + to_string(n) + "/postgres-stats.csv";
         break;
 
     default:

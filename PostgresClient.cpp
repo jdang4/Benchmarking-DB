@@ -7,7 +7,7 @@
 using namespace std;
 using namespace pqxx;
 
-PostgresClient::PostgresClient(string host_name) : DBClient() 
+PostgresClient::PostgresClient(string host_name, int recordSize) : DBClient() 
 {
     dataVal = DBClient::getEntryVal('a', recordSize);
     newVal = DBClient::getEntryVal('j', recordSize);

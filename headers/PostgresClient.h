@@ -13,7 +13,7 @@ class DBClient;
 class PostgresClient : public DBClient
 {
     public:
-	PostgresClient(std::string host);
+	PostgresClient(std::string host, int record_size);
 	~PostgresClient();
 	void connect() override;
 	double initializeDB() override;

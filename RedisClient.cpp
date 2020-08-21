@@ -9,14 +9,13 @@ using namespace sw::redis;
 using namespace std;
 
 
-RedisClient::RedisClient(string host_name) : DBClient()
+RedisClient::RedisClient(string host_name, int record_size) : DBClient()
 {
-    dataVal = DBClient::getEntryVal('a', recordSize);
-    newVal = DBClient::getEntryVal('j', recordSize);
+    dataVal = DBClient::getEntryVal('a', record_size);
+    newVal = DBClient::getEntryVal('j', record_size);
     
-	int sizeOfArray = sizeof(dataVal) / sizeof(dataVal[0]);
 
-	cout << sizeOfArray << endl;
+    cout << strlen(dataVal) << endl;
 
     options.host = host_name;
     options.port = 6379;

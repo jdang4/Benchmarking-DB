@@ -21,7 +21,7 @@ class BenchmarkManager
 	void initializeDB();
 	void connect();
 	void disconnect();
-	void openCSV(int n);
+	void openCSV(int n, int recordSize);
 	void closeCSV();
 	double getReadOutput(int threads, bool csvOption, bool random);
 	double getInsertOutput(int threads, int start, bool csvOption);

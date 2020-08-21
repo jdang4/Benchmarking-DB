@@ -11,7 +11,7 @@ class DBClient;
 class RedisClient : public DBClient
 {
     public:
-	RedisClient(std::string host_name);
+	RedisClient(std::string host_name, int record_size);
 	~RedisClient();
 	void connect() override;
 	double initializeDB() override;

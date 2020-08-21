@@ -9,7 +9,7 @@
 class DBClient 
 {
     public:
-	char* getEntryVal(char recordChar, int recordSize);
+	char* getEntryVal(char recordChar, int record_size);
 	virtual void connect();
 	virtual double initializeDB();
 	virtual double readEntry(bool randomOption);
@@ -22,7 +22,6 @@ class DBClient
 	std::vector<int> getRandomKeys(int len, int min, int max);
 	void setThreads(int n);
 	void setEntries(int n);
-	void setRecordSize(int n);
 	int getThreads();
 	int getEntries();
 
@@ -30,7 +29,6 @@ class DBClient
 	double calculateTime(std::chrono::time_point<std::chrono::high_resolution_clock> start, std::chrono::time_point<std::chrono::high_resolution_clock> end); 
 	int threads;
 	int entries;
-	int recordSize;
 	
 	
 };

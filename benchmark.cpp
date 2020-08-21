@@ -13,7 +13,6 @@ int main()
     int db, numOfEntries, benchmarkOption, recordSize;
     string host, initialize_option, print_option;
  
-    bool initialize_db = false;
     bool printOutputs = true;
     bool randomizeKey = false;
  
@@ -27,7 +26,8 @@ int main()
     cin >> db;
  
     cout << endl;
- 
+
+   /* 
     cout << "Do you want to initialize the DB? [y/n]: ";
     cin >> initialize_option;
  
@@ -37,7 +37,8 @@ int main()
     }
  
     cout << endl;
- 
+    */
+
     cout << "Do you want to show all the print outputs? [y/n]: ";
     cin >> print_option;
  
@@ -126,17 +127,17 @@ int main()
     {
         case 1 :
             recordSize = 256;
-            initialize_db = true;
+            //initialize_db = true;
             break;
 
         case 2 :
             recordSize = 2000;
-            initialize_db = true;
+            //initialize_db = true;
             break;
 
         case 3 :
             recordSize = 10000;
-            initialize_db = true;
+            //initialize_db = true;
             break;
 
         default :
@@ -164,7 +165,7 @@ int main()
 
     cout << endl << endl;
 
-   int trials = 3; 
+   int trials = 1; 
  
     BenchmarkManager* bm = new BenchmarkManager(trials, printOutputs);
  
@@ -183,7 +184,7 @@ int main()
     int start_100 = start_50 + incrementor;
  
  
-    string file = (db == 1) ? "stats/" + to_string(recordSize) + "/" + to_string(numOfEntries) + "/redis-running-stats.csv" : "stats/" + to_string(numOfEntries) + "/postgres-running-stats.csv";
+    string file = (db == 1) ? "stats/" + to_string(recordSize) + "/" + to_string(numOfEntries) + "/redis-running-stats.csv" : "stats/" + to_string(recordSize) + "/" + to_string(numOfEntries) + "/postgres-running-stats.csv";
  
     if (remove(file.c_str()) != 0)
     {
@@ -201,15 +202,12 @@ int main()
     }
     
     ofstream csv(file);
- 
+
     bm->selectDB(db, host, recordSize);
     bm->setThreads_and_Entries(10, 1000000);
     bm->connect();
  
-    if (initialize_db)
-    {
-        bm->initializeDB();
-    }
+    bm->initializeDB();
  
     auto start = chrono::high_resolution_clock::now();
  
@@ -234,7 +232,7 @@ int main()
     {
 		if (benchmarkOption != 3)
 		{
-		    bm->openCSV(numOfEntries);
+		    bm->openCSV(numOfEntries, recordSize);
  
 		    cout << "READING BENCHMARK: \n\n" << endl;
  

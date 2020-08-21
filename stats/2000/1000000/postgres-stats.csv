@@ -1,106 +1,72 @@
-Read Num,Threads,Runs,Time Elapsed (sec),,
-1,1,1000000,996.732,,
-2,1,1000000,985.931,,978.186
-3,1,1000000,951.895,,
-,,,,,
-,,,,,
-Read Num,Threads,Runs,Time Elapsed (sec),,
-1,5,1000000,219.087,,
-2,5,1000000,253.071,,244.031
-3,5,1000000,259.935,,
-,,,,,
-,,,,,
-Read Num,Threads,Runs,Time Elapsed (sec),,
-1,10,1000000,142.142,,
-2,10,1000000,142.953,,140.4626667
-3,10,1000000,136.293,,
-,,,,,
-,,,,,
-Insert Num,Threads,Runs,Time Elapased (sec),,
-1,1,1000000,1314.34,,
-2,1,1000000,1285.36,,1312.48
-3,1,1000000,1337.74,,
-,,,,,
-,,,,,
-Insert Num,Threads,Runs,Time Elapased (sec),,
-1,5,1000000,305.273,,
-2,5,1000000,323.056,,316.777
-3,5,1000000,322.002,,
-,,,,,
-,,,,,
-Insert Num,Threads,Runs,Time Elapased (sec),,
-1,10,1000000,178.291,,
-2,10,1000000,179.145,,178.651
-3,10,1000000,178.517,,
-,,,,,
-,,,,,
-Update Num,Threads,Runs,Time Elapsed (sec),,
-1,1,1000000,1387.63,,
-2,1,1000000,1358.24,,1394.736667
-3,1,1000000,1438.34,,
-,,,,,
-,,,,,
-Update Num,Threads,Runs,Time Elapsed (sec),,
-1,5,1000000,322.691,,
-2,5,1000000,338.113,,332.5933333
-3,5,1000000,336.976,,
-,,,,,
-,,,,,
-Update Num,Threads,Runs,Time Elapsed (sec),,
-1,10,1000000,183.875,,
-2,10,1000000,184.278,,184.3046667
-3,10,1000000,184.761,,
-,,,,,
-,,,,,
-Delete Num,Threads,Runs,Time Elapsed (sec),,
-1,1,1000000,865.988,,
-2,1,1000000,889.223,,873.455
-3,1,1000000,865.154,,
-,,,,,
-,,,,,
-Delete Num,Threads,Runs,Time Elapsed (sec),,
-1,5,1000000,183.25,,
-2,5,1000000,186.062,,187.2253333
-3,5,1000000,192.364,,
-,,,,,
-,,,,,
-Delete Num,Threads,Runs,Time Elapsed (sec),,
-1,10,1000000,100.139,,
-2,10,1000000,101.529,,100.9376667
-3,10,1000000,101.145,,
-,,,,,
-,,,,,
-10 Simul. Tasks Num,Threads,Runs,Time Elapsed (sec),Average Time per Tasks,
-1,10,1000000,183.319,,
-2,10,1000000,183.852,,183.6073333
-3,10,1000000,183.651,,
-,,,,,
-,,,,,
-50 Simul. Tasks Num,Threads,Runs,Time Elapsed (sec),Average Time per Tasks,
-1,50,1000000,70.886,,
-2,50,1000000,75.5916,,72.78563333
-3,50,1000000,71.8793,,
-,,,,,
-,,,,,
-100 Simul. Tasks Num,Threads,Runs,Time Elapsed (sec),Average Time per Tasks,
-1,100,1000000,60.0762,,
-2,100,1000000,60.532,,60.45806667
-3,100,1000000,60.766,,
-,,,,,
-,,,,,
-10 Simul. Transactions,Threads,Runs,Time Elapsed (sec),Average Time per Tasks,
-1,10,1000000,223.19,,
-2,10,1000000,215.064,,219.9266667
-3,10,1000000,221.526,,
-,,,,,
-,,,,,
-50 Simul. Transactions,Threads,Runs,Time Elapsed (sec),Average Time per Tasks,
-1,50,1000000,72.9488,,
-2,50,1000000,76.604,,75.2056
-3,50,1000000,76.064,,
-,,,,,
-,,,,,
-100 Simul. Transactions,Threads,Runs,Time Elapsed (sec),Average Time per Tasks,
-1,100,1000000,64.5248,,
-2,100,1000000,62.6641,,63.6297
-3,100,1000000,63.7002,,
+Read Num,Threads,Runs,Time Elapsed (sec)
+1,1,1000000,967.03
+
+
+Read Num,Threads,Runs,Time Elapsed (sec)
+1,5,1000000,232.941
+
+
+Read Num,Threads,Runs,Time Elapsed (sec)
+1,10,1000000,130.805
+
+
+Insert Num,Threads,Runs,Time Elapased (sec)
+1,1,1000000,1082.58
+
+
+Insert Num,Threads,Runs,Time Elapased (sec)
+1,5,1000000,247.434
+
+
+Insert Num,Threads,Runs,Time Elapased (sec)
+1,10,1000000,131.781
+
+
+Update Num,Threads,Runs,Time Elapsed (sec)
+1,1,1000000,1116.96
+
+
+Update Num,Threads,Runs,Time Elapsed (sec)
+1,5,1000000,246.113
+
+
+Update Num,Threads,Runs,Time Elapsed (sec)
+1,10,1000000,138.253
+
+
+Delete Num,Threads,Runs,Time Elapsed (sec)
+1,1,1000000,883.072
+
+
+Delete Num,Threads,Runs,Time Elapsed (sec)
+1,5,1000000,189.683
+
+
+Delete Num,Threads,Runs,Time Elapsed (sec)
+1,10,1000000,102.082
+
+
+10 Simul. Tasks Num,Threads,Runs,Time Elapsed (sec),Average Time per Tasks
+1,10,1000000,138.974
+
+
+50 Simul. Tasks Num,Threads,Runs,Time Elapsed (sec),Average Time per Tasks
+1,50,1000000,47.5449
+
+
+100 Simul. Tasks Num,Threads,Runs,Time Elapsed (sec),Average Time per Tasks
+1,100,1000000,80.0963
+
+
+10 Simul. Transactions,Threads,Runs,Time Elapsed (sec),Average Time per Tasks
+1,10,1000000,169.171
+
+
+50 Simul. Transactions,Threads,Runs,Time Elapsed (sec),Average Time per Tasks
+1,50,1000000,48.5849
+
+
+100 Simul. Transactions,Threads,Runs,Time Elapsed (sec),Average Time per Tasks
+1,100,1000000,46.5329
+
+
